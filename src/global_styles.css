@@ -1,0 +1,38 @@
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import 'swiper/css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #7C6A46;
+  --secondary-color: #2C3E50;
+  --background-color: #F9F7F4;
+  --text-color: #333333;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.container {
+  @apply mx-auto px-4 max-w-7xl;
+}
+
+.btn-primary {
+  @apply bg-primary text-white px-6 py-2 rounded-md hover:bg-primary-dark transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white px-6 py-2 rounded-md hover:bg-secondary-dark transition-colors;
+}
+
+.product-card {
+  @apply bg-white rounded-lg shadow-md p-4 transition-transform hover:scale-105;
+}
+
+.section-title {
+  @apply text-3xl font-bold text-center mb-8;
+}
