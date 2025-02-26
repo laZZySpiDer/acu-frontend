@@ -1,0 +1,157 @@
+<main class="container py-8 mt-20">
+  <!-- Page Header -->
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">Shop</h1>
+    <div class="flex items-center gap-4">
+      <!-- View Toggle -->
+      <div class="flex gap-2">
+        <button 
+          (click)="toggleViewMode()"
+          [class.text-primary]="viewMode === 'grid'"
+          class="p-2">
+          <i class="fas fa-grid-2 text-lg"></i>
+        </button>
+        <button 
+        (click)="toggleViewMode()"
+          [class.text-primary]="viewMode === 'list'"
+          class="p-2">
+          <i class="fas fa-list text-lg"></i>
+        </button>
+      </div>
+      <!-- Sort Dropdown -->
+      <select 
+        [(ngModel)]="sortBy"
+        class="border rounded-md px-3 py-2 focus:outline-none focus:border-primary">
+        <option value="newest">Newest</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="flex gap-8">
+    <!-- Sidebar Filters -->
+    <aside class="w-64 flex-shrink-0">
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- Price Range -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3">Price Range</h3>
+          <div class="space-y-2">
+            <div class="flex items-center">
+              <input type="number" 
+                     [(ngModel)]="filters.minPrice"
+                     class="w-24 border rounded px-2 py-1" 
+                     placeholder="Min"/>
+              <span class="mx-2">-</span>
+              <input type="number" 
+                     [(ngModel)]="filters.maxPrice"
+                     class="w-24 border rounded px-2 py-1" 
+                     placeholder="Max"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3">Categories</h3>
+          <div class="space-y-2">
+            <label *ngFor="let category of categories" class="flex items-center">
+              <input type="checkbox"
+                     [checked]="filters.categories.includes(category)"
+                     (change)="toggleCategory(category)"
+                     class="mr-2"/>
+              {{category}}
+            </label>
+          </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3">Availability</h3>
+          <label class="flex items-center">
+            <input type="checkbox"
+                   [(ngModel)]="filters.inStock"
+                   class="mr-2"/>
+            In Stock Only
+          </label>
+        </div>
+
+        <!-- Ratings -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3">Customer Ratings</h3>
+          <div class="space-y-2">
+            <label *ngFor="let rating of [4,3,2,1]" class="flex items-center">
+              <input type="radio"
+                     name="rating"
+                     [value]="rating"
+                     [(ngModel)]="filters.minRating"
+                     class="mr-2"/>
+              <div class="flex text-yellow-400">
+                <i *ngFor="let star of [1,2,3,4,5]"
+                   class="fas fa-star text-sm"
+                   [class.text-gray-300]="star > rating"></i>
+              </div>
+              <span class="ml-2">& Up</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Clear Filters -->
+        <button (click)="clearFilters()"
+                class="w-full btn-secondary">
+          Clear Filters
+        </button>
+      </div>
+    </aside>
+
+    <!-- Product Grid/List -->
+    <div class="flex-1">
+      <div [class]="viewMode === 'grid' ? 
+                   'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 
+                   'space-y-6'">
+        <div *ngFor="let product of filteredProducts" 
+             [class]="viewMode === 'grid' ? 
+                     'product-card group' : 
+                     'product-card group flex gap-6'">
+          <!-- Product Image -->
+          <div [class]="viewMode === 'grid' ? 
+                       'relative overflow-hidden' :
+                       'relative overflow-hidden w-48'">
+            <img [src]="product.images[0]" 
+                 [alt]="product.name"
+                 class="w-full h-64 object-cover"/>
+            <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <button class="btn-primary mx-2">Quick View</button>
+              <button class="text-white">
+                <i class="fas fa-heart text-2xl"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Product Info -->
+          <div [class]="viewMode === 'grid' ? 'p-4' : 'flex-1 p-4'">
+            <h3 class="text-lg font-semibold mb-2">{{product.name}}</h3>
+            <div class="flex items-center mb-2">
+              <div class="flex text-yellow-400">
+                <i *ngFor="let star of [1,2,3,4,5]"
+                   class="fas fa-star text-sm"
+                   [class.text-gray-300]="star > product.rating"></i>
+              </div>
+              <span class="text-sm text-gray-500 ml-2">({{product.reviews}})</span>
+            </div>
+            <p class="text-primary font-bold mb-2">${{product.price.toFixed(2)}}</p>
+            <p *ngIf="viewMode === 'list'" class="text-gray-600 mb-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+            <button *ngIf="viewMode === 'list'"
+                    class="btn-primary" (click)="addToCart(product)">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+

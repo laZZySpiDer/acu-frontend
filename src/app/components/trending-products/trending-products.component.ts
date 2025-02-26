@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 @Component({
   selector: 'app-trending-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductCardComponent],
   templateUrl: './trending-products.component.html',
   styleUrls: ['./trending-products.component.css']
 })
@@ -16,14 +17,14 @@ export class TrendingProductsComponent {
       price: '49.99',
       rating: 5,
       reviews: 128,
-      image: 'https://images.unsplash.com/photo-1595408076683-5d0c643e4f11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
     },
     {
       name: 'Ceramic Vase',
       price: '34.99',
       rating: 4,
       reviews: 89,
-      image: 'https://images.unsplash.com/photo-1578500351865-0a4734e8cd6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
     },
     {
       name: 'Macrame Wall Hanging',
@@ -41,9 +42,7 @@ export class TrendingProductsComponent {
     }
   ];
 
-  constructor(private router: Router) {}
 
-  openProductPage(product: any) {
-    this.router.navigate(['/product', 1]);
-  }
+
+
 }

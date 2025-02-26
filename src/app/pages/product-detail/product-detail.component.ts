@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
@@ -28,7 +28,7 @@ interface Product {
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
@@ -81,7 +81,7 @@ export class ProductDetailComponent implements OnInit {
   Math = Math;
 
   constructor(
-    private route: ActivatedRoute,
+    private router: Router,
     private cartService: CartService
   ) {}
 
@@ -109,6 +109,7 @@ export class ProductDetailComponent implements OnInit {
 
   buyNow() {
     this.addToCart();
+    this.router.navigate(['/checkout']);
     // TODO: Implement redirect to checkout
   }
 }
