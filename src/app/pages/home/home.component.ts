@@ -13,24 +13,13 @@ import { FooterComponent } from '../../components/footer/footer.component';
   standalone: true,
   imports: [
     CommonModule,
-    HeaderComponent,
     HeroBannerComponent,
     FeaturedCollectionsComponent,
     TrendingProductsComponent,
     CustomerReviewsComponent,
-    NewsletterComponent,
-    FooterComponent
+    NewsletterComponent
   ],
-  template: `
-    <app-header></app-header>
-    <main>
-      <app-hero-banner></app-hero-banner>
-      <app-featured-collections></app-featured-collections>
-      <app-trending-products></app-trending-products>
-      <app-customer-reviews></app-customer-reviews>
-      <app-newsletter></app-newsletter>
-    </main>
-    <app-footer></app-footer>
-  `
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {}
