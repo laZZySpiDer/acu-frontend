@@ -9,7 +9,7 @@ import { OrderDetails } from '../../interfaces/order.interface';
 @Component({
   selector: 'app-order-confirmation',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './order-confirmation.component.html'
 })
 export class OrderConfirmationComponent implements OnInit {

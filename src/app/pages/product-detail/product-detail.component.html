@@ -1,19 +1,19 @@
-<main class="container py-8 mt-20">
+<main class="container py-8 mt-20" *ngIf="product">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <!-- Left Side: Product Images -->
         <div>
             <div class="relative overflow-hidden rounded-lg mb-4">
-                <img [src]="selectedImage" [alt]="product.name" class="w-full h-[500px] object-cover" />
+                <img [src]="selectedImage?.image_link" [alt]="'Alt Description'" class="w-full h-[500px] object-cover" />
                 <!-- Image Zoom Overlay -->
                 <div class="absolute inset-0 bg-black opacity-0 hover:opacity-50 transition-opacity cursor-zoom-in">
                 </div>
             </div>
             <!-- Thumbnails -->
             <div class="grid grid-cols-4 gap-2">
-                <button *ngFor="let image of product.images" (click)="selectedImage = image"
-                    class="rounded-lg overflow-hidden" [class.ring-2]="selectedImage === image"
-                    [class.ring-primary]="selectedImage === image">
-                    <img [src]="image" [alt]="product.name" class="w-full h-24 object-cover" />
+                <button *ngFor="let image of product.general_images" (click)="selectedImage= image"
+                    class="rounded-lg overflow-hidden" [class.ring-2]="selectedImage?.image_link === image.image_link"
+                    [class.ring-primary]="selectedImage?.image_link === image.image_link">
+                    <img [src]="image.image_link" [alt]="product.name" class="w-full h-24 object-cover" />
                 </button>
             </div>
         </div>
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Price -->
-            <p class="text-2xl font-bold text-primary mb-6">${{product.price.toFixed(2)}}</p>
+            <p class="text-2xl font-bold text-primary mb-6">₹{{product.price}}</p>
 
             <!-- Description -->
             <p class="text-gray-600 mb-6">{{product.description}}</p>
@@ -58,10 +58,10 @@
             <div *ngIf="product.sizes" class="mb-6">
                 <h3 class="font-semibold mb-2">Size</h3>
                 <div class="flex gap-2">
-                    <button *ngFor="let size of product.sizes" (click)="selectedSize = size"
-                        [class.bg-primary]="selectedSize === size" [class.text-white]="selectedSize === size"
+                    <button *ngFor="let size of product.sizes" (click)="changeSizeOfProduct(size)"
+                        [class.bg-primary]="selectedSize === size.size" [class.text-white]="selectedSize === size.size"
                         class="px-4 py-2 border rounded-md hover:border-primary">
-                        {{size}}
+                        {{size.size}}
                     </button>
                 </div>
             </div>
@@ -93,15 +93,15 @@
                 <dl class="grid grid-cols-1 gap-2">
                     <div class="grid grid-cols-2">
                         <dt class="text-gray-600">Material</dt>
-                        <dd>{{product.details.material}}</dd>
+                        <dd>{{product.material}}</dd>
                     </div>
                     <div class="grid grid-cols-2">
                         <dt class="text-gray-600">Dimensions</dt>
-                        <dd>{{product.details.dimensions}}</dd>
+                        <dd>{{product.dimensions}}</dd>
                     </div>
                     <div class="grid grid-cols-2">
                         <dt class="text-gray-600">Weight</dt>
-                        <dd>{{product.details.weight}}</dd>
+                        <dd>{{product.weight}} kg</dd>
                     </div>
                 </dl>
             </div>

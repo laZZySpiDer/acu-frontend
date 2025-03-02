@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between h-20">
         <!-- Logo -->
         <div class="flex-shrink-0">
-          <h1 class="text-2xl font-bold text-primary">ACU</h1>
+          <h1 class="text-2xl font-bold text-primary" [routerLink]="'/'">ACU</h1>
         </div>
 
         <!-- Search Bar -->
@@ -49,10 +49,16 @@
         </div>
 
         <!-- Mobile Menu Button -->
-        <button class="md:hidden text-gray-700">
+        <button class="md:hidden text-gray-700"  (click)="toggleMobileMenu()">
           <i class="fas fa-bars text-2xl"></i>
         </button>
       </div>
     </div>
+
+    <nav *ngIf="isMobileMenuOpen" class="absolute top-20 left-0 w-full bg-white shadow-md p-4 flex flex-col space-y-4 md:hidden">
+      <a *ngFor="let menuItem of menuList" href="{{menuItem.link}}" class="text-gray-700 hover:text-primary">
+        {{menuItem.name}}
+      </a>
+    </nav>
   </header>
   <app-cart #cart></app-cart>

@@ -1,30 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { Product, ProductSize, Image } from '../../interfaces/product.interface';
+import { ProductsApiService } from '../../services/products-api.service';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  category: string;
-  images: string[];
-  inStock: boolean;
-  description: string;
-  details: {
-    material: string;
-    dimensions: string;
-    weight: string;
-  };
-  colors?: string[];
-  sizes?: string[];
-}
+
+
 
 @Component({
   selector: 'app-product-detail',
@@ -34,30 +20,7 @@ interface Product {
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
-  product: Product = {
-    id: 1,
-    name: 'Handwoven Basket',
-    price: 49.99,
-    rating: 5,
-    reviews: 128,
-    category: 'Home Decor',
-    images: [
-      'https://images.unsplash.com/photo-1595408076683-5d0c643e4f11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      'https://images.unsplash.com/photo-1595408076683-5d0c643e4f12?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      'https://images.unsplash.com/photo-1595408076683-5d0c643e4f13?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      'https://images.unsplash.com/photo-1595408076683-5d0c643e4f14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    ],
-    inStock: true,
-    description: 'Handcrafted by skilled artisans, this beautiful basket is perfect for storage and decoration. Each piece is unique and made with sustainable materials.',
-    details: {
-      material: 'Natural Seagrass',
-      dimensions: '12" x 12" x 14"',
-      weight: '2.5 lbs'
-    },
-    colors: ['#8B4513', '#D2691E', '#DEB887'],
-    sizes: ['Small', 'Medium', 'Large']
-  };
-
+  product!: Product;
   reviews = [
     {
       name: 'Sarah Johnson',
@@ -75,7 +38,7 @@ export class ProductDetailComponent implements OnInit {
     }
   ];
 
-  selectedImage: string = '';
+  selectedImage!: Image | null;
   selectedColor: string | null = null;
   selectedSize: string | null = null;
   quantity: number = 1;
@@ -85,17 +48,36 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private router: Router,
     private cartService: CartService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private route: ActivatedRoute,
+    private productApi: ProductsApiService
   ) {}
 
   ngOnInit() {
-    this.selectedImage = this.product.images[0];
-    if (this.product.colors) {
-      this.selectedColor = this.product.colors[0];
-    }
-    if (this.product.sizes) {
-      this.selectedSize = this.product.sizes[0];
-    }
+    this.route.params.subscribe(params => {
+      const productId = parseInt(params['id']);
+      if (this.wishlistService.isInWishlist(productId)) {
+        this.isInWishlist = true;
+      }
+      this.getProduct(productId);
+    })
+   
+  }
+
+  getProduct(productId: number) {
+    this.productApi.getProductById(productId).subscribe((product:any) => {
+      this.product = product;
+      if (this.product.sizes) {
+        this.product.general_images = this.product.sizes[0].images;
+        this.selectedImage = this.product.general_images[0];
+        this.selectedSize = this.product.sizes[0].size;
+        this.product.price = this.product.sizes[0].price;
+        this.product.stock_quantity = this.product.sizes[0].stock_quantity;
+        this.product.dimensions = this.product.sizes[0].dimensions;
+        this.product.weight = this.product.sizes[0].weight;
+        this.product.material = this.product.sizes[0].material;
+      }
+    });
   }
 
   addToCart() {
@@ -103,7 +85,7 @@ export class ProductDetailComponent implements OnInit {
       id: this.product.id,
       name: this.product.name,
       price: this.product.price,
-      image: this.product.images[0],
+      image: this.product.general_images[0].image_link,
       quantity: this.quantity,
       color: this.selectedColor || undefined,
       size: this.selectedSize || undefined
@@ -124,12 +106,23 @@ export class ProductDetailComponent implements OnInit {
         id: this.product.id,
         name: this.product.name,
         price: this.product.price,
-        image: this.product.images[0],
-        category: this.product.category,
-        rating: this.product.rating,
-        reviews: this.product.reviews
+        image: this.product.general_images[0].image_link,
+        category: this.product.category.name,
+        rating: 69,
+        reviews: 100
       });
     }
     this.isInWishlist = !this.isInWishlist;
+  }
+
+  changeSizeOfProduct(size: ProductSize) {
+    this.selectedSize = size.size
+    this.product.price = size.price;
+    this.product.stock_quantity = size.stock_quantity;
+    this.product.general_images = size.images;
+    this.selectedImage = this.product.general_images[0];
+    this.product.dimensions = size.dimensions;
+    this.product.weight = size.weight;
+    this.product.material = size.material;
   }
 }

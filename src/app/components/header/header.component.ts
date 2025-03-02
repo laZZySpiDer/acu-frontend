@@ -28,4 +28,10 @@ export class HeaderComponent {
   wishlistCount$ = this.wishlistService.wishlistCount$;
 
   constructor(private cartService: CartService,private wishlistService: WishlistService) {}
+
+  isMobileMenuOpen = false;
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 }
