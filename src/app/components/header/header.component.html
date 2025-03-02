@@ -31,8 +31,12 @@
           <button class="text-gray-700 hover:text-primary">
             <i class="fas fa-user"></i>
           </button>
-          <button class="text-gray-700 hover:text-primary">
+          <button routerLink="/wishlist" class="text-gray-700 hover:text-primary relative">
             <i class="fas fa-heart"></i>
+            <span *ngIf="wishlistCount$ | async as count"
+                  class="absolute -top-2 -right-2 bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+              {{count}}
+            </span>
           </button>
           <button (click)="cart.open()" 
                     class="text-gray-700 hover:text-primary relative">

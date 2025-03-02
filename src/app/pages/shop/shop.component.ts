@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
+import { WishlistService } from '../../services/wishlist.service';
+import { RouterModule } from '@angular/router';
 
 interface Product {
   id: number;
@@ -19,7 +21,7 @@ interface Product {
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterModule],
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
@@ -88,7 +90,7 @@ export class ShopComponent {
     // Add more products as needed
   ];
 
-  constructor(private cartService: CartService) {}
+  constructor(private wishlistService: WishlistService,private cartService: CartService) {}
 
 
   get filteredProducts(): Product[] {
@@ -149,5 +151,25 @@ export class ShopComponent {
       color:  undefined,
       size: undefined
     });
+  }
+
+  isInWishlist(productId: number): boolean {
+    return this.wishlistService.isInWishlist(productId);
+  }
+
+  toggleWishlist(product: Product) {
+    if (this.isInWishlist(product.id)) {
+      this.wishlistService.removeFromWishlist(product.id);
+    } else {
+      this.wishlistService.addToWishlist({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.images[0],
+        category: product.category,
+        rating: product.rating,
+        reviews: product.reviews
+      });
+    }
   }
 }

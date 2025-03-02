@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
+import { WishlistService } from '../../services/wishlist.service';
 
 interface Product {
   id: number;
@@ -79,10 +80,12 @@ export class ProductDetailComponent implements OnInit {
   selectedSize: string | null = null;
   quantity: number = 1;
   Math = Math;
+  isInWishlist: boolean = false;
 
   constructor(
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private wishlistService: WishlistService
   ) {}
 
   ngOnInit() {
@@ -111,5 +114,22 @@ export class ProductDetailComponent implements OnInit {
     this.addToCart();
     this.router.navigate(['/checkout']);
     // TODO: Implement redirect to checkout
+  }
+
+  toggleWishlist() {
+    if (this.isInWishlist) {
+      this.wishlistService.removeFromWishlist(this.product.id);
+    } else {
+      this.wishlistService.addToWishlist({
+        id: this.product.id,
+        name: this.product.name,
+        price: this.product.price,
+        image: this.product.images[0],
+        category: this.product.category,
+        rating: this.product.rating,
+        reviews: this.product.reviews
+      });
+    }
+    this.isInWishlist = !this.isInWishlist;
   }
 }

@@ -1,23 +1,29 @@
 <div  class="product-card group">
-    <div class="relative overflow-hidden">
-      <img [src]="product.image" [alt]="product.name" class="w-full h-64 object-cover"/>
-      <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <button class="btn-primary mx-2" (click)="openProductPage(product)">Quick View</button>
-        <button class="text-white">
-          <i class="fas fa-heart text-2xl"></i>
-        </button>
-      </div>
+  <div class="relative overflow-hidden">
+    <img [src]="product.image" [alt]="product.name" class="w-full h-64 object-cover"/>
+    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+      <button [routerLink]="['/product', product.id]" class="btn-primary mx-2">Quick View</button>
+      <button (click)="toggleWishlist(product)" class="text-white">
+        <i class="fas" [class.fa-heart]="isInWishlist(product.id)" [class.fa-heart-o]="!isInWishlist(product.id)" [class.text-red-500]="isInWishlist(product.id)" [class.text-white]="!isInWishlist(product.id)"></i>
+      </button>
     </div>
-    <div class="p-4">
-      <h3 class="text-lg font-semibold mb-2">{{product.name}}</h3>
-      <div class="flex items-center mb-2">
-        <div class="flex text-yellow-400">
-          <i *ngFor="let star of [1,2,3,4,5]" 
-             class="fas fa-star text-sm"
-             [class.text-gray-300]="star > product.rating"></i>
-        </div>
-        <span class="text-sm text-gray-500 ml-2">({{product.reviews}})</span>
+  </div>
+  <div class="p-4">
+    <h3 class="text-lg font-semibold mb-2">{{product.name}}</h3>
+    <div class="flex items-center mb-2">
+      <div class="flex text-yellow-400">
+        <i *ngFor="let star of [1,2,3,4,5]" 
+           class="fas fa-star text-sm"
+           [class.text-gray-300]="star > product.rating"></i>
       </div>
+      <span class="text-sm text-gray-500 ml-2">({{product.reviews}})</span>
+    </div>
+    <div class="flex justify-between items-center">
       <p class="text-primary font-bold">${{product.price}}</p>
+      <button (click)="addToCart(product)" class="text-gray-700 hover:text-primary">
+        <i class="fas fa-shopping-cart"></i>
+      </button>
+      
     </div>
+  </div>
   </div>

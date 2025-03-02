@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { CartComponent } from '../cart/cart.component';
+import { WishlistService } from '../../services/wishlist.service';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +25,7 @@ export class HeaderComponent {
   ]
 
   cartCount$ = this.cartService.cartCount$;
+  wishlistCount$ = this.wishlistService.wishlistCount$;
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService,private wishlistService: WishlistService) {}
 }
