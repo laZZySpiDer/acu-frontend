@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { OrderService, OrderDetails } from '../../services/order.service';
+import { OrderService} from '../../services/order.service';
+import { OrderDetails } from '../../interfaces/order.interface';
 
 @Component({
   selector: 'app-order-confirmation',
@@ -32,7 +33,7 @@ export class OrderConfirmationComponent implements OnInit {
   }
 
   trackOrder() {
-    alert('Order tracking will be implemented soon!');
+    this.router.navigate(['/track-order']);
   }
 
   ngOnDestroy() {

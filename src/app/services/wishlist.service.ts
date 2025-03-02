@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { WishlistItem } from '../interfaces/wishlist.interface';
 
-export interface WishlistItem {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  rating: number;
-  reviews: number;
-}
 
 @Injectable({
   providedIn: 'root'
