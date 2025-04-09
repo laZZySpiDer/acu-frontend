@@ -1,0 +1,188 @@
+<main class="container py-8 mt-20">
+    <div class="max-w-6xl mx-auto">
+      <!-- Profile Header -->
+      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="flex items-center gap-6">
+          <div class="w-24 h-24 rounded-full overflow-hidden">
+            <img [src]="user?.avatar || 'https://via.placeholder.com/150'" 
+                 [alt]="user?.name"
+                 class="w-full h-full object-cover"/>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold mb-2">{{user?.name}}</h1>
+            <p class="text-gray-600">{{user?.email}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Navigation -->
+      <div class="bg-white rounded-lg shadow-md mb-8">
+        <nav class="flex border-b">
+          <button *ngFor="let tab of tabs"
+                  (click)="activeTab = tab.id"
+                  class="px-6 py-3 text-gray-600 hover:text-primary"
+                  [class.text-primary]="activeTab === tab.id"
+                  [class.border-b-2]="activeTab === tab.id"
+                  [class.border-primary]="activeTab === tab.id">
+            {{tab.name}}
+          </button>
+        </nav>
+
+        <!-- Personal Details -->
+        <div *ngIf="activeTab === 'personal'" class="p-6">
+          <form (ngSubmit)="updateProfile()" class="max-w-lg">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
+              <input 
+                type="text"
+                [(ngModel)]="profileForm.name"
+                name="name"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input 
+                type="tel"
+                [(ngModel)]="profileForm.phone"
+                name="phone"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Default Shipping Address
+              </label>
+              <textarea 
+                [(ngModel)]="profileForm.address"
+                name="address"
+                rows="3"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Orders -->
+        <div *ngIf="activeTab === 'orders'" class="p-6">
+          <div class="space-y-6">
+            <div *ngFor="let order of orders" 
+                 class="border rounded-lg p-4">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="font-semibold">Order #{{order.orderId}}</h3>
+                  <p class="text-sm text-gray-600">
+                    Tracking Number: {{order.trackingNumber}}
+                  </p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-sm"
+                      [class.bg-yellow-100]="order.currentStatus === 'processing'"
+                      [class.text-yellow-800]="order.currentStatus === 'processing'"
+                      [class.bg-blue-100]="order.currentStatus === 'shipped'"
+                      [class.text-blue-800]="order.currentStatus === 'shipped'"
+                      [class.bg-green-100]="order.currentStatus === 'delivered'"
+                      [class.text-green-800]="order.currentStatus === 'delivered'">
+                  {{order.currentStatus | titlecase}}
+                </span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-1">
+                    Estimated Delivery
+                  </h4>
+                  <p>{{formatDate(order.estimatedDelivery)}}</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-gray-700 mb-1">
+                    Shipping Address
+                  </h4>
+                  <p class="text-sm">
+                    {{order.shippingAddress.name}}<br>
+                    {{order.shippingAddress.address}}<br>
+                    {{order.shippingAddress.city}}, {{order.shippingAddress.state}} {{order.shippingAddress.zipCode}}
+                  </p>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <div *ngFor="let item of order.items" 
+                     class="flex items-center gap-4">
+                  <img [src]="item.image" 
+                       [alt]="item.name"
+                       class="w-16 h-16 object-cover rounded"/>
+                  <div>
+                    <h4 class="font-medium">{{item.name}}</h4>
+                    <p class="text-sm text-gray-600">Qty: {{item.quantity}}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 flex justify-end">
+                <a [routerLink]="['/track-order']" 
+                   [queryParams]="{id: order.orderId}"
+                   class="text-primary hover:underline">
+                  Track Order
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security -->
+        <div *ngIf="activeTab === 'security'" class="p-6">
+          <form (ngSubmit)="updatePassword()" class="max-w-lg">
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Current Password
+              </label>
+              <input 
+                type="password"
+                [(ngModel)]="passwordForm.currentPassword"
+                name="currentPassword"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                New Password
+              </label>
+              <input 
+                type="password"
+                [(ngModel)]="passwordForm.newPassword"
+                name="newPassword"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Confirm New Password
+              </label>
+              <input 
+                type="password"
+                [(ngModel)]="passwordForm.confirmPassword"
+                name="confirmPassword"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+
+            <button type="submit" class="btn-primary">
+              Update Password
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>

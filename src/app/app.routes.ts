@@ -10,6 +10,10 @@ export const routes: Routes = [
     path: 'shop',
     loadComponent: () => 
       import('./pages/shop/shop.component').then(m => m.ShopComponent)
+  },{
+    path: 'experience',
+    loadComponent: () => 
+      import('./pages/experience/experience.component').then(m => m.ExperienceComponent)
   },
   {
     path: 'product/:id',
@@ -20,6 +24,11 @@ export const routes: Routes = [
     path: 'checkout',
     loadComponent: () =>
       import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent)
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./pages/profile/profile.component').then(m => m.ProfileComponent)
   },
   {
     path: 'order-confirmation',
@@ -35,5 +44,15 @@ export const routes: Routes = [
     path: 'track-order',
     loadComponent: () =>
       import('./pages/track-order/track-order.component').then(m => m.TrackOrderComponent)
-  }
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./pages/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./pages/register/register.component').then(m => m.RegisterComponent)
+  },
 ];

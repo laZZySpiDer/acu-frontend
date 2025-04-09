@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component';
@@ -6,17 +6,19 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { RouterModule } from '@angular/router';
+import { ProductsApiService } from '../../services/products-api.service';
+import { Product } from '../../interfaces/product.interface';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  category: string;
-  images: string[];
-  inStock: boolean;
-}
+// interface Product {
+//   id: number;
+//   name: string;
+//   price: number;
+//   rating: number;
+//   reviews: number;
+//   category: string;
+//   images: string[];
+//   inStock: boolean;
+// }
 
 @Component({
   selector: 'app-shop',
@@ -25,7 +27,7 @@ interface Product {
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
-export class ShopComponent {
+export class ShopComponent implements OnInit {
   viewMode: 'grid' | 'list' = 'grid';
   sortBy: string = 'newest';
   
@@ -46,51 +48,30 @@ export class ShopComponent {
     'Jewelry'
   ];
 
-  products: Product[] = [
-    {
-      id: 1,
-      name: 'Handwoven Basket',
-      price: 49.99,
-      rating: 5,
-      reviews: 128,
-      category: 'Home Decor',
-      images: ['https://images.unsplash.com/photo-1595408076683-5d0c643e4f11?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'],
-      inStock: true
-    },
-    {
-      id: 2,
-      name: 'Ceramic Vase',
-      price: 34.99,
-      rating: 4,
-      reviews: 89,
-      category: 'Home Decor',
-      images: ['https://images.unsplash.com/photo-1578500351865-0a4734e8cd6b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'],
-      inStock: true
-    },
-    {
-      id: 3,
-      name: 'Macrame Wall Hanging',
-      price: 79.99,
-      rating: 5,
-      reviews: 156,
-      category: 'Home Decor',
-      images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'],
-      inStock: false
-    },
-    {
-      id: 4,
-      name: 'Handmade Soap Set',
-      price: 24.99,
-      rating: 4,
-      reviews: 67,
-      category: 'Handmade Crafts',
-      images: ['https://images.unsplash.com/photo-1600857062241-98e5dba7f214?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'],
-      inStock: true
-    },
+  products : Product[] = [
     // Add more products as needed
   ];
 
-  constructor(private wishlistService: WishlistService,private cartService: CartService) {}
+  constructor(private wishlistService: WishlistService,private cartService: CartService, private productsApiService: ProductsApiService) {}
+  
+    ngOnInit() {
+      this.productsApiService.getProducts().subscribe((products:any) => {
+        console.log(products);
+        this.products = products.products;
+        console.log(this.products);
+        this.products.forEach(product => {
+          if(product.sizes.length > 0){
+            product.price = product.sizes[0].price;
+            product.stock_quantity = product.sizes[0].stock_quantity;
+            product.dimensions = product.sizes[0].dimensions;
+            product.weight = product.sizes[0].weight;
+            product.material = product.sizes[0].material;
+            product.general_images = product.sizes[0].images;
+          }
+        })
+      });
+    }
+  
 
 
   get filteredProducts(): Product[] {
@@ -98,8 +79,8 @@ export class ShopComponent {
       .filter(product => {
         if (this.filters.minPrice && product.price < this.filters.minPrice) return false;
         if (this.filters.maxPrice && product.price > this.filters.maxPrice) return false;
-        if (this.filters.categories.length && !this.filters.categories.includes(product.category)) return false;
-        if (this.filters.inStock && !product.inStock) return false;
+        if (this.filters.categories.length && !this.filters.categories.includes(product.category.name)) return false;
+        if (this.filters.inStock && !product.stock_quantity) return false;
         if (this.filters.minRating && product.rating < this.filters.minRating) return false;
         return true;
       })
@@ -146,7 +127,7 @@ export class ShopComponent {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.images[0],
+      image: product.general_images[0].image_link,
       quantity: 1,
       color:  undefined,
       size: undefined
@@ -165,8 +146,8 @@ export class ShopComponent {
         id: product.id,
         name: product.name,
         price: product.price,
-        image: product.images[0],
-        category: product.category,
+        image: product.general_images[0].image_link,
+        category: product.category.name,
         rating: product.rating,
         reviews: product.reviews
       });

@@ -28,9 +28,40 @@
 
         <!-- User Icons -->
         <div class="flex items-center space-x-4">
-          <button class="text-gray-700 hover:text-primary">
-            <i class="fas fa-user"></i>
-          </button>
+          <div class="relative">
+            <button class="text-gray-700 hover:text-primary p-2"
+                    (mouseenter)="showDropdown = true">
+              <i class="fas fa-user"></i>
+            </button>
+            <!-- User Menu Dropdown -->
+            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1"
+                 [class.hidden]="!showDropdown"
+                 (mouseleave)="showDropdown = false"
+                 (mouseenter)="showDropdown = true">
+              <ng-container *ngIf="currentUser$ | async as user; else loginLinks">
+                <div class="px-4 py-2 text-sm text-gray-700 border-b">
+                  Hello, {{user.name}}
+                </div>
+                <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <i class="fas fa-user-circle mr-2"></i>Profile
+                </a>
+                <a routerLink="/profile" [queryParams]="{tab: 'orders'}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <i class="fas fa-box mr-2"></i>Orders
+                </a>
+                <button (click)="logout()" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+              </ng-container>
+              <ng-template #loginLinks>
+                <a routerLink="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+                <a routerLink="/auth/register" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <i class="fas fa-user-plus mr-2"></i>Register
+                </a>
+              </ng-template>
+            </div>
+          </div>
           <button routerLink="/wishlist" class="text-gray-700 hover:text-primary relative">
             <i class="fas fa-heart"></i>
             <span *ngIf="wishlistCount$ | async as count"
@@ -39,13 +70,13 @@
             </span>
           </button>
           <button (click)="cart.open()" 
-                    class="text-gray-700 hover:text-primary relative">
-              <i class="fas fa-shopping-cart"></i>
-              <span *ngIf="cartCount$ | async as count"
-                    class="absolute -top-2 -right-2 bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                {{count}}
-              </span>
-            </button>
+                  class="text-gray-700 hover:text-primary relative">
+            <i class="fas fa-shopping-cart"></i>
+            <span *ngIf="cartCount$ | async as count"
+                  class="absolute -top-2 -right-2 bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+              {{count}}
+            </span>
+          </button>
         </div>
 
         <!-- Mobile Menu Button -->

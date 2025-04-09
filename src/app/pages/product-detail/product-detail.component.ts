@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,10 @@ import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { Product, ProductSize, Image } from '../../interfaces/product.interface';
 import { ProductsApiService } from '../../services/products-api.service';
+import { AuthService} from '../../services/auth.service';
+import { ReviewFormComponent } from '../../components/review-form/review-form.component';
+import { Review, ReviewsService } from '../../services/review.service';
+import { UserLoginResponse } from '../../interfaces/user.interface';
 
 
 
@@ -15,43 +19,31 @@ import { ProductsApiService } from '../../services/products-api.service';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,ReviewFormComponent],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
   product!: Product;
-  reviews = [
-    {
-      name: 'Sarah Johnson',
-      rating: 5,
-      comment: 'Beautiful craftsmanship! The basket is even more stunning in person.',
-      avatar: 'https://randomuser.me/api/portraits/women/1.jpg',
-      date: '2024-02-15'
-    },
-    {
-      name: 'Michael Chen',
-      rating: 4,
-      comment: 'Great quality and perfect size for my needs. Would buy again.',
-      avatar: 'https://randomuser.me/api/portraits/men/2.jpg',
-      date: '2024-02-10'
-    }
-  ];
-
   selectedImage!: Image | null;
   selectedColor: string | null = null;
   selectedSize: string | null = null;
   quantity: number = 1;
   Math = Math;
   isInWishlist: boolean = false;
+  currentUser: UserLoginResponse | null = null;
+  reviews: Review[] = [];
 
   constructor(
     private router: Router,
     private cartService: CartService,
     private wishlistService: WishlistService,
     private route: ActivatedRoute,
-    private productApi: ProductsApiService
+    private authService: AuthService,
+    private productApi: ProductsApiService,
+    private reviewsService: ReviewsService
   ) {}
+
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -62,6 +54,8 @@ export class ProductDetailComponent implements OnInit {
       this.getProduct(productId);
     })
    
+    // this.currentUser = this.authService.getCurrentUser();
+    this.currentUser = null;
   }
 
   getProduct(productId: number) {
@@ -77,6 +71,8 @@ export class ProductDetailComponent implements OnInit {
         this.product.weight = this.product.sizes[0].weight;
         this.product.material = this.product.sizes[0].material;
       }
+
+      this.loadReviews();
     });
   }
 
@@ -125,4 +121,38 @@ export class ProductDetailComponent implements OnInit {
     this.product.weight = size.weight;
     this.product.material = size.material;
   }
+
+  onReviewSubmitted(review: {rating: number, comment: string}) {
+    if (!this.currentUser) return;
+
+    const newReview = {
+      productId: this.product.id,
+      userId: this.currentUser.id,
+      userName: this.currentUser.name,
+      userAvatar: this.currentUser.avatar || 'https://randomuser.me/api/portraits/lego/1.jpg',
+      rating: review.rating,
+      comment: review.comment
+    };
+
+    this.reviewsService.addReview(newReview)
+      .subscribe(() => {
+        this.loadReviews();
+      });
+  }
+
+  loadReviews() {
+    this.reviewsService.getProductReviews(this.product.id)
+      .subscribe(reviews => {
+        this.reviews = reviews;
+        console.log(reviews);
+      });
+  }
+
+  markHelpful(review: Review) {
+    this.reviewsService.markHelpful(review.id, this.product.id)
+      .subscribe(() => {
+        this.loadReviews();
+      });
+  }
+
 }
