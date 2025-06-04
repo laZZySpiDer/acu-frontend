@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { OrderService} from '../../services/order.service';
@@ -18,18 +18,21 @@ export class OrderConfirmationComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
     // Redirect to home if no order details are available
-    this.orderDetails$.subscribe((details:any) => {
-      if (!details) {
-        this.router.navigate(['/']);
-      }else{
-        this.orderDetails = details;
-      }
-    });
+    // this.orderDetails$.subscribe((details:any) => {
+    //   if (!details) {
+    //     this.router.navigate(['/']);
+    //   }else{
+    //     this.orderDetails = details;
+    //   }
+    // });
+    const transactionId = this.activatedRoute.snapshot.params['transactionId'];
+    console.log('Transaction ID:', transactionId);
   }
 
   trackOrder() {

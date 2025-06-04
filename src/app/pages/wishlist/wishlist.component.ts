@@ -29,7 +29,8 @@ export class WishlistComponent {
       name: item.name,
       price: item.price,
       image: item.image,
-      quantity: 1
+      quantity: 1,
+      size: item.size
     });
   }
  }

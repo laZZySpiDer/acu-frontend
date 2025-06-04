@@ -31,6 +31,21 @@ export const routes: Routes = [
       import('./pages/profile/profile.component').then(m => m.ProfileComponent)
   },
   {
+    path: 'order-confirmation/:transactionId',
+    loadComponent: () =>
+      import('./pages/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmationComponent)
+  },
+    {
+    path: 'payment-success',
+    loadComponent: () =>
+      import('./pages/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent)
+  },
+  {
+    path: 'payment-failure',
+    loadComponent: () =>
+      import('./pages/payment-failure/payment-failure.component').then(m => m.PaymentFailureComponent)
+  },
+  {
     path: 'order-confirmation',
     loadComponent: () =>
       import('./pages/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmationComponent)

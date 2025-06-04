@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
@@ -11,12 +11,15 @@ import { WishlistService } from '../../services/wishlist.service';
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'  
 })
-export class ProductCardComponent {
+export class ProductCardComponent implements OnChanges {
 
   @Input() product: any;
   constructor(private router: Router, private wishlistService: WishlistService,
     private cartService: CartService) {}
  
+  ngOnChanges(changes: any) {
+    // console.log('ProductCardComponent changes:', changes);
+  }
 
   isInWishlist(productId: number): boolean {
     return this.wishlistService.isInWishlist(productId);
@@ -30,7 +33,7 @@ export class ProductCardComponent {
         id: product.id,
         name: product.name,
         price: parseFloat(product.price),
-        image: product.image,
+        image: product.main_image_link?.image_link || '',
         category: product.category,
         rating: product.rating,
         reviews: product.reviews
@@ -42,9 +45,10 @@ export class ProductCardComponent {
     this.cartService.addToCart({
       id: product.id,
       name: product.name,
-      price: parseFloat(product.price),
-      image: product.image,
-      quantity: 1
+      price: parseFloat(product.sizes[0].price),
+      image: product.main_image_link?.image_link || '',
+      quantity: 1,
+      size: product.sizes[0]
     });
   }
  }

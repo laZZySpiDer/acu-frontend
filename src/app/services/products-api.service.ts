@@ -11,6 +11,9 @@ export class ProductsApiService {
 
   constructor(private http: HttpClient) { }
 
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(ApiUrlConstants.GET_CATEGORIES);
+  }
 
   getProducts(): Observable<any[]> {
     return this.http.get<any[]>(ApiUrlConstants.GET_PRODUCTS);
@@ -25,5 +28,25 @@ export class ProductsApiService {
   getProductsByCategory(category:string): Observable<any[]> {
     return this.http.get<any[]>(`${ApiUrlConstants.GET_CATEGORIES}?category=${category}`)
   }
+
+  addToCart(productId: number, quantity: number, product_variant_id: number): Observable<any> {
+    return this.http.post<any>(ApiUrlConstants.ADD_TO_CART, { product_id : productId, quantity, product_variant_id });
+  }
+  removeFromCart(productId: number,product_variant_id: number): Observable<any> {
+    return this.http.post<any>(ApiUrlConstants.REMOVE_FROM_CART, { product_id : productId, product_variant_id });
+  }
+  // updateCart(productId: number, quantity: number): Observable<any> {
+  //   return this.http.put<any>(`${ApiUrlConstants.UPDATE_CART}/${productId}`, { quantity });
+  // }
+  getCart(): Observable<any[]> {
+    return this.http.get<any[]>(ApiUrlConstants.GET_CART);
+  }
+
+  initiatePayment(orderDetails:any): Observable<any> {
+    return this.http.post<any>(ApiUrlConstants.INITIATE_PAYMENT, orderDetails);
+  }
+  // clearCart(): Observable<any> {
+  //   return this.http.delete<any>(ApiUrlConstants.CLEAR_CART);
+  // }
 
 }

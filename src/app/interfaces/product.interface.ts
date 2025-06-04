@@ -17,6 +17,8 @@
 //   sizes?: string[];
 // }
 
+import { Category } from "./category.interface";
+
 
 
 export interface Product {
@@ -36,6 +38,7 @@ export interface Product {
     dimensions: string;
     weight: number;
     material: string;
+    main_image_link: Image;
   }
   
   export interface Image {
@@ -52,10 +55,11 @@ export interface Product {
     dimensions: string;
     weight: number;
     material: string;
+    product_variant_id: number;
   }
   
-  export interface Category {
-    id: number;
-    name: string;
-  }
+  // export interface Category {
+  //   id: number;
+  //   name: string;
+  // }
   

@@ -8,6 +8,9 @@ import { CartService } from '../../services/cart.service';
 import { OrderService } from '../../services/order.service';
 import { take } from 'rxjs';
 import { OrderDetails } from '../../interfaces/order.interface';
+import { ProductsApiService } from '../../services/products-api.service';
+import { AuthApiService } from '../../services/auth-api.service';
+import { AuthService } from '../../services/auth.service';
 
 interface ShippingMethod {
   id: string;
@@ -66,7 +69,8 @@ export class CheckoutComponent {
     cvv: ''
   };
 
-  constructor(private cartService: CartService,private orderService: OrderService, private router: Router) {}
+  constructor(private cartService: CartService,private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
+     private _auth: AuthService) {}
 
   getSelectedShippingPrice(): number {
     const method = this.shippingMethods.find(m => m.id === this.selectedShippingMethod);
@@ -94,7 +98,7 @@ export class CheckoutComponent {
     });
 
     // Clear cart
-    this.cartService.clearCart();
+    // this.cartService.clearCart();
     let order: OrderDetails = {
       items: [],
       shipping: this.getSelectedShippingPrice(),
@@ -106,12 +110,20 @@ export class CheckoutComponent {
         ...this.formData
       },
       estimatedDelivery: '',
-      subtotal: 100
+      subtotal: 0,
+      userId: this._auth.getCurrentUser()?.id
     }
     this.cartItems$.pipe(take(1)).subscribe(items => order.items = items)
     this.orderService.setOrderDetails(order);
-    this.router.navigate(['/order-confirmation']);
+
+    this._productsApi.initiatePayment(order).subscribe((response:any)=>{
+      console.log('Payment Response : ',response)
+      // window.location.href = response.payment_url;
+      window.location.href = response.data.instrumentResponse.redirectInfo.url;
+    });
+
+    // this.router.navigate(['/order-confirmation']);
     // TODO: Redirect to order confirmation page
-    alert('Order placed successfully!');
+    // alert('Order placed successfully!');
   }
 }

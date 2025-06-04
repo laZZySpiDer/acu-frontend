@@ -1,3 +1,5 @@
+import { ProductSize } from "./product.interface";
+
 export interface OrderDetails {
     orderId: string;
     shippingAddress: {
@@ -18,10 +20,11 @@ export interface OrderDetails {
       quantity: number;
       image: string;
       color?: string;
-      size?: string;
+      size?: ProductSize;
     }>;
     subtotal: number;
     shipping: number;
     tax: number;
     total: number;
+    userId?: string;
   }

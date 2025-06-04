@@ -213,12 +213,12 @@
               <h3 class="font-medium">{{item.name}}</h3>
               <p class="text-sm text-gray-600">
                 Qty: {{item.quantity}}
-                <span *ngIf="item.color">, Color: {{item.color}}</span>
-                <span *ngIf="item.size">, Size: {{item.size}}</span>
+                <!-- <span *ngIf="item.color">, Color: {{item.color}}</span> -->
+                <span *ngIf="item.size">, Size: {{item.size.size}}</span>
               </p>
             </div>
             <span class="font-semibold">
-              ${{(item.price * item.quantity).toFixed(2)}}
+              ₹{{(item.price * item.quantity).toFixed(2)}}
             </span>
           </div>
         </div>
@@ -227,22 +227,22 @@
         <div class="space-y-2 py-4 border-t border-b">
           <div class="flex justify-between">
             <span>Subtotal</span>
-            <span>${{cartTotal$ | async | number:'1.2-2'}}</span>
+            <span>₹{{cartTotal$ | async | number:'1.2-2'}}</span>
           </div>
           <div class="flex justify-between">
             <span>Shipping</span>
-            <span>${{getSelectedShippingPrice() | number:'1.2-2'}}</span>
+            <span>₹{{getSelectedShippingPrice() | number:'1.2-2'}}</span>
           </div>
           <div class="flex justify-between">
             <span>Tax</span>
-            <span>${{calculateTax() | number:'1.2-2'}}</span>
+            <span>₹{{calculateTax() | number:'1.2-2'}}</span>
           </div>
         </div>
 
         <!-- Total -->
         <div class="flex justify-between pt-4 text-lg font-bold">
           <span>Total</span>
-          <span>${{calculateTotal() | number:'1.2-2'}}</span>
+          <span>₹{{calculateTotal() | number:'1.2-2'}}</span>
         </div>
 
         <!-- Place Order Button -->

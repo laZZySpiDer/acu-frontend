@@ -8,29 +8,22 @@ import { WishlistService } from '../../services/wishlist.service';
 import { RouterModule } from '@angular/router';
 import { ProductsApiService } from '../../services/products-api.service';
 import { Product } from '../../interfaces/product.interface';
+import { Category } from '../../interfaces/category.interface';
 
-// interface Product {
-//   id: number;
-//   name: string;
-//   price: number;
-//   rating: number;
-//   reviews: number;
-//   category: string;
-//   images: string[];
-//   inStock: boolean;
-// }
+
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css']
 })
 export class ShopComponent implements OnInit {
   viewMode: 'grid' | 'list' = 'grid';
   sortBy: string = 'newest';
-  
+  showMobileFilters = false;
+
   filters = {
     minPrice: null as number | null,
     maxPrice: null as number | null,
@@ -39,39 +32,45 @@ export class ShopComponent implements OnInit {
     minRating: null as number | null
   };
 
-  categories = [
-    'Handmade Crafts',
-    'Accessories',
-    'Apparel',
-    'Home Decor',
-    'Art & Collectibles',
-    'Jewelry'
-  ];
+  categories : Category[] = [];
 
-  products : Product[] = [
+  products: Product[] = [
     // Add more products as needed
   ];
 
-  constructor(private wishlistService: WishlistService,private cartService: CartService, private productsApiService: ProductsApiService) {}
-  
-    ngOnInit() {
-      this.productsApiService.getProducts().subscribe((products:any) => {
-        console.log(products);
-        this.products = products.products;
-        console.log(this.products);
-        this.products.forEach(product => {
-          if(product.sizes.length > 0){
-            product.price = product.sizes[0].price;
-            product.stock_quantity = product.sizes[0].stock_quantity;
-            product.dimensions = product.sizes[0].dimensions;
-            product.weight = product.sizes[0].weight;
-            product.material = product.sizes[0].material;
-            product.general_images = product.sizes[0].images;
-          }
-        })
-      });
-    }
-  
+  constructor(private wishlistService: WishlistService, private cartService: CartService, private productsApiService: ProductsApiService) { }
+
+  ngOnInit() {
+
+    this.getProducts();
+    this.getCategories();
+
+  }
+
+  getCategories() {
+    this.productsApiService.getCategories().subscribe((categories: any) => {
+      this.categories = categories.categories.filter((elem:any) => elem.parent_category_id === null);
+      console.log(this.categories);
+    });
+  }
+
+  getProducts() {
+    this.productsApiService.getProducts().subscribe((products: any) => {
+      console.log(products);
+      this.products = products.products;
+      console.log(this.products);
+      this.products.forEach(product => {
+        if (product.sizes.length > 0) {
+          product.price = product.sizes[0].price;
+          product.stock_quantity = product.sizes[0].stock_quantity;
+          product.dimensions = product.sizes[0].dimensions;
+          product.weight = product.sizes[0].weight;
+          product.material = product.sizes[0].material;
+          product.general_images = product.sizes[0].images;
+        }
+      })
+    });
+  }
 
 
   get filteredProducts(): Product[] {
@@ -98,10 +97,10 @@ export class ShopComponent implements OnInit {
       });
   }
 
-  toggleCategory(category: string) {
-    const index = this.filters.categories.indexOf(category);
+  toggleCategory(category: Category) {
+    const index = this.filters.categories.indexOf(category.name);
     if (index === -1) {
-      this.filters.categories.push(category);
+      this.filters.categories.push(category.name);
     } else {
       this.filters.categories.splice(index, 1);
     }
@@ -129,8 +128,7 @@ export class ShopComponent implements OnInit {
       price: product.price,
       image: product.general_images[0].image_link,
       quantity: 1,
-      color:  undefined,
-      size: undefined
+      size: product.sizes[0]
     });
   }
 

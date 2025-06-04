@@ -60,7 +60,7 @@
                 <h3 class="font-semibold mb-2">Size</h3>
                 <div class="flex gap-2">
                     <button *ngFor="let size of product.sizes" (click)="changeSizeOfProduct(size)"
-                        [class.bg-primary]="selectedSize === size.size" [class.text-white]="selectedSize === size.size"
+                        [class.bg-primary]="selectedSize.product_variant_id === size.product_variant_id" [class.text-white]="selectedSize.product_variant_id === size.product_variant_id"
                         class="px-4 py-2 border rounded-md hover:border-primary">
                         {{size.size}}
                     </button>
@@ -69,16 +69,19 @@
 
             <!-- Quantity -->
             <div class="mb-6">
-                <h3 class="font-semibold mb-2">Quantity</h3>
+                <h3 class="font-semibold mb-2">Dolls in box</h3>
                 <div class="flex items-center gap-2">
-                    <button (click)="quantity = Math.max(1, quantity - 1)" class="px-3 py-1 border rounded-md">
+                    <!-- <button (click)="quantity = Math.max(1, quantity - 1)" class="px-3 py-1 border rounded-md">
                         <i class="fas fa-minus"></i>
                     </button>
                     <input type="number" [(ngModel)]="quantity" min="1"
                         class="w-16 text-center border rounded-md px-2 py-1" />
                     <button (click)="quantity = quantity + 1" class="px-3 py-1 border rounded-md">
                         <i class="fas fa-plus"></i>
-                    </button>
+                    </button> -->
+                    <select (change)="quantityChange($event)" [(ngModel)]="quantity"  class="border rounded-md px-2 py-1">
+                        <option *ngFor="let quantityType of quantityDropdownValuesForDolls" class="block px-4 py-2 text-sm text-gray-700" [value]="quantityType.value">{{quantityType.label}}</option>
+                    </select>
                 </div>
             </div>
 

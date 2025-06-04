@@ -27,13 +27,20 @@ export class ProductDetailComponent implements OnInit {
   product!: Product;
   selectedImage!: Image | null;
   selectedColor: string | null = null;
-  selectedSize: string | null = null;
+  selectedSize!: ProductSize;
   quantity: number = 1;
   Math = Math;
   isInWishlist: boolean = false;
   currentUser: UserLoginResponse | null = null;
   reviews: Review[] = [];
 
+  quantityDropdownValuesForDolls = [
+    {value: 1, label: 'Single Doll'},
+    {value: 2, label: 'Couple Dolls'},
+    {value: 3, label: 'Family Set of 3'},
+    {value: 4, label: 'Family Set of 4'},
+    {value: 5, label: 'Family Set of 5'},
+  ];
   constructor(
     private router: Router,
     private cartService: CartService,
@@ -54,8 +61,8 @@ export class ProductDetailComponent implements OnInit {
       this.getProduct(productId);
     })
    
-    // this.currentUser = this.authService.getCurrentUser();
-    this.currentUser = null;
+    this.currentUser = this.authService.getCurrentUser();
+    // this.currentUser = null;
   }
 
   getProduct(productId: number) {
@@ -64,7 +71,7 @@ export class ProductDetailComponent implements OnInit {
       if (this.product.sizes) {
         this.product.general_images = this.product.sizes[0].images;
         this.selectedImage = this.product.general_images[0];
-        this.selectedSize = this.product.sizes[0].size;
+        this.selectedSize = this.product.sizes[0];
         this.product.price = this.product.sizes[0].price;
         this.product.stock_quantity = this.product.sizes[0].stock_quantity;
         this.product.dimensions = this.product.sizes[0].dimensions;
@@ -76,15 +83,18 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  quantityChange(event: Event) {
+    this.quantity = +(event.target as HTMLInputElement).value;
+  }
+
   addToCart() {
     this.cartService.addToCart({
       id: this.product.id,
       name: this.product.name,
       price: this.product.price,
       image: this.product.general_images[0].image_link,
-      quantity: this.quantity,
-      color: this.selectedColor || undefined,
-      size: this.selectedSize || undefined
+      quantity: +this.quantity,
+      size: this.selectedSize
     });
   }
 
@@ -112,7 +122,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   changeSizeOfProduct(size: ProductSize) {
-    this.selectedSize = size.size
+    this.selectedSize = size
     this.product.price = size.price;
     this.product.stock_quantity = size.stock_quantity;
     this.product.general_images = size.images;

@@ -33,8 +33,9 @@ export class LoginComponent {
     this.error = '';
 
     this.authService.login(this.email, this.password).subscribe({
-      next: (user: UserLoginResponse) => {
-        console.log(user);
+      next: (user: any) => {
+        console.log(user.user);
+        console.log(user.user.token);
         this.authService.setCurrentUser(user);
         this.router.navigate(['/']);
       },

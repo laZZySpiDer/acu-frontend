@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent{
   menuList = [
     {
       name: 'Home',
@@ -45,5 +45,11 @@ export class HeaderComponent {
   logout(){
     this.showDropdown = false;
     console.log('logout');
+    this.authService.logout().subscribe({
+      next: (response:any) => {
+        console.log('Logout Response',response);
+        this.authService.setCurrentUser(null);
+      }
+    });
   }
 }

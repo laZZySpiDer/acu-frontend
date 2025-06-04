@@ -15,15 +15,27 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private authApi: AuthApiService) {
-
+    const storedUser = sessionStorage.getItem('currentUser');
+    if (storedUser) {
+      const user: UserLoginResponse = JSON.parse(storedUser);
+      this.currentUserSubject.next(user);
+    }
   }
 
   isLoggedIn(): boolean {
     return !!this.currentUserSubject.value;
   }
 
-  setCurrentUser(user: UserLoginResponse) {
-    this.currentUserSubject.next(user);
+  setCurrentUser(user: any) {
+    if(!user || !user.user) {
+      this.currentUserSubject.next(null);
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('currentUser');
+      return;
+    }
+    this.currentUserSubject.next(user.user);
+    sessionStorage.setItem('token', user.user.token);
+    sessionStorage.setItem('currentUser', JSON.stringify(user.user));
   }
 
   getCurrentUser(): UserLoginResponse | null {
@@ -36,5 +48,6 @@ export class AuthService {
 
   logout() {
     this.currentUserSubject.next(null);
+    return this.authApi.logout();
   }
 }

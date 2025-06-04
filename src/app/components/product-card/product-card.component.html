@@ -1,6 +1,6 @@
 <div  class="product-card group">
   <div class="relative overflow-hidden">
-    <img [src]="product.image" [alt]="product.name" class="w-full h-64 object-cover"/>
+    <img [src]="product.main_image_link?.image_link" [alt]="product.name" class="w-full h-64 object-cover"/>
     <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
       <button [routerLink]="['/product', product.id]" class="btn-primary mx-2">Quick View</button>
       <button (click)="toggleWishlist(product)" class="text-white">
@@ -9,7 +9,8 @@
     </div>
   </div>
   <div class="p-4">
-    <h3 class="text-lg font-semibold mb-2">{{product.name}}</h3>
+    <h3 class="text-lg font-semibold">{{product.name}}</h3>
+    <h6 class="text-sm mb-2 italic">{{product.category.name}}</h6>
     <div class="flex items-center mb-2">
       <div class="flex text-yellow-400">
         <i *ngFor="let star of [1,2,3,4,5]" 
@@ -20,11 +21,10 @@
        <span class="text-sm text-gray-500 ml-2">(69)</span>
     </div>
     <div class="flex justify-between items-center">
-      <p class="text-primary font-bold">₹{{product.price}}</p>
+      <p class="text-primary font-bold">₹{{!!(product.sizes[0].price)  ? (product.sizes[0].price):  product.price}}</p>
       <button (click)="addToCart(product)" class="text-gray-700 hover:text-primary">
         <i class="fas fa-shopping-cart"></i>
-      </button>
-      
+      </button> 
     </div>
   </div>
   </div>
