@@ -90,7 +90,7 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart() {
     this.cartService.addToCart({
-      productId: `this.product.id`,
+      productId: `${this.product.id}`,
       productName: this.product.name,
       price: +this.product.price,
       mainImageLink: this.product.generalImages[0],

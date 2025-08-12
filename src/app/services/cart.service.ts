@@ -49,20 +49,24 @@ export class CartService {
   private loadCartItems() {
     if (this._authApi.isLoggedIn()) {
       this._productsApi.getCart().subscribe((res:any) => {
-        const items = res.items.map((item: any) => ({
-          id: item.product_id,
+        console.log('Cart items loaded from API:', res);
+        const items : CartItem[] = res.items.map((item: CartItem) => ({
+          productId: item.productId,
           quantity: +item.quantity,
-          price: parseFloat(item.size.price),
-          name: item.product_name,
-          image: item.main_image_link?.image_link || '',
+          price: typeof item.size.price === 'string' ? parseFloat(item.size.price) : item.size.price,
+          productName: item.productName,
+          mainImageLink: item.mainImageLink,
           size: item.size
         }));
         this.cartItems.next(items);
+        console.log('Cart items loaded:', this.cartItems.value);
       });
     } else {
       const saved = localStorage.getItem('cart');
       this.cartItems.next(saved ? JSON.parse(saved) : []);
     }
+
+    
   }
 
   addToCart(item: CartItem) {
