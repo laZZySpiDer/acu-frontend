@@ -1,21 +1,4 @@
-// export interface Product {
-//   id: number;
-//   name: string;
-//   price: number;
-//   rating: number;
-//   reviews: number;
-//   category: string;
-//   images: string[];
-//   inStock: boolean;
-//   description: string;
-//   details: {
-//     material: string;
-//     dimensions: string;
-//     weight: string;
-//   };
-//   colors?: string[];
-//   sizes?: string[];
-// }
+
 
 import { Category } from "./category.interface";
 

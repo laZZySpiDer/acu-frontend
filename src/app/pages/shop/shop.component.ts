@@ -7,8 +7,9 @@ import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { RouterModule } from '@angular/router';
 import { ProductsApiService } from '../../services/products-api.service';
-import { Product } from '../../interfaces/product.interface';
+// import { Product } from '../../interfaces/product.interface';
 import { Category } from '../../interfaces/category.interface';
+import { Product } from '../../interfaces/products/product.interface';
 
 
 
@@ -61,12 +62,12 @@ export class ShopComponent implements OnInit {
       console.log(this.products);
       this.products.forEach(product => {
         if (product.sizes.length > 0) {
-          product.price = product.sizes[0].price;
-          product.stock_quantity = product.sizes[0].stock_quantity;
+          product.price = product.sizes[0].price.toString();
+          product.stockQuantity = product.sizes[0].stockQuantity.toString();
           product.dimensions = product.sizes[0].dimensions;
-          product.weight = product.sizes[0].weight;
+          product.weight = product.sizes[0].weight.toString();
           product.material = product.sizes[0].material;
-          product.general_images = product.sizes[0].images;
+          product.generalImages = product.sizes[0].images;
         }
       })
     });
@@ -76,21 +77,21 @@ export class ShopComponent implements OnInit {
   get filteredProducts(): Product[] {
     return this.products
       .filter(product => {
-        if (this.filters.minPrice && product.price < this.filters.minPrice) return false;
-        if (this.filters.maxPrice && product.price > this.filters.maxPrice) return false;
+        if (this.filters.minPrice && +product.price < this.filters.minPrice) return false;
+        if (this.filters.maxPrice && +product.price > this.filters.maxPrice) return false;
         if (this.filters.categories.length && !this.filters.categories.includes(product.category.name)) return false;
-        if (this.filters.inStock && !product.stock_quantity) return false;
-        if (this.filters.minRating && product.rating < this.filters.minRating) return false;
+        if (this.filters.inStock && !product.stockQuantity) return false;
+        if (this.filters.minRating && 4 < this.filters.minRating) return false;
         return true;
       })
       .sort((a, b) => {
         switch (this.sortBy) {
           case 'price-low':
-            return a.price - b.price;
+            return +a.price - +b.price;
           case 'price-high':
-            return b.price - a.price;
+            return +b.price - +a.price;
           case 'rating':
-            return b.rating - a.rating;
+            return 4 - 5;
           default: // newest
             return b.id - a.id;
         }
@@ -123,10 +124,10 @@ export class ShopComponent implements OnInit {
 
   addToCart(product: Product) {
     this.cartService.addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.general_images[0].image_link,
+      productId: product.id.toString(),
+      productName: product.name,
+      price: +product.price,
+      mainImageLink: product.generalImages[0],
       quantity: 1,
       size: product.sizes[0]
     });
@@ -143,11 +144,11 @@ export class ShopComponent implements OnInit {
       this.wishlistService.addToWishlist({
         id: product.id,
         name: product.name,
-        price: product.price,
-        image: product.general_images[0].image_link,
+        price: +product.price,
+        image: product.generalImages[0].imageLink,
         category: product.category.name,
-        rating: product.rating,
-        reviews: product.reviews
+        rating: 5,
+        reviews: 5
       });
     }
   }

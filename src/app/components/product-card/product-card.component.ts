@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/c
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { Product } from '../../interfaces/products/product.interface';
 
 @Component({
   selector: 'app-product-card',
@@ -13,7 +14,7 @@ import { WishlistService } from '../../services/wishlist.service';
 })
 export class ProductCardComponent implements OnChanges {
 
-  @Input() product: any;
+  @Input() product!: Product;
   constructor(private router: Router, private wishlistService: WishlistService,
     private cartService: CartService) {}
  
@@ -43,10 +44,10 @@ export class ProductCardComponent implements OnChanges {
 
   addToCart(product: any) {
     this.cartService.addToCart({
-      id: product.id,
-      name: product.name,
+      productId: product.id,
+      productName: product.name,
       price: parseFloat(product.sizes[0].price),
-      image: product.main_image_link?.image_link || '',
+      mainImageLink: product.main_image_link?.image_link || '',
       quantity: 1,
       size: product.sizes[0]
     });

@@ -1,4 +1,5 @@
-import { ProductSize } from "./product.interface";
+import { ProductSize } from "../interfaces/cart/cart.model";
+import { Image } from "./products/product.interface";
 
 export interface OrderDetails {
     orderId: string;
@@ -15,10 +16,10 @@ export interface OrderDetails {
     shippingMethod: string;
     estimatedDelivery: string;
     items: Array<{
-      name: string;
+      productName: string;
       price: number;
       quantity: number;
-      image: string;
+      mainImageLink: Image;
       color?: string;
       size?: ProductSize;
     }>;

@@ -1,7 +1,8 @@
 // cart.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { CartItem } from '../interfaces/cart.interface';
+// import { CartItem } from '../interfaces/cart.interface';
+import { CartItem } from '../interfaces/cart/cart.model';
 import { ProductsApiService } from './products-api.service';
 import { AuthService } from './auth.service';
 
@@ -67,7 +68,7 @@ export class CartService {
   addToCart(item: CartItem) {
     const current = [...this.cartItems.value];
     const index = current.findIndex(i =>
-      i.id === item.id && i.size.product_variant_id === item.size.product_variant_id
+      i.cartItemId === item.cartItemId && i.size.productVariantId === item.size.productVariantId
     );
 
     const newQuantity = index !== -1
@@ -75,7 +76,7 @@ export class CartService {
       : item.quantity;
 
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.addToCart(item.id, newQuantity, item.size.product_variant_id)
+      this._productsApi.addToCart(+item.productId, newQuantity, item.size.productVariantId)
         .subscribe(response => {
           this.upsertItem(item, +response.item.quantity);
         });
@@ -87,12 +88,12 @@ export class CartService {
 
   removeFromCart(item: CartItem) {
     const updated = this.cartItems.value.filter(i =>
-      !(i.id === item.id && i.size.product_variant_id === item.size.product_variant_id)
+      !(i.productId === item.productId && i.size.productVariantId === item.size.productVariantId)
     );
     this.cartItems.next(updated);
 
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.removeFromCart(item.id,item.size.product_variant_id).subscribe();
+      this._productsApi.removeFromCart(+item.productId,item.size.productVariantId).subscribe();
     } else {
       this.persistLocalCart();
     }
@@ -100,7 +101,7 @@ export class CartService {
 
   updateQuantity(item: CartItem, quantity: number) {
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.addToCart(item.id, quantity, item.size.product_variant_id)
+      this._productsApi.addToCart(+item.productId, quantity, item.size.productVariantId)
         .subscribe(response => {
           this.upsertItem(item, +response.item.quantity);
         });
@@ -113,7 +114,7 @@ export class CartService {
   private upsertItem(item: CartItem, quantity: number) {
     const items = [...this.cartItems.value];
     const index = items.findIndex(i =>
-      i.id === item.id && i.size.product_variant_id === item.size.product_variant_id
+      i.productId === item.productId && i.size.productVariantId === item.size.productVariantId
     );
 
     if (index !== -1) {

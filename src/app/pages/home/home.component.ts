@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../components/header/header.component';
 import { HeroBannerComponent } from '../../components/hero-banner/hero-banner.component';
 import { FeaturedCollectionsComponent } from '../../components/featured-collections/featured-collections.component';
 import { TrendingProductsComponent } from '../../components/trending-products/trending-products.component';
 import { CustomerReviewsComponent } from '../../components/customer-reviews/customer-reviews.component';
 import { NewsletterComponent } from '../../components/newsletter/newsletter.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -27,8 +25,8 @@ export class HomeComponent implements OnInit {
   constructor(private _cartService: CartService) { }
 
   ngOnInit(): void {
-      // this._cartService.getCartItems();
+     
   }
 
-  // Any additional methods can be added here
+
 }

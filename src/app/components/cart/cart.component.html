@@ -19,12 +19,12 @@
    </div>
    
    <div *ngFor="let item of items" class="flex gap-4 mb-4 pb-4 border-b">
-     <img [src]="item.image" 
-          [alt]="item.name"
+     <img [src]="item.mainImageLink.imageLink" 
+          [alt]="item.mainImageLink.imageName"
           class="w-20 h-20 object-cover rounded"/>
      
      <div class="flex-1">
-       <a class="font-semibold" [routerLink]="['/product', item.id]">{{item.name}}</a>
+       <a class="font-semibold" [routerLink]="['/product', item.productId]">{{item.productName}}</a>
        <p class="text-sm text-gray-600 mb-2">
          <!-- <span *ngIf="item.color">Color: {{item.color}}</span> -->
          <span *ngIf="item.size">Size: {{item.size.size}}</span>

@@ -6,6 +6,7 @@ import { WishlistService } from '../../services/wishlist.service';
 import { CartService } from '../../services/cart.service';
 import { ProductsApiService } from '../../services/products-api.service';
 import { HttpClient } from '@angular/common/http';
+import { Product } from '../../interfaces/products/product.interface';
 
 @Component({
   selector: 'app-trending-products',
@@ -16,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
   providers: [ProductsApiService,HttpClient]
 })
 export class TrendingProductsComponent implements OnInit {
-  products = [];
+  products: Product[] = [];
 
 
   constructor(
@@ -27,9 +28,8 @@ export class TrendingProductsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.productsApiService.getProducts().subscribe((products:any) => {
-      console.log(products);
-      this.products = products.products;
+    this.productsApiService.getProducts().subscribe((res: any) => {
+      this.products = res.products;
     });
   }
 
@@ -55,10 +55,10 @@ export class TrendingProductsComponent implements OnInit {
 
   addToCart(product: any) {
     this.cartService.addToCart({
-      id: product.id,
-      name: product.name,
+      productId: product.id,
+      productName: product.name,
       price: parseFloat(product.sizes[0].price),
-      image: product.image,
+      mainImageLink: product.image,
       quantity: 1,
       size: product.sizes[0].size
     });

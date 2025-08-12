@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CartService} from '../../services/cart.service';
-import { CartItem } from '../../interfaces/cart.interface';
+import { CartItem } from '../../interfaces/cart/cart.model';
+// import { CartItem } from '../../interfaces/cart.interface';
 
 @Component({
   selector: 'app-cart',

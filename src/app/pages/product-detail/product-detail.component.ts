@@ -6,12 +6,13 @@ import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
-import { Product, ProductSize, Image } from '../../interfaces/product.interface';
 import { ProductsApiService } from '../../services/products-api.service';
 import { AuthService} from '../../services/auth.service';
 import { ReviewFormComponent } from '../../components/review-form/review-form.component';
 import { Review, ReviewsService } from '../../services/review.service';
 import { UserLoginResponse } from '../../interfaces/user.interface';
+import { ProductSize } from '../../interfaces/cart/cart.model';
+import { Product, Image } from '../../interfaces/products/product.interface';
 
 
 
@@ -69,13 +70,13 @@ export class ProductDetailComponent implements OnInit {
     this.productApi.getProductById(productId).subscribe((product:any) => {
       this.product = product;
       if (this.product.sizes) {
-        this.product.general_images = this.product.sizes[0].images;
-        this.selectedImage = this.product.general_images[0];
+        this.product.generalImages = this.product.sizes[0].images;
+        this.selectedImage = this.product.generalImages[0];
         this.selectedSize = this.product.sizes[0];
-        this.product.price = this.product.sizes[0].price;
-        this.product.stock_quantity = this.product.sizes[0].stock_quantity;
+        this.product.price = this.product.sizes[0].price.toString();
+        this.product.stockQuantity = this.product.sizes[0].stockQuantity.toString();
         this.product.dimensions = this.product.sizes[0].dimensions;
-        this.product.weight = this.product.sizes[0].weight;
+        this.product.weight = this.product.sizes[0].weight.toString();
         this.product.material = this.product.sizes[0].material;
       }
 
@@ -89,10 +90,10 @@ export class ProductDetailComponent implements OnInit {
 
   addToCart() {
     this.cartService.addToCart({
-      id: this.product.id,
-      name: this.product.name,
-      price: this.product.price,
-      image: this.product.general_images[0].image_link,
+      productId: `this.product.id`,
+      productName: this.product.name,
+      price: +this.product.price,
+      mainImageLink: this.product.generalImages[0],
       quantity: +this.quantity,
       size: this.selectedSize
     });
@@ -111,8 +112,8 @@ export class ProductDetailComponent implements OnInit {
       this.wishlistService.addToWishlist({
         id: this.product.id,
         name: this.product.name,
-        price: this.product.price,
-        image: this.product.general_images[0].image_link,
+        price: +this.product.price,
+        image: this.product.generalImages[0].imageLink,
         category: this.product.category.name,
         rating: 69,
         reviews: 100
@@ -123,12 +124,12 @@ export class ProductDetailComponent implements OnInit {
 
   changeSizeOfProduct(size: ProductSize) {
     this.selectedSize = size
-    this.product.price = size.price;
-    this.product.stock_quantity = size.stock_quantity;
-    this.product.general_images = size.images;
-    this.selectedImage = this.product.general_images[0];
+    this.product.price = size.price.toString();
+    this.product.stockQuantity = size.stockQuantity.toString();
+    this.product.generalImages = size.images;
+    this.selectedImage = this.product.generalImages[0];
     this.product.dimensions = size.dimensions;
-    this.product.weight = size.weight;
+    this.product.weight = size.weight.toString();
     this.product.material = size.material;
   }
 

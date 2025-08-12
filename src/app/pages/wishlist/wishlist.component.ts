@@ -25,10 +25,10 @@ export class WishlistComponent {
 
   addToCart(item: any) {
     this.cartService.addToCart({
-      id: item.id,
-      name: item.name,
+      productId: item.id,
+      productName: item.name,
       price: item.price,
-      image: item.image,
+      mainImageLink: item.image,
       quantity: 1,
       size: item.size
     });

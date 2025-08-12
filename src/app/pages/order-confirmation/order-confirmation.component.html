@@ -39,11 +39,11 @@
       <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
       <div class="space-y-4">
         <div *ngFor="let item of orderDetails.items" class="flex items-center gap-4 text-left">
-          <img [src]="item.image" 
-               [alt]="item.name"
+          <img [src]="item.mainImageLink.imageLink" 
+               [alt]="item.mainImageLink.imageName"
                class="w-16 h-16 object-cover rounded"/>
           <div class="flex-1">
-            <h3 class="font-medium">{{item.name}}</h3>
+            <h3 class="font-medium">{{item.productName}}</h3>
             <p class="text-sm text-gray-600">
               Qty: {{item.quantity}}
               <span *ngIf="item.color">, Color: {{item.color}}</span>

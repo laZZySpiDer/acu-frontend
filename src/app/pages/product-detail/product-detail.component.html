@@ -3,7 +3,7 @@
         <!-- Left Side: Product Images -->
         <div>
             <div class="relative overflow-hidden rounded-lg mb-4">
-                <img [src]="selectedImage?.image_link" [alt]="'Alt Description'"
+                <img [src]="selectedImage?.imageLink" [alt]="'Alt Description'"
                     class="w-full h-[500px] object-cover" />
                 <!-- Image Zoom Overlay -->
                 <div class="absolute inset-0 bg-black opacity-0 hover:opacity-50 transition-opacity cursor-zoom-in">
@@ -11,10 +11,10 @@
             </div>
             <!-- Thumbnails -->
             <div class="grid grid-cols-4 gap-2">
-                <button *ngFor="let image of product.general_images" (click)="selectedImage= image"
-                    class="rounded-lg overflow-hidden" [class.ring-2]="selectedImage?.image_link === image.image_link"
-                    [class.ring-primary]="selectedImage?.image_link === image.image_link">
-                    <img [src]="image.image_link" [alt]="product.name" class="w-full h-24 object-cover" />
+                <button *ngFor="let image of product.generalImages" (click)="selectedImage= image"
+                    class="rounded-lg overflow-hidden" [class.ring-2]="selectedImage?.imageLink === image.imageLink"
+                    [class.ring-primary]="selectedImage?.imageLink === image.imageLink">
+                    <img [src]="image.imageLink" [alt]="product.name" class="w-full h-24 object-cover" />
                 </button>
             </div>
         </div>
@@ -33,9 +33,9 @@
             <div class="flex items-center mb-4">
                 <div class="flex text-yellow-400">
                     <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star"
-                        [class.text-gray-300]="star > product.rating"></i>
+                        [class.text-gray-300]="true"></i>
                 </div>
-                <span class="ml-2 text-gray-600">{{product.reviews}} reviews</span>
+                <span class="ml-2 text-gray-600">100 reviews</span>
             </div>
 
             <!-- Price -->
@@ -60,7 +60,7 @@
                 <h3 class="font-semibold mb-2">Size</h3>
                 <div class="flex gap-2">
                     <button *ngFor="let size of product.sizes" (click)="changeSizeOfProduct(size)"
-                        [class.bg-primary]="selectedSize.product_variant_id === size.product_variant_id" [class.text-white]="selectedSize.product_variant_id === size.product_variant_id"
+                        [class.bg-primary]="selectedSize.productVariantId === size.productVariantId" [class.text-white]="selectedSize.productVariantId === size.productVariantId"
                         class="px-4 py-2 border rounded-md hover:border-primary">
                         {{size.size}}
                     </button>
@@ -132,13 +132,13 @@
         <!-- Review Stats -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div class="flex items-center gap-4">
-                <div class="text-4xl font-bold">{{product.rating}}</div>
+                <div class="text-4xl font-bold">5</div>
                 <div>
                     <div class="flex text-yellow-400 mb-1">
                         <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star"
-                            [class.text-gray-300]="star > product.rating"></i>
+                            [class.text-gray-300]="true"></i>
                     </div>
-                    <p class="text-gray-600">Based on {{product.reviews}} reviews</p>
+                    <p class="text-gray-600">Based on 10 reviews</p>
                 </div>
             </div>
         </div>
