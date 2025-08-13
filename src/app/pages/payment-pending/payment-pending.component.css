@@ -1,0 +1,15 @@
+.payment-pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.payment-pending h2 {
+  margin-bottom: 1rem;
+}
+
+.payment-pending p {
+  margin: 0.5rem 0;
+}

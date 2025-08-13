@@ -18,4 +18,8 @@ export class ApiUrlConstants {
 
     //PAYMENT
     static readonly INITIATE_PAYMENT = `${ApiUrlConstants.baseUrl}/payment/initiate`;
+    static readonly CHECK_PAYMENT_STATUS = `${ApiUrlConstants.baseUrl}/payment/status`;
+
+    //ORDERS
+    static readonly GET_ORDER_DETAILS = `${ApiUrlConstants.baseUrl}/orders`;
 }

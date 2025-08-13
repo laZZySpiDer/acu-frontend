@@ -46,6 +46,11 @@ export const routes: Routes = [
       import('./pages/payment-failure/payment-failure.component').then(m => m.PaymentFailureComponent)
   },
   {
+    path: 'payment-pending/:id',
+    loadComponent: () =>
+      import('./pages/payment-pending/payment-pending.component').then(m => m.PaymentPendingComponent)
+  },
+  {
     path: 'order-confirmation',
     loadComponent: () =>
       import('./pages/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmationComponent)

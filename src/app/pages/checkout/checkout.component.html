@@ -125,6 +125,7 @@
                 <option value="US">United States</option>
                 <option value="CA">Canada</option>
                 <option value="GB">United Kingdom</option>
+                <option value="IN">India</option>
               </select>
             </div>
           </div>
@@ -149,13 +150,13 @@
               <h3 class="font-semibold">{{method.name}}</h3>
               <p class="text-sm text-gray-600">Estimated delivery: {{method.estimatedDays}}</p>
             </div>
-            <span class="font-semibold">${{method.price.toFixed(2)}}</span>
+            <span class="font-semibold">₹{{method.price.toFixed(2)}}</span>
           </div>
         </div>
       </section>
 
       <!-- Payment Information -->
-      <section class="bg-white p-6 rounded-lg shadow-md mb-6">
+      <!-- <section class="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 class="text-xl font-semibold mb-4">Payment Information</h2>
         <div class="space-y-4">
           <div>
@@ -194,7 +195,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
     </div>
 
     <!-- Right Column: Order Summary -->

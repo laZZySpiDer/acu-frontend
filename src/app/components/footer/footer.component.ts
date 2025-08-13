@@ -49,7 +49,7 @@ import { RouterModule } from '@angular/router';
           </div>
         </div>
         <div class="border-t border-gray-700 pt-8 text-center text-sm">
-          <p> EcoStore. All rights reserved.</p>
+          <p> Ahiru's Creative Universe. All rights reserved.</p>
         </div>
       </div>
     </footer>

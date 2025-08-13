@@ -6,7 +6,7 @@
         <i class="fas fa-check text-3xl text-green-500"></i>
       </div>
       <h1 class="text-3xl font-bold mb-4">Thank You for Your Order!</h1>
-      <p class="text-gray-600 mb-2">Order #1234</p>
+      <p class="text-gray-600 mb-2">Order #{{orderDetails.orderId}}</p>
       <p class="text-gray-600">We'll send you a confirmation email shortly.</p>
     </div>
 
@@ -28,8 +28,8 @@
           </div>
           <div>
             <h3 class="font-medium text-gray-700">Shipping Method</h3>
-            <p class="text-gray-600">{{orderDetails.shippingMethod}}</p>
-            <p class="text-sm text-gray-500">Estimated delivery: {{orderDetails.estimatedDelivery}}</p>
+            <p class="text-gray-600">{{orderDetails.shippingMethod | uppercase}}</p>
+            <p class="text-sm text-gray-500">Estimated delivery: {{orderDetails.estimatedDelivery | date}}</p>
           </div>
         </div>
       </div>
@@ -47,28 +47,28 @@
             <p class="text-sm text-gray-600">
               Qty: {{item.quantity}}
               <span *ngIf="item.color">, Color: {{item.color}}</span>
-              <span *ngIf="item.size">, Size: {{item.size}}</span>
+              <span *ngIf="item.size">, Size: {{item.size.size}}</span>
             </p>
           </div>
-          <span class="font-semibold">\${{(item.price * item.quantity).toFixed(2)}}</span>
+          <span class="font-semibold">₹{{(item.price * item.quantity).toFixed(2)}}</span>
         </div>
 
         <div class="border-t pt-4 mt-4">
           <div class="flex justify-between text-gray-600">
             <span>Subtotal</span>
-            <span>$100</span>
+            <span>₹{{orderDetails.subtotal}}</span>
           </div>
           <div class="flex justify-between text-gray-600">
             <span>Shipping</span>
-            <span>$10</span>
+            <span>₹{{orderDetails.shipping}}</span>
           </div>
           <div class="flex justify-between text-gray-600">
             <span>Tax</span>
-            <span>$20</span>
+            <span>₹{{orderDetails.tax}}</span>
           </div>
           <div class="flex justify-between font-bold text-lg mt-2">
             <span>Total</span>
-            <span>$ 100</span>
+            <span>₹{{orderDetails.total}}</span>
           </div>
         </div>
       </div>

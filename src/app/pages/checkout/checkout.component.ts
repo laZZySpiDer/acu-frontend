@@ -34,20 +34,14 @@ export class CheckoutComponent {
     {
       id: 'standard',
       name: 'Standard Shipping',
-      price: 5.99,
-      estimatedDays: '5-7 business days'
+      price: 100,
+      estimatedDays: '7-10 business days'
     },
     {
       id: 'express',
       name: 'Express Shipping',
-      price: 14.99,
-      estimatedDays: '2-3 business days'
-    },
-    {
-      id: 'overnight',
-      name: 'Overnight Shipping',
-      price: 29.99,
-      estimatedDays: 'Next business day'
+      price: 180,
+      estimatedDays: '4-6 business days'
     }
   ];
 
@@ -63,7 +57,7 @@ export class CheckoutComponent {
     city: '',
     state: '',
     zipCode: '',
-    country: 'US',
+    country: 'IN',
     cardNumber: '',
     expiryDate: '',
     cvv: ''
@@ -79,7 +73,7 @@ export class CheckoutComponent {
 
   calculateTax(): number {
     // Simplified tax calculation (8.5%)
-    return (this.cartService.getCartTotal() * 0.085);
+    return (this.cartService.getCartTotal() * 0.12);
   }
 
   calculateTotal(): number {
@@ -88,14 +82,14 @@ export class CheckoutComponent {
 
   placeOrder() {
     // TODO: Implement order placement logic
-    console.log('Order placed:', {
-      items: this.cartItems$,
-      shipping: this.getSelectedShippingPrice(),
-      tax: this.calculateTax(),
-      total: this.calculateTotal(),
-      shippingMethod: this.selectedShippingMethod,
-      ...this.formData
-    });
+    // console.log('Order placed:', {
+    //   items: this.cartItems$.subscribe(items => items),
+    //   shipping: this.getSelectedShippingPrice(),
+    //   tax: this.calculateTax(),
+    //   total: this.calculateTotal(),
+    //   shippingMethod: this.selectedShippingMethod,
+    //   ...this.formData
+    // });
 
     // Clear cart
     // this.cartService.clearCart();
@@ -115,6 +109,8 @@ export class CheckoutComponent {
     }
     this.cartItems$.pipe(take(1)).subscribe(items => order.items = items)
     this.orderService.setOrderDetails(order);
+
+    console.log('Order Details:', this.orderService.getOrderDetails());
 
     this._productsApi.initiatePayment(order).subscribe((response:any)=>{
       console.log('Payment Response : ',response)

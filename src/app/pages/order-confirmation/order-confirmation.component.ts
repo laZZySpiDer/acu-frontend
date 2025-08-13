@@ -23,16 +23,29 @@ export class OrderConfirmationComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Redirect to home if no order details are available
-    // this.orderDetails$.subscribe((details:any) => {
-    //   if (!details) {
-    //     this.router.navigate(['/']);
-    //   }else{
-    //     this.orderDetails = details;
-    //   }
-    // });
+
     const transactionId = this.activatedRoute.snapshot.params['transactionId'];
     console.log('Transaction ID:', transactionId);
+    if(!transactionId){
+      this.router.navigate(['/']);
+    }else{
+      this.getOrderDetails(transactionId);
+    }
+  }
+
+
+  getOrderDetails(transactionId: string) {
+    this.orderService.getOrderDetailsByTransactionId(transactionId).subscribe({
+      next: (res:OrderDetails) => {
+        console.log('Order details fetched:', res);
+        this.orderDetails = res
+        this.orderService.setOrderDetails(res);
+      },
+      error: (error) => {
+        console.error('Error fetching order details:', error);
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   trackOrder() {
