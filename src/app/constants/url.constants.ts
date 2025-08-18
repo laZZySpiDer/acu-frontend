@@ -22,4 +22,8 @@ export class ApiUrlConstants {
 
     //ORDERS
     static readonly GET_ORDER_DETAILS = `${ApiUrlConstants.baseUrl}/orders`;
+
+    //PROFILE
+    static readonly GET_ORDERS = `${ApiUrlConstants.baseUrl}/profile/recent-orders`
 }
+

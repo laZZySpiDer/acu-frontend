@@ -46,17 +46,24 @@ export class ProfileComponent {
     this.user = this.authService.getCurrentUser();
     if (this.user) {
       this.loadOrders();
+      console.log('User:', this.user);
       this.profileForm.name = this.user.name;
+      this.loadProfile();
     }
   }
 
   loadOrders() {
     if (this.user) {
       this.orderTrackingService.getRecentOrders(this.user.id)
-        .subscribe(orders => {
-          this.orders = orders;
+        .subscribe((orders:any) => {
+          console.log('ORDERS:', orders.length);
+          this.orders = orders.finalOrders;
         });
     }
+  }
+
+  loadProfile(){
+    
   }
 
   updateProfile() {

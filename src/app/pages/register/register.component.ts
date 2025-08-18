@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthApiService } from '../../services/auth-api.service';
 
 @Component({
   selector: 'app-register',
@@ -21,6 +22,7 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
+    private authApiService: AuthApiService,
     private router: Router
   ) {}
 
@@ -43,15 +45,15 @@ export class RegisterComponent {
     this.isLoading = true;
     this.error = '';
 
-    // this.authService.register(this.email, this.password, this.name).subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/']);
-    //   },
-    //   error: (err) => {
-    //     this.isLoading = false;
-    //     this.error = this.getErrorMessage(err.code);
-    //   }
-    // });
+    this.authApiService.register(this.name, this.email, this.password).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.error = this.getErrorMessage(err.code);
+      }
+    });
   }
 
   loginWithGoogle() {

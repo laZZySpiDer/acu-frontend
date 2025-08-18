@@ -1,5 +1,5 @@
 export interface OrderStatus {
-  status: 'processing' | 'shipped' | 'out-for-delivery' | 'delivered';
+  status: 'In Progress' | 'shipped' | 'out-for-delivery' | 'Delivered';
   timestamp: Date;
   location?: string;
   description: string;
@@ -12,9 +12,10 @@ export interface TrackingDetails {
   currentStatus: OrderStatus['status'];
   statusHistory: OrderStatus[];
   items: Array<{
-    name: string;
+    itemName: string;
     quantity: number;
-    image: string;
+    itemImage: string;
+    variantSize?:string
   }>;
   shippingAddress: {
     name: string;
@@ -23,5 +24,6 @@ export interface TrackingDetails {
     state: string;
     zipCode: string;
     country: string;
+    method?: string; // Optional shipping method
   };
 }

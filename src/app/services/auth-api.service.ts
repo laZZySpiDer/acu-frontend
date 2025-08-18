@@ -17,4 +17,9 @@ export class AuthApiService {
   logout() {
     return this.http.get<any>(`${ApiUrlConstants.LOGOUT}`);
   }
+
+  register(name: string, email: string, password: string) {
+    const role = 'customer'; // Default role for registration
+    return this.http.post<UserLoginResponse>(`${ApiUrlConstants.REGISTER}`, { name, email, password, role });
+  }
 }

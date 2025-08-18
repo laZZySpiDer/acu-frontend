@@ -85,9 +85,9 @@
                class="relative flex items-start mb-6">
             <div class="absolute left-0 mt-1.5 w-6 h-6 rounded-full border-2 border-primary bg-white flex items-center justify-center">
               <i class="fas" 
-                 [class.fa-check]="status.status === 'delivered'"
+                 [class.fa-check]="status.status === 'Delivered'"
                  [class.fa-truck]="status.status === 'shipped' || status.status === 'out-for-delivery'"
-                 [class.fa-box]="status.status === 'processing'"
+                 [class.fa-box]="status.status === 'In Progress'"
                  [class.text-primary]="true"></i>
             </div>
             <div class="ml-10">
@@ -107,11 +107,11 @@
         <h3 class="text-lg font-semibold mb-4">Order Items</h3>
         <div class="space-y-4">
           <div *ngFor="let item of trackingDetails.items" class="flex items-center gap-4">
-            <img [src]="item.image" 
-                 [alt]="item.name"
+            <img [src]="item.itemImage" 
+                 [alt]="item.itemName"
                  class="w-16 h-16 object-cover rounded"/>
             <div>
-              <h4 class="font-medium">{{item.name}}</h4>
+              <h4 class="font-medium">{{item.itemName}}</h4>
               <p class="text-gray-600">Qty: {{item.quantity}}</p>
             </div>
           </div>
