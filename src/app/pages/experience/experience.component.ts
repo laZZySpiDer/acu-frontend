@@ -18,7 +18,7 @@ export class ExperienceComponent {
       description: 'Learn the art of doll painting and create your own unique masterpiece.',
       image: 'https://images.unsplash.com/photo-1560421683-6856ea585c78?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
       duration: '3 hours',
-      price: 49.99
+      price: 2500
     },
     {
       id: 'clay-magnets',
@@ -26,7 +26,7 @@ export class ExperienceComponent {
       description: 'Create adorable clay magnets with professional guidance.',
       image: 'https://images.unsplash.com/photo-1516981442399-a91139e20ff8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
       duration: '2 hours',
-      price: 39.99
+      price: 2000
     },
     {
       id: 'doodling',
@@ -34,7 +34,7 @@ export class ExperienceComponent {
       description: 'Express yourself through creative doodling techniques.',
       image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
       duration: '2.5 hours',
-      price: 34.99
+      price: 1800
     },
     {
       id: 'canvas',
@@ -42,7 +42,7 @@ export class ExperienceComponent {
       description: 'Learn various canvas painting techniques and create your own artwork.',
       image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
       duration: '4 hours',
-      price: 59.99
+      price: 1500
     }
   ];
 
@@ -52,21 +52,21 @@ export class ExperienceComponent {
       title: 'Wedding Invitations',
       description: 'Elegant digital invitations for your special day.',
       image: 'https://images.unsplash.com/photo-1511184150666-9bb7d41a88f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      startingPrice: 99.99
+      startingPrice: 4999
     },
     {
       id: 'baby-shower',
       title: 'Baby Shower Invitations',
       description: 'Cute and customizable digital invites for your baby shower.',
       image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      startingPrice: 49.99
+      startingPrice: 2999
     },
     {
       id: 'custom',
       title: 'Custom Invitations',
       description: 'Personalized digital invitations for any occasion.',
       image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      startingPrice: 79.99
+      startingPrice: 3999
     }
   ];
 

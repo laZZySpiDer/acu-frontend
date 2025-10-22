@@ -1,22 +1,35 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from "@angular/common";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ProductsApiService } from "../../services/products-api.service";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-review-form',
+  selector: "app-review-form",
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './review-form.component.html',
-  styleUrl: './review-form.component.css',
+  templateUrl: "./review-form.component.html",
+  styleUrl: "./review-form.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewFormComponent {
   @Input() productId!: number;
-  @Output() submitted = new EventEmitter<{rating: number, comment: string}>();
+  @Output() submitted = new EventEmitter<{ rating: number; comment: string }>();
 
   rating: number = 0;
-  comment: string = '';
+  comment: string = "";
   isSubmitting: boolean = false;
+
+  constructor(
+    private _productsApiService: ProductsApiService,
+    private router: Router
+  ) {}
 
   get isValid(): boolean {
     return this.rating > 0 && this.comment.trim().length > 0;
@@ -25,15 +38,37 @@ export class ReviewFormComponent {
   submitReview() {
     if (this.isValid && !this.isSubmitting) {
       this.isSubmitting = true;
-      this.submitted.emit({
+ 
+
+      console.log("Review submitted:", {
         rating: this.rating,
-        comment: this.comment.trim()
+        comment: this.comment.trim(),
+        productId: this.productId,
       });
 
+      this._productsApiService
+        .addProductReview(
+          this.productId.toString(),
+          this.rating,
+          this.comment.trim()
+        )
+        .subscribe({
+          next: (response) => {
+            console.log("Review successfully sent to server:", response);
+            this.submitted.emit({ rating: this.rating, comment: this.comment });
+            this.rating = 0;
+            this.comment = "";
+            this.isSubmitting = false;
+            
+          },
+          error: (error) => {
+            console.error("Error submitting review to server:", error);
+          },
+        });
       // Reset form
       setTimeout(() => {
         this.rating = 0;
-        this.comment = '';
+        this.comment = "";
         this.isSubmitting = false;
       }, 500);
     }

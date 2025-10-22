@@ -47,7 +47,7 @@
               <div class="p-6">
                 <p class="text-gray-600 mb-4">{{workshop.description}}</p>
                 <div class="flex justify-between items-center">
-                  <span class="text-2xl font-bold text-primary">${{workshop.price}}</span>
+                  <span class="text-2xl font-bold text-primary">₹{{workshop.price}}</span>
                   <button (click)="showWorkshopForm(workshop)" 
                           class="px-6 py-2 bg-primary text-white rounded-full hover:bg-primary-dark transform hover:-translate-y-1 transition-all">
                     Join Now
@@ -84,7 +84,7 @@
                 <div class="absolute inset-0 flex items-center justify-center">
                   <div class="text-center">
                     <h3 class="text-3xl font-bold text-white mb-2">{{type.title}}</h3>
-                    <p class="text-white/80">Starting from ${{type.startingPrice}}</p>
+                    <p class="text-white/80">Starting from ₹{{type.startingPrice}}</p>
                   </div>
                 </div>
               </div>

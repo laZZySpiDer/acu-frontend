@@ -10,8 +10,8 @@ export interface Review {
   userAvatar: string;
   rating: number;
   comment: string;
-  date: Date;
-  helpful: number;
+  createdAt: Date;
+  helpful?: number;
   images?: string[];
 }
 
@@ -29,7 +29,7 @@ export class ReviewsService {
         userAvatar: 'https://randomuser.me/api/portraits/women/1.jpg',
         rating: 5,
         comment: 'Beautiful craftsmanship! The basket is even more stunning in person.',
-        date: new Date('2024-02-15'),
+        createdAt: new Date('2024-02-15'),
         helpful: 12
       },
       {
@@ -40,7 +40,7 @@ export class ReviewsService {
         userAvatar: 'https://randomuser.me/api/portraits/men/2.jpg',
         rating: 4,
         comment: 'Great quality and perfect size for my needs. Would buy again.',
-        date: new Date('2024-02-10'),
+        createdAt: new Date('2024-02-10'),
         helpful: 8
       }
     ]
@@ -52,11 +52,11 @@ export class ReviewsService {
     return of(this.reviews[productId] || []).pipe(delay(500));
   }
 
-  addReview(review: Omit<Review, 'id' | 'date' | 'helpful'>): Observable<Review> {
+  addReview(review: Omit<Review, 'id' | 'createdAt' | 'helpful'>): Observable<Review> {
     const newReview: Review = {
       ...review,
       id: Math.random().toString(36).substr(2, 9),
-      date: new Date(),
+      createdAt: new Date(),
       helpful: 0
     };
 
@@ -70,12 +70,12 @@ export class ReviewsService {
     return of(newReview).pipe(delay(500));
   }
 
-  markHelpful(reviewId: string, productId: number): Observable<void> {
-    const review = this.reviews[productId]?.find(r => r.id === reviewId);
-    if (review) {
-      review.helpful += 1;
-      this.reviewsSubject.next(this.reviews);
-    }
-    return of(void 0).pipe(delay(200));
-  }
+  // markHelpful(reviewId: string, productId: number): Observable<void> {
+  //   const review = this.reviews[productId]?.find(r => r.id === reviewId);
+  //   if (review) {
+  //     review.helpful += 1;
+  //     this.reviewsSubject.next(this.reviews);
+  //   }
+  //   return of(void 0).pipe(delay(200));
+  // }
 }

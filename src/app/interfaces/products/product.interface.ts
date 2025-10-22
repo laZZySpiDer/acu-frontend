@@ -1,3 +1,5 @@
+import { Review } from "../../services/review.service";
+
 export interface Product {
   id: number;
   name: string;
@@ -14,6 +16,9 @@ export interface Product {
   generalImages: Image[];
   sizes: ProductSize[];
   category: ProductCategory;
+  comments?: Review[];
+  averageRating?: number;
+  ratingsCount?: number;
 }
 
 export interface ProductSize {

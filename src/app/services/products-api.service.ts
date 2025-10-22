@@ -45,6 +45,14 @@ export class ProductsApiService {
   initiatePayment(orderDetails:any): Observable<any> {
     return this.http.post<any>(ApiUrlConstants.INITIATE_PAYMENT, orderDetails);
   }
+
+  getProductByCategory(categorySlug: string): Observable<any[]> {
+    return this.http.get<any[]>(`${ApiUrlConstants.GET_PRODUCT_BY_CATEGORY}${categorySlug}`);
+  }
+
+  addProductReview(productId:string,rating:number, comment:string): Observable<any> {
+    return this.http.post<any>(`${ApiUrlConstants.ADD_PRODUCT_REVIEW}${productId}/comment`, {rating, comment});
+  }
   // clearCart(): Observable<any> {
   //   return this.http.delete<any>(ApiUrlConstants.CLEAR_CART);
   // }

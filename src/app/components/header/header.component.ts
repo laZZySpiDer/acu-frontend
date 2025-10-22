@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { CartComponent } from '../cart/cart.component';
 import { WishlistService } from '../../services/wishlist.service';
@@ -34,7 +34,7 @@ export class HeaderComponent{
   currentUser$ = this.authService.currentUser$;
   showDropdown = false;
 
-  constructor(private cartService: CartService,private wishlistService: WishlistService, private authService: AuthService) {}
+  constructor(private cartService: CartService,private wishlistService: WishlistService, private authService: AuthService, private router: Router) {}
 
   isMobileMenuOpen = false;
 
@@ -49,6 +49,9 @@ export class HeaderComponent{
       next: (response:any) => {
         console.log('Logout Response',response);
         this.authService.setCurrentUser(null);
+        this.router.navigate(['/']);
+        this.cartService.clearCart();
+        this.wishlistService.clearWishlist();
       }
     });
   }

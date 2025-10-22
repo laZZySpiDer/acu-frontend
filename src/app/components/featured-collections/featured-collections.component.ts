@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductsApiService } from '../../services/products-api.service';
 import { Category } from '../../interfaces/category.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-featured-collections',
@@ -30,7 +31,7 @@ export class FeaturedCollectionsComponent implements OnInit {
     // }
   ];
 
-  constructor(private _productsApiService: ProductsApiService){}
+  constructor(private _productsApiService: ProductsApiService, private router: Router){}
 
  ngOnInit(): void {
   //  this.collections
@@ -45,4 +46,10 @@ export class FeaturedCollectionsComponent implements OnInit {
     }
   })
  } 
+
+ navigateToCollection(collection: Category) {
+  // const slug = collection.slug ? collection.slug : collection.name.toLowerCase().replace(/\s+/g, '-');
+  // window.location.href = `/collections/${slug}`;
+  this.router.navigate(['/collections', collection.slug]);
+ }
 }

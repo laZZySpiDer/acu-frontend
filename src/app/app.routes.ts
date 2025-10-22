@@ -26,6 +26,11 @@ export const routes: Routes = [
       import('./pages/checkout/checkout.component').then(m => m.CheckoutComponent)
   },
   {
+    path: 'collections/:category',
+    loadComponent: () =>
+      import('./pages/categories/categories.component').then(m => m.CategoriesComponent)
+  },
+  {
     path: 'profile',
     loadComponent: () =>
       import('./pages/profile/profile.component').then(m => m.ProfileComponent)

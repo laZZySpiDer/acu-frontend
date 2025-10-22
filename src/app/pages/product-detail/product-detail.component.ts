@@ -79,7 +79,7 @@ export class ProductDetailComponent implements OnInit {
         this.product.weight = this.product.sizes[0].weight.toString();
         this.product.material = this.product.sizes[0].material;
       }
-
+      console.log(this.product);
       this.loadReviews();
     });
   }
@@ -136,19 +136,24 @@ export class ProductDetailComponent implements OnInit {
   onReviewSubmitted(review: {rating: number, comment: string}) {
     if (!this.currentUser) return;
 
-    const newReview = {
+    const newReview : Review = {
+      id: '0',
       productId: this.product.id,
       userId: this.currentUser.id,
       userName: this.currentUser.name,
       userAvatar: this.currentUser.avatar || 'https://randomuser.me/api/portraits/lego/1.jpg',
       rating: review.rating,
-      comment: review.comment
+      comment: review.comment,
+      createdAt: new Date()
     };
 
-    this.reviewsService.addReview(newReview)
-      .subscribe(() => {
-        this.loadReviews();
-      });
+    this.product.comments = [ newReview, ...(this.product.comments || []) ];
+    this.product.ratingsCount = (this.product.ratingsCount || 0) + 1;
+    this.product.averageRating = +(((this.product.averageRating || 0) * (this.product.ratingsCount - 1) + review.rating) / this.product.ratingsCount).toFixed(1);
+    // this.reviewsService.addReview(newReview)
+    //   .subscribe(() => {
+    //     this.loadReviews();
+    //   });
   }
 
   loadReviews() {
@@ -159,11 +164,6 @@ export class ProductDetailComponent implements OnInit {
       });
   }
 
-  markHelpful(review: Review) {
-    this.reviewsService.markHelpful(review.id, this.product.id)
-      .subscribe(() => {
-        this.loadReviews();
-      });
-  }
+
 
 }

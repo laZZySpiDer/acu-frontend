@@ -129,4 +129,13 @@ export class CartService {
 
     this.cartItems.next(items);
   }
+
+  clearCart() {
+    this.cartItems.next([]);
+    // if (this._authApi.isLoggedIn()) {
+    //   this._productsApi.clearCart().subscribe();
+    // } else {
+    //   this.persistLocalCart();
+    // }
+  }
 }

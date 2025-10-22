@@ -3,7 +3,7 @@
       <h2 class="section-title">Featured Collections</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div *ngFor="let collection of collections" 
-             class="relative overflow-hidden rounded-lg group cursor-pointer">
+             class="relative overflow-hidden rounded-lg group cursor-pointer" (click)="navigateToCollection(collection)">
           <img [src]="collection.image" 
                [alt]="collection.name"
                class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"/>
