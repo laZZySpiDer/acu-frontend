@@ -34,6 +34,7 @@ export class ProductDetailComponent implements OnInit {
   isInWishlist: boolean = false;
   currentUser: UserLoginResponse | null = null;
   reviews: Review[] = [];
+  variantId: number | null = null;
 
   quantityDropdownValuesForDolls = [
     {value: 1, label: 'Single Doll'},
@@ -56,6 +57,13 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       const productId = parseInt(params['id']);
+      
+      if(params['variantId']) {
+        const variantId = parseInt(params['variantId']);
+ 
+        this.variantId = variantId;
+
+      }
       if (this.wishlistService.isInWishlist(productId)) {
         this.isInWishlist = true;
       }
@@ -70,14 +78,21 @@ export class ProductDetailComponent implements OnInit {
     this.productApi.getProductById(productId).subscribe((product:any) => {
       this.product = product;
       if (this.product.sizes) {
-        this.product.generalImages = this.product.sizes[0].images;
-        this.selectedImage = this.product.generalImages[0];
-        this.selectedSize = this.product.sizes[0];
-        this.product.price = this.product.sizes[0].price.toString();
-        this.product.stockQuantity = this.product.sizes[0].stockQuantity.toString();
-        this.product.dimensions = this.product.sizes[0].dimensions;
-        this.product.weight = this.product.sizes[0].weight.toString();
-        this.product.material = this.product.sizes[0].material;
+        let index = 0;
+        if (this.variantId) {
+          const variantSize = this.product.sizes.find(size => size.productVariantId === this.variantId);
+
+          index  = this.product.sizes.indexOf(variantSize!);
+          
+        }
+        this.product.generalImages = this.product.sizes[index].images;
+        this.selectedImage = this.product.generalImages[index];
+        this.selectedSize = this.product.sizes[index];
+        this.product.price = this.product.sizes[index].price.toString();
+        this.product.stockQuantity = this.product.sizes[index].stockQuantity.toString();
+        this.product.dimensions = this.product.sizes[index].dimensions;
+        this.product.weight = this.product.sizes[index].weight.toString();
+        this.product.material = this.product.sizes[index].material;
       }
       console.log(this.product);
       this.loadReviews();

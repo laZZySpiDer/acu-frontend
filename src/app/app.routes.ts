@@ -15,11 +15,17 @@ export const routes: Routes = [
     loadComponent: () => 
       import('./pages/experience/experience.component').then(m => m.ExperienceComponent)
   },
+    {
+    path: 'product/:id/:variantId',
+    loadComponent: () => 
+      import('./pages/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
+  },
   {
     path: 'product/:id',
     loadComponent: () => 
       import('./pages/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
   },
+
   {
     path: 'checkout',
     loadComponent: () =>

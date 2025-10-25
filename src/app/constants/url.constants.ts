@@ -7,6 +7,7 @@ export class ApiUrlConstants {
     static readonly GET_CATEGORIES = `${ApiUrlConstants.baseUrl}/categories`;
     static readonly GET_PRODUCT_BY_CATEGORY = `${ApiUrlConstants.baseUrl}/products/category/`;
     static readonly ADD_PRODUCT_REVIEW = `${ApiUrlConstants.baseUrl}/products/`;
+    static readonly SEARCH_PRODUCTS = `${ApiUrlConstants.baseUrl}/search`;
 
     //CART
     static readonly ADD_TO_CART = `${ApiUrlConstants.baseUrl}/cart/add`;

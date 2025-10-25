@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiUrlConstants } from '../constants/url.constants';
@@ -56,5 +56,10 @@ export class ProductsApiService {
   // clearCart(): Observable<any> {
   //   return this.http.delete<any>(ApiUrlConstants.CLEAR_CART);
   // }
+
+  searchProducts(query: string): Observable<any[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<any[]>(`${ApiUrlConstants.SEARCH_PRODUCTS}`, { params });
+  }
 
 }
