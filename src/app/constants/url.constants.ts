@@ -18,6 +18,7 @@ export class ApiUrlConstants {
     static readonly LOGIN = `${ApiUrlConstants.baseUrl}/auth/loginSupa`;
     static readonly REGISTER = `${ApiUrlConstants.baseUrl}/auth/registerSupa`;
     static readonly LOGOUT = `${ApiUrlConstants.baseUrl}/auth/logout`;
+    static readonly ME = `${ApiUrlConstants.baseUrl}/auth/me`;
 
     //PAYMENT
     static readonly INITIATE_PAYMENT = `${ApiUrlConstants.baseUrl}/payment/initiate`;

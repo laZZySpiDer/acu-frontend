@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { ProductsApiService } from '../../services/products-api.service';
-import { AuthService} from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ReviewFormComponent } from '../../components/review-form/review-form.component';
 import { Review, ReviewsService } from '../../services/review.service';
 import { UserLoginResponse } from '../../interfaces/user.interface';
@@ -20,7 +20,7 @@ import { Product, Image } from '../../interfaces/products/product.interface';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule,ReviewFormComponent],
+  imports: [CommonModule, FormsModule, ReviewFormComponent, RouterModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
@@ -37,11 +37,11 @@ export class ProductDetailComponent implements OnInit {
   variantId: number | null = null;
 
   quantityDropdownValuesForDolls = [
-    {value: 1, label: 'Single Doll'},
-    {value: 2, label: 'Couple Dolls'},
-    {value: 3, label: 'Family Set of 3'},
-    {value: 4, label: 'Family Set of 4'},
-    {value: 5, label: 'Family Set of 5'},
+    { value: 1, label: 'Single Doll' },
+    { value: 2, label: 'Couple Dolls' },
+    { value: 3, label: 'Family Set of 3' },
+    { value: 4, label: 'Family Set of 4' },
+    { value: 5, label: 'Family Set of 5' },
   ];
   constructor(
     private router: Router,
@@ -51,16 +51,16 @@ export class ProductDetailComponent implements OnInit {
     private authService: AuthService,
     private productApi: ProductsApiService,
     private reviewsService: ReviewsService
-  ) {}
+  ) { }
 
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const productId = parseInt(params['id']);
-      
-      if(params['variantId']) {
+
+      if (params['variantId']) {
         const variantId = parseInt(params['variantId']);
- 
+
         this.variantId = variantId;
 
       }
@@ -69,21 +69,21 @@ export class ProductDetailComponent implements OnInit {
       }
       this.getProduct(productId);
     })
-   
+
     this.currentUser = this.authService.getCurrentUser();
     // this.currentUser = null;
   }
 
   getProduct(productId: number) {
-    this.productApi.getProductById(productId).subscribe((product:any) => {
+    this.productApi.getProductById(productId).subscribe((product: any) => {
       this.product = product;
       if (this.product.sizes) {
         let index = 0;
         if (this.variantId) {
           const variantSize = this.product.sizes.find(size => size.productVariantId === this.variantId);
 
-          index  = this.product.sizes.indexOf(variantSize!);
-          
+          index = this.product.sizes.indexOf(variantSize!);
+
         }
         this.product.generalImages = this.product.sizes[index].images;
         this.selectedImage = this.product.generalImages[index];
@@ -104,6 +104,10 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart() {
+    if (!this.selectedSize) {
+      alert('Please select a size');
+      return;
+    }
     this.cartService.addToCart({
       productId: `${this.product.id}`,
       productName: this.product.name,
@@ -148,10 +152,10 @@ export class ProductDetailComponent implements OnInit {
     this.product.material = size.material;
   }
 
-  onReviewSubmitted(review: {rating: number, comment: string}) {
+  onReviewSubmitted(review: { rating: number, comment: string }) {
     if (!this.currentUser) return;
 
-    const newReview : Review = {
+    const newReview: Review = {
       id: '0',
       productId: this.product.id,
       userId: this.currentUser.id,
@@ -162,7 +166,7 @@ export class ProductDetailComponent implements OnInit {
       createdAt: new Date()
     };
 
-    this.product.comments = [ newReview, ...(this.product.comments || []) ];
+    this.product.comments = [newReview, ...(this.product.comments || [])];
     this.product.ratingsCount = (this.product.ratingsCount || 0) + 1;
     this.product.averageRating = +(((this.product.averageRating || 0) * (this.product.ratingsCount - 1) + review.rating) / this.product.ratingsCount).toFixed(1);
     // this.reviewsService.addReview(newReview)

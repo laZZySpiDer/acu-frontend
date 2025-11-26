@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, of, tap } from 'rxjs';
 import { ApiUrlConstants } from '../constants/url.constants';
 import { AuthApiService } from './auth-api.service';
 import { UserLoginResponse } from '../interfaces/user.interface';
@@ -14,12 +14,8 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserLoginResponse | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private authApi: AuthApiService) {
-    const storedUser = sessionStorage.getItem('currentUser');
-    if (storedUser) {
-      const user: UserLoginResponse = JSON.parse(storedUser);
-      this.currentUserSubject.next(user);
-    }
+  constructor(private authApi: AuthApiService, private http: HttpClient) {
+    this.checkAuthStatus().subscribe();
   }
 
   isLoggedIn(): boolean {
@@ -29,13 +25,9 @@ export class AuthService {
   setCurrentUser(user: any) {
     if(!user || !user.user) {
       this.currentUserSubject.next(null);
-      sessionStorage.removeItem('token');
-      sessionStorage.removeItem('currentUser');
       return;
     }
     this.currentUserSubject.next(user.user);
-    sessionStorage.setItem('token', user.user.token);
-    sessionStorage.setItem('currentUser', JSON.stringify(user.user));
   }
 
   getCurrentUser(): UserLoginResponse | null {
@@ -43,11 +35,26 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.authApi.login(email, password);
+    return this.authApi.login(email, password).pipe(
+      tap(() => this.checkAuthStatus().subscribe())
+    );
   }
 
   logout() {
-    this.currentUserSubject.next(null);
-    return this.authApi.logout();
+    return this.authApi.logout().pipe(
+      tap(() => this.currentUserSubject.next(null))
+    );
+  }
+
+  checkAuthStatus() {
+    return this.http.get<UserLoginResponse>(ApiUrlConstants.ME).pipe(
+      tap(userResponse => {
+        this.setCurrentUser(userResponse);
+      }),
+      catchError(error => {
+        this.currentUserSubject.next(null);
+        return of(null);
+      })
+    );
   }
 }
