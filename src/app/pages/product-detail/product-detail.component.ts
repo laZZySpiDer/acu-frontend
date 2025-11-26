@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -184,5 +184,43 @@ export class ProductDetailComponent implements OnInit {
   }
 
 
+  // Lightbox methods
+  isLightboxOpen: boolean = false;
+  currentLightboxIndex: number = 0;
 
+  openLightbox(index: number) {
+    this.currentLightboxIndex = index;
+    this.isLightboxOpen = true;
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  closeLightbox() {
+    this.isLightboxOpen = false;
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+
+  nextLightboxImage() {
+    if (this.product && this.product.generalImages) {
+      this.currentLightboxIndex = (this.currentLightboxIndex + 1) % this.product.generalImages.length;
+    }
+  }
+
+  prevLightboxImage() {
+    if (this.product && this.product.generalImages) {
+      this.currentLightboxIndex = (this.currentLightboxIndex - 1 + this.product.generalImages.length) % this.product.generalImages.length;
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (!this.isLightboxOpen) return;
+
+    if (event.key === 'Escape') {
+      this.closeLightbox();
+    } else if (event.key === 'ArrowRight') {
+      this.nextLightboxImage();
+    } else if (event.key === 'ArrowLeft') {
+      this.prevLightboxImage();
+    }
+  }
 }
