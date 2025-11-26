@@ -3,26 +3,26 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./pages/home/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'shop',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./pages/shop/shop.component').then(m => m.ShopComponent)
-  },{
+  }, {
     path: 'experience',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./pages/experience/experience.component').then(m => m.ExperienceComponent)
   },
-    {
+  {
     path: 'product/:id/:variantId',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./pages/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
   },
   {
     path: 'product/:id',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./pages/product-detail/product-detail.component').then(m => m.ProductDetailComponent)
   },
 
@@ -46,7 +46,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/order-confirmation/order-confirmation.component').then(m => m.OrderConfirmationComponent)
   },
-    {
+  {
     path: 'payment-success',
     loadComponent: () =>
       import('./pages/payment-success/payment-success.component').then(m => m.PaymentSuccessComponent)
@@ -85,5 +85,10 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () =>
       import('./pages/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'faq',
+    loadComponent: () =>
+      import('./pages/faq/faq.component').then(m => m.FaqComponent)
   },
 ];

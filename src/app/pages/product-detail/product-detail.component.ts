@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, HostListener } from '@angular/core';
+import { AfterViewInit, Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -13,6 +13,7 @@ import { Review, ReviewsService } from '../../services/review.service';
 import { UserLoginResponse } from '../../interfaces/user.interface';
 import { ProductSize } from '../../interfaces/cart/cart.model';
 import { Product, Image } from '../../interfaces/products/product.interface';
+import { Subscription } from 'rxjs';
 
 
 
@@ -24,7 +25,7 @@ import { Product, Image } from '../../interfaces/products/product.interface';
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
   product!: Product;
   selectedImage!: Image | null;
   selectedColor: string | null = null;
@@ -35,6 +36,7 @@ export class ProductDetailComponent implements OnInit {
   currentUser: UserLoginResponse | null = null;
   reviews: Review[] = [];
   variantId: number | null = null;
+  private authSubscription: Subscription | null = null;
 
   quantityDropdownValuesForDolls = [
     { value: 1, label: 'Single Doll' },
@@ -70,8 +72,15 @@ export class ProductDetailComponent implements OnInit {
       this.getProduct(productId);
     })
 
-    this.currentUser = this.authService.getCurrentUser();
-    // this.currentUser = null;
+    this.authSubscription = this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   getProduct(productId: number) {

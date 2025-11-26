@@ -1,31 +1,34 @@
-<div  class="product-card group">
+<div class="product-card group">
   <div class="relative overflow-hidden">
-    <img [src]="product.mainImageLink?.imageLink" [alt]="product.name" class="w-full h-64 object-cover"/>
-    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+    <img [src]="product.mainImageLink?.imageLink" [alt]="product.name" class="w-full h-64 object-cover" />
+    <div
+      class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
       <button [routerLink]="['/product', product.id]" class="btn-primary mx-2">Quick View</button>
       <button (click)="toggleWishlist(product)" class="text-white">
-        <i class="fas" [class.fa-heart]="isInWishlist(product.id)" [class.fa-heart-o]="!isInWishlist(product.id)" [class.text-red-500]="isInWishlist(product.id)" [class.text-white]="!isInWishlist(product.id)"></i>
+        <i class="fas" [class.fa-heart]="isInWishlist(product.id)" [class.fa-heart-o]="!isInWishlist(product.id)"
+          [class.text-red-500]="isInWishlist(product.id)" [class.text-white]="!isInWishlist(product.id)"></i>
       </button>
     </div>
   </div>
   <div class="p-4">
     <h3 class="text-lg font-semibold">{{product.name}}</h3>
     <h6 class="text-sm mb-2 italic">{{product.category.name}}</h6>
-    <div class="flex items-center mb-2">
+    <div class="flex items-center mb-2"
+      *ngIf="product.averageRating && product.ratingsCount && product.averageRating > 0">
+      <span class="text-sm text-gray-500 ml-2">{{product.averageRating}}</span>
       <div class="flex text-yellow-400">
-       <!-- RATING IS COMMENTED OUT AS OF NOW -->
-        <!-- <i *ngFor="let star of [1,2,3,4,5]" 
-           class="fas fa-star text-sm"
-           [class.text-gray-300]="star > product.rating"></i> -->
+        <!-- RATING IS COMMENTED OUT AS OF NOW -->
+        <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star text-sm"
+          [class.text-gray-300]="star > product.averageRating"></i>
       </div>
-      <!-- <span class="text-sm text-gray-500 ml-2">({{product.reviews}})</span> -->
-       <span class="text-sm text-gray-500 ml-2">(69)</span>
+
+      <span class="text-sm text-gray-500 ml-2">({{product.ratingsCount}})</span>
     </div>
     <div class="flex justify-between items-center">
-      <p class="text-primary font-bold">₹{{!!(product.sizes[0].price)  ? (product.sizes[0].price):  product.price}}</p>
+      <p class="text-primary font-bold">₹{{!!(product.sizes[0].price) ? (product.sizes[0].price): product.price}}</p>
       <button (click)="addToCart(product)" class="text-gray-700 hover:text-primary">
         <i class="fas fa-shopping-cart"></i>
-      </button> 
+      </button>
     </div>
   </div>
-  </div>
+</div>

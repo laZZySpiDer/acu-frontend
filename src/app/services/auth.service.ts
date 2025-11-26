@@ -22,12 +22,19 @@ export class AuthService {
     return !!this.currentUserSubject.value;
   }
 
-  setCurrentUser(user: any) {
-    if(!user || !user.user) {
+  setCurrentUser(data: any) {
+    if (!data) {
       this.currentUserSubject.next(null);
       return;
     }
-    this.currentUserSubject.next(user.user);
+
+    // Check if data has a 'user' property (Login response structure)
+    if (data.user) {
+      this.currentUserSubject.next(data.user);
+    } else {
+      // Otherwise assume data itself is the user object (e.g. /me response)
+      this.currentUserSubject.next(data);
+    }
   }
 
   getCurrentUser(): UserLoginResponse | null {
@@ -36,7 +43,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.authApi.login(email, password).pipe(
-      tap(() => this.checkAuthStatus().subscribe())
+      tap((response) => this.setCurrentUser(response))
     );
   }
 
@@ -49,6 +56,7 @@ export class AuthService {
   checkAuthStatus() {
     return this.http.get<UserLoginResponse>(ApiUrlConstants.ME).pipe(
       tap(userResponse => {
+        console.log("ME", userResponse);
         this.setCurrentUser(userResponse);
       }),
       catchError(error => {
