@@ -108,8 +108,67 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  selectedCustomImage: string | null = null;
+  uploadedImageKey: string | null = null;
+  isUploadingImage: boolean = false;
+
   quantityChange(event: Event) {
     this.quantity = +(event.target as HTMLInputElement).value;
+  }
+
+  get requiresPhoto(): boolean {
+    // TODO: Define the actual logic for which categories require a photo.
+    // For now, let's assume any category with 'Custom' or 'Personalized' in the name,
+    // or specific IDs if known.
+    if (!this.product || !this.product.category) return false;
+    const name = this.product.category.name.toLowerCase();
+    return name.includes('custom') || name.includes('personalized') || name.includes('dolls');
+    // return false;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+      if (!validTypes.includes(file.type)) {
+        alert('Please upload a valid image (PNG, JPG, JPEG)');
+        event.target.value = ''; // Clear the input
+        this.selectedCustomImage = null;
+        this.uploadedImageKey = null;
+        return;
+      }
+
+      // Show preview immediately
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedCustomImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to API
+      this.isUploadingImage = true;
+      this.productApi.uploadTempImage(file).subscribe({
+        next: (response: any) => {
+          this.uploadedImageKey = response.key;
+          this.isUploadingImage = false;
+          console.log('Image uploaded successfully, key:', this.uploadedImageKey);
+        },
+        error: (err) => {
+          console.error('Image upload failed', err);
+          alert('Failed to upload image. Please try again.');
+          this.isUploadingImage = false;
+          this.selectedCustomImage = null;
+          this.uploadedImageKey = null;
+          event.target.value = '';
+        }
+      });
+    }
+  }
+
+  removeImage() {
+    this.selectedCustomImage = null;
+    this.uploadedImageKey = null;
+    this.isUploadingImage = false;
   }
 
   addToCart() {
@@ -117,17 +176,56 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       alert('Please select a size');
       return;
     }
+
+    if (this.requiresPhoto) {
+      if (!this.selectedCustomImage) {
+        alert('Please upload a photo for this product before adding to cart.');
+        return;
+      }
+      if (this.isUploadingImage) {
+        alert('Please wait for the image to finish uploading.');
+        return;
+      }
+      if (!this.uploadedImageKey) {
+        alert('Image upload failed or incomplete. Please try uploading again.');
+        return;
+      }
+    }
+
     this.cartService.addToCart({
       productId: `${this.product.id}`,
       productName: this.product.name,
       price: +this.product.price,
       mainImageLink: this.product.generalImages[0],
       quantity: +this.quantity,
-      size: this.selectedSize
+      size: this.selectedSize,
+      category: this.product.category.name,
+      // customImage: this.selectedCustomImage || undefined,
+      customImageName: this.uploadedImageKey || undefined
     });
   }
 
   buyNow() {
+    if (!this.selectedSize) {
+      alert('Please select a size');
+      return;
+    }
+
+    if (this.requiresPhoto) {
+      if (!this.selectedCustomImage) {
+        alert('Please upload a photo for this product before adding to cart.');
+        return;
+      }
+      if (this.isUploadingImage) {
+        alert('Please wait for the image to finish uploading.');
+        return;
+      }
+      if (!this.uploadedImageKey) {
+        alert('Image upload failed or incomplete. Please try uploading again.');
+        return;
+      }
+    }
+
     this.addToCart();
     this.router.navigate(['/checkout']);
     // TODO: Implement redirect to checkout

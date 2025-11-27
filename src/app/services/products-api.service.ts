@@ -7,7 +7,7 @@ import { ApiUrlConstants } from '../constants/url.constants';
   providedIn: 'root'
 })
 export class ProductsApiService {
-  
+
 
   constructor(private http: HttpClient) { }
 
@@ -25,15 +25,15 @@ export class ProductsApiService {
   }
 
   // For example request with query params
-  getProductsByCategory(category:string): Observable<any[]> {
+  getProductsByCategory(category: string): Observable<any[]> {
     return this.http.get<any[]>(`${ApiUrlConstants.GET_CATEGORIES}?category=${category}`)
   }
 
-  addToCart(productId: number, quantity: number, product_variant_id: number): Observable<any> {
-    return this.http.post<any>(ApiUrlConstants.ADD_TO_CART, { product_id : productId, quantity, product_variant_id });
+  addToCart(productId: number, quantity: number, product_variant_id: number, customImageName?: string | null): Observable<any> {
+    return this.http.post<any>(ApiUrlConstants.ADD_TO_CART, { product_id: productId, quantity, product_variant_id, customImageName });
   }
-  removeFromCart(productId: number,product_variant_id: number): Observable<any> {
-    return this.http.post<any>(ApiUrlConstants.REMOVE_FROM_CART, { product_id : productId, product_variant_id });
+  removeFromCart(productId: number, product_variant_id: number): Observable<any> {
+    return this.http.post<any>(ApiUrlConstants.REMOVE_FROM_CART, { product_id: productId, product_variant_id });
   }
   // updateCart(productId: number, quantity: number): Observable<any> {
   //   return this.http.put<any>(`${ApiUrlConstants.UPDATE_CART}/${productId}`, { quantity });
@@ -42,7 +42,7 @@ export class ProductsApiService {
     return this.http.get<any[]>(ApiUrlConstants.GET_CART);
   }
 
-  initiatePayment(orderDetails:any): Observable<any> {
+  initiatePayment(orderDetails: any): Observable<any> {
     return this.http.post<any>(ApiUrlConstants.INITIATE_PAYMENT, orderDetails);
   }
 
@@ -50,16 +50,22 @@ export class ProductsApiService {
     return this.http.get<any[]>(`${ApiUrlConstants.GET_PRODUCT_BY_CATEGORY}${categorySlug}`);
   }
 
-  addProductReview(productId:string,rating:number, comment:string): Observable<any> {
-    return this.http.post<any>(`${ApiUrlConstants.ADD_PRODUCT_REVIEW}${productId}/comment`, {rating, comment});
+  addProductReview(productId: string, rating: number, comment: string): Observable<any> {
+    return this.http.post<any>(`${ApiUrlConstants.ADD_PRODUCT_REVIEW}${productId}/comment`, { rating, comment });
   }
-  // clearCart(): Observable<any> {
-  //   return this.http.delete<any>(ApiUrlConstants.CLEAR_CART);
-  // }
+  clearCart(): Observable<any> {
+    return this.http.delete<any>(ApiUrlConstants.CLEAR_CART);
+  }
 
   searchProducts(query: string): Observable<any[]> {
     const params = new HttpParams().set('query', query);
     return this.http.get<any[]>(`${ApiUrlConstants.SEARCH_PRODUCTS}`, { params });
+  }
+
+  uploadTempImage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http.post<any>(`${ApiUrlConstants.baseUrl}/products/uploadTempImage`, formData);
   }
 
 }

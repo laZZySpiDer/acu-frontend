@@ -13,6 +13,7 @@ export class ApiUrlConstants {
     static readonly ADD_TO_CART = `${ApiUrlConstants.baseUrl}/cart/add`;
     static readonly REMOVE_FROM_CART = `${ApiUrlConstants.baseUrl}/cart/remove`;
     static readonly GET_CART = `${ApiUrlConstants.baseUrl}/cart`;
+    static readonly CLEAR_CART = `${ApiUrlConstants.baseUrl}/cart`;
 
     //AUTH
     static readonly LOGIN = `${ApiUrlConstants.baseUrl}/auth/loginSupa`;

@@ -28,10 +28,10 @@ export class CartService {
     this.loadCartItems();
 
     this._authApi.currentUser$.subscribe(user => {
-    if (user) {
-      this.loadCartItems();
-    }
-  });
+      if (user) {
+        this.loadCartItems();
+      }
+    });
 
   }
 
@@ -48,15 +48,16 @@ export class CartService {
 
   private loadCartItems() {
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.getCart().subscribe((res:any) => {
+      this._productsApi.getCart().subscribe((res: any) => {
         console.log('Cart items loaded from API:', res);
-        const items : CartItem[] = res.items.map((item: CartItem) => ({
+        const items: CartItem[] = res.items.map((item: any) => ({
           productId: item.productId,
           quantity: +item.quantity,
           price: typeof item.size.price === 'string' ? parseFloat(item.size.price) : item.size.price,
           productName: item.productName,
           mainImageLink: item.mainImageLink,
-          size: item.size
+          size: item.size,
+          customImageName: item.customImageName || item.custom_image_name
         }));
         this.cartItems.next(items);
         console.log('Cart items loaded:', this.cartItems.value);
@@ -66,7 +67,7 @@ export class CartService {
       this.cartItems.next(saved ? JSON.parse(saved) : []);
     }
 
-    
+
   }
 
   addToCart(item: CartItem) {
@@ -80,7 +81,7 @@ export class CartService {
       : item.quantity;
 
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.addToCart(+item.productId, newQuantity, item.size.productVariantId)
+      this._productsApi.addToCart(+item.productId, newQuantity, item.size.productVariantId, item.customImageName)
         .subscribe(response => {
           this.upsertItem(item, +response.item.quantity);
         });
@@ -97,7 +98,7 @@ export class CartService {
     this.cartItems.next(updated);
 
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.removeFromCart(+item.productId,item.size.productVariantId).subscribe();
+      this._productsApi.removeFromCart(+item.productId, item.size.productVariantId).subscribe();
     } else {
       this.persistLocalCart();
     }
@@ -105,7 +106,7 @@ export class CartService {
 
   updateQuantity(item: CartItem, quantity: number) {
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.addToCart(+item.productId, quantity, item.size.productVariantId)
+      this._productsApi.addToCart(+item.productId, quantity, item.size.productVariantId, item.customImageName)
         .subscribe(response => {
           this.upsertItem(item, +response.item.quantity);
         });
@@ -132,10 +133,10 @@ export class CartService {
 
   clearCart() {
     this.cartItems.next([]);
-    // if (this._authApi.isLoggedIn()) {
-    //   this._productsApi.clearCart().subscribe();
-    // } else {
-    //   this.persistLocalCart();
-    // }
+    if (this._authApi.isLoggedIn()) {
+      this._productsApi.clearCart().subscribe();
+    } else {
+      localStorage.removeItem('cart');
+    }
   }
 }

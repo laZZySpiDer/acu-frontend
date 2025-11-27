@@ -8,6 +8,8 @@ export interface CartItem {
   mainImageLink: Image;
   size: ProductSize;
   price: number;
+  customImageName?: string;
+  category?: string;
 }
 
 export interface ProductSize {

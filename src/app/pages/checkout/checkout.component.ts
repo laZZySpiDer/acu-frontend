@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -27,6 +27,7 @@ interface ShippingMethod {
   styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent {
+  @ViewChild('checkoutForm') checkoutForm!: NgForm;
   cartItems$ = this.cartService.cartItems$;
   cartTotal$ = this.cartService.cartTotal$;
 
@@ -63,8 +64,8 @@ export class CheckoutComponent {
     cvv: ''
   };
 
-  constructor(private cartService: CartService,private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
-     private _auth: AuthService) {}
+  constructor(private cartService: CartService, private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
+    private _auth: AuthService) { }
 
   getSelectedShippingPrice(): number {
     const method = this.shippingMethods.find(m => m.id === this.selectedShippingMethod);
@@ -81,6 +82,12 @@ export class CheckoutComponent {
   }
 
   placeOrder() {
+    if (this.checkoutForm.invalid) {
+      this.checkoutForm.form.markAllAsTouched();
+      alert('Please fill in all required fields correctly.');
+      return;
+    }
+
     // TODO: Implement order placement logic
     // console.log('Order placed:', {
     //   items: this.cartItems$.subscribe(items => items),
@@ -112,8 +119,9 @@ export class CheckoutComponent {
 
     console.log('Order Details:', this.orderService.getOrderDetails());
 
-    this._productsApi.initiatePayment(order).subscribe((response:any)=>{
-      console.log('Payment Response : ',response)
+    this._productsApi.initiatePayment(order).subscribe((response: any) => {
+      console.log('Payment Response : ', response)
+      this.cartService.clearCart();
       // window.location.href = response.payment_url;
       window.location.href = response.data.instrumentResponse.redirectInfo.url;
     });
