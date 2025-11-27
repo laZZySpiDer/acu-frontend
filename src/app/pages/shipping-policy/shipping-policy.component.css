@@ -1,0 +1,48 @@
+.shipping-policy-content h1 {
+    @apply text-3xl font-bold text-gray-900 mb-6;
+}
+
+.shipping-policy-content h2 {
+    @apply text-2xl font-bold text-gray-800 mt-8 mb-4 pb-2 border-b border-gray-200;
+}
+
+.shipping-policy-content h3 {
+    @apply text-xl font-semibold text-gray-700 mt-6 mb-3;
+}
+
+.shipping-policy-content p {
+    @apply text-gray-600 mb-4 leading-relaxed;
+}
+
+.shipping-policy-content ul {
+    @apply list-disc pl-6 mb-4 text-gray-600;
+}
+
+.shipping-policy-content li {
+    @apply mb-2;
+}
+
+.shipping-policy-content a {
+    @apply text-primary hover:underline;
+}
+
+.shipping-policy-content strong {
+    @apply font-semibold text-gray-800;
+}
+
+/* Table Styles */
+.shipping-policy-content table {
+    @apply w-full text-left border-collapse mt-4 mb-6 border border-gray-200 rounded-lg overflow-hidden;
+}
+
+.shipping-policy-content th {
+    @apply border-b-2 border-gray-200 p-4 font-semibold text-gray-700 bg-gray-50;
+}
+
+.shipping-policy-content td {
+    @apply border-b border-gray-200 p-4 text-gray-600;
+}
+
+.shipping-policy-content tr:last-child td {
+    @apply border-b-0;
+}

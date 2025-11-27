@@ -33,7 +33,7 @@ export class ShopComponent implements OnInit {
     minRating: null as number | null
   };
 
-  categories : Category[] = [];
+  categories: Category[] = [];
 
   products: Product[] = [
     // Add more products as needed
@@ -50,7 +50,7 @@ export class ShopComponent implements OnInit {
 
   getCategories() {
     this.productsApiService.getCategories().subscribe((categories: any) => {
-      this.categories = categories.categories.filter((elem:any) => elem.parent_category_id === null);
+      this.categories = categories.categories.filter((elem: any) => elem.parent_category_id === null);
       console.log(this.categories);
     });
   }
@@ -81,7 +81,7 @@ export class ShopComponent implements OnInit {
         if (this.filters.maxPrice && +product.price > this.filters.maxPrice) return false;
         if (this.filters.categories.length && !this.filters.categories.includes(product.category.name)) return false;
         if (this.filters.inStock && !product.stockQuantity) return false;
-        if (this.filters.minRating && 4 < this.filters.minRating) return false;
+        if (this.filters.minRating && (product.averageRating ?? 0) < this.filters.minRating) return false;
         return true;
       })
       .sort((a, b) => {
@@ -91,7 +91,7 @@ export class ShopComponent implements OnInit {
           case 'price-high':
             return +b.price - +a.price;
           case 'rating':
-            return 4 - 5;
+            return (b.averageRating ?? 0) - (a.averageRating ?? 0);
           default: // newest
             return b.id - a.id;
         }

@@ -1,0 +1,31 @@
+.return-policy-content h1 {
+    @apply text-3xl font-bold text-gray-900 mb-6;
+}
+
+.return-policy-content h2 {
+    @apply text-2xl font-bold text-gray-800 mt-8 mb-4 pb-2 border-b border-gray-200;
+}
+
+.return-policy-content h3 {
+    @apply text-xl font-semibold text-gray-700 mt-6 mb-3;
+}
+
+.return-policy-content p {
+    @apply text-gray-600 mb-4 leading-relaxed;
+}
+
+.return-policy-content ul {
+    @apply list-disc pl-6 mb-4 text-gray-600;
+}
+
+.return-policy-content li {
+    @apply mb-2;
+}
+
+.return-policy-content a {
+    @apply text-primary hover:underline;
+}
+
+.return-policy-content strong {
+    @apply font-semibold text-gray-800;
+}

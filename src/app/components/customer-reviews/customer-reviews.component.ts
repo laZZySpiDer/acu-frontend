@@ -32,21 +32,21 @@ import { CommonModule } from '@angular/common';
 export class CustomerReviewsComponent {
   reviews = [
     {
-      name: 'Sarah Johnson',
+      name: 'Dr. Bhavin Kamani',
       rating: 5,
-      comment: 'Absolutely love the quality of handmade products. The attention to detail is remarkable!',
+      comment: 'You made a miracle for Deverra IVF,All the patients are feeling so happy after seeing this. Thank you so much, Ashwini!',
       avatar: 'https://randomuser.me/api/portraits/women/1.jpg'
     },
     {
-      name: 'Michael Chen',
+      name: 'Simran Jain',
       rating: 5,
-      comment: 'Great customer service and unique items that you cannot find anywhere else.',
+      comment: 'The precision to replicate pictures into peg dolls is astounding. I asked for a super quick delivery and she managed to complete it within 2 days and ship it. Amazing work, will highly recommend it!',
       avatar: 'https://randomuser.me/api/portraits/men/2.jpg'
     },
     {
-      name: 'Emily Wilson',
-      rating: 4,
-      comment: 'Beautiful craftsmanship and fast shipping. Will definitely shop here again!',
+      name: 'Kishan Sharma',
+      rating: 5,
+      comment: "The wooden dolls were a MASTERPIECE in UK! 🎨You need a massive round of applause! The gifts were absolutely adored, brilliant, and totally unique. Seriously, they were such a hit, I'm already planning my next order (I want more!). Thank you, thank you, thank you for your incredible effort and generosity. Sending you the biggest hug and tons of love! ❤️✨",
       avatar: 'https://randomuser.me/api/portraits/women/3.jpg'
     }
   ];

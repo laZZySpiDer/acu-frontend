@@ -91,4 +91,24 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/faq/faq.component').then(m => m.FaqComponent)
   },
+  {
+    path: 'terms-conditions',
+    loadComponent: () =>
+      import('./pages/terms-conditions/terms-conditions.component').then(m => m.TermsConditionsComponent)
+  },
+  {
+    path: 'privacy-policy',
+    loadComponent: () =>
+      import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
+  {
+    path: 'return-policy',
+    loadComponent: () =>
+      import('./pages/return-policy/return-policy.component').then(m => m.ReturnPolicyComponent)
+  },
+  {
+    path: 'shipping-policy',
+    loadComponent: () =>
+      import('./pages/shipping-policy/shipping-policy.component').then(m => m.ShippingPolicyComponent)
+  },
 ];

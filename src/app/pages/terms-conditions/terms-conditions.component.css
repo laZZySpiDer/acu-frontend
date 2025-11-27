@@ -1,0 +1,27 @@
+.terms-and-conditions-content h2 {
+    @apply text-2xl font-bold text-gray-800 mt-8 mb-4 pb-2 border-b border-gray-200;
+}
+
+.terms-and-conditions-content h3 {
+    @apply text-xl font-semibold text-gray-700 mt-6 mb-3;
+}
+
+.terms-and-conditions-content h4 {
+    @apply text-lg font-semibold text-gray-700 mt-4 mb-2;
+}
+
+.terms-and-conditions-content p {
+    @apply text-gray-600 mb-4 leading-relaxed;
+}
+
+.terms-and-conditions-content ul {
+    @apply list-disc pl-6 mb-4 text-gray-600;
+}
+
+.terms-and-conditions-content li {
+    @apply mb-2;
+}
+
+.terms-and-conditions-content a {
+    @apply text-primary hover:underline;
+}
