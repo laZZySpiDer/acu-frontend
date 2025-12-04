@@ -11,11 +11,14 @@ export interface TrackingDetails {
   estimatedDelivery: string;
   currentStatus: OrderStatus['status'];
   statusHistory: OrderStatus[];
+  allowUploads: boolean;
+  additionalImages?: string[];
   items: Array<{
     itemName: string;
     quantity: number;
     itemImage: string;
-    variantSize?:string
+    variantSize?: string;
+    customImageUrl?: string;
   }>;
   shippingAddress: {
     name: string;

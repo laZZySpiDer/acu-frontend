@@ -1,61 +1,49 @@
 <main class="container py-8 mt-20">
-    <div class="max-w-6xl mx-auto">
-      <!-- Profile Header -->
-      <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div class="flex items-center gap-6">
-          <div class="w-24 h-24 rounded-full overflow-hidden">
-            <img [src]="user?.avatar || 'https://via.placeholder.com/150'" 
-                 [alt]="user?.name"
-                 class="w-full h-full object-cover"/>
-          </div>
-          <div>
-            <h1 class="text-2xl font-bold mb-2">{{user?.name}}</h1>
-            <p class="text-gray-600">{{user?.email}}</p>
-          </div>
+  <div class="max-w-6xl mx-auto">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+      <div class="flex items-center gap-6">
+        <div class="w-24 h-24 rounded-full overflow-hidden">
+          <img [src]="user?.avatar || 'https://via.placeholder.com/150'" [alt]="user?.name"
+            class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold mb-2">{{user?.name}}</h1>
+          <p class="text-gray-600">{{user?.email}}</p>
         </div>
       </div>
+    </div>
 
-      <!-- Profile Navigation -->
-      <div class="bg-white rounded-lg shadow-md mb-8">
-        <nav class="flex border-b">
-          <button *ngFor="let tab of tabs"
-                  (click)="activeTab = tab.id"
-                  class="px-6 py-3 text-gray-600 hover:text-primary"
-                  [class.text-primary]="activeTab === tab.id"
-                  [class.border-b-2]="activeTab === tab.id"
-                  [class.border-primary]="activeTab === tab.id">
-            {{tab.name}}
-          </button>
-        </nav>
+    <!-- Profile Navigation -->
+    <div class="bg-white rounded-lg shadow-md mb-8">
+      <nav class="flex border-b">
+        <button *ngFor="let tab of tabs" (click)="activeTab = tab.id" class="px-6 py-3 text-gray-600 hover:text-primary"
+          [class.text-primary]="activeTab === tab.id" [class.border-b-2]="activeTab === tab.id"
+          [class.border-primary]="activeTab === tab.id">
+          {{tab.name}}
+        </button>
+      </nav>
 
-        <!-- Personal Details -->
-        <div *ngIf="activeTab === 'personal'" class="p-6">
-          <form (ngSubmit)="updateProfile()" class="max-w-lg">
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <input 
-                type="text"
-                [(ngModel)]="profileForm.name"
-                name="name"
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
+      <!-- Personal Details -->
+      <div *ngIf="activeTab === 'personal'" class="p-6">
+        <form (ngSubmit)="updateProfile()" class="max-w-lg">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Full Name
+            </label>
+            <input type="text" [(ngModel)]="profileForm.name" name="name"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
 
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
-              </label>
-              <input 
-                type="tel"
-                [(ngModel)]="profileForm.phone"
-                name="phone"
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Phone Number
+            </label>
+            <input type="tel" [(ngModel)]="profileForm.phone" name="phone"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
 
-            <!-- <div class="mb-4">
+          <!-- <div class="mb-4">
               <label class="block text-sm font-medium text-gray-700 mb-1">
                 Default Shipping Address
               </label>
@@ -67,122 +55,196 @@
               ></textarea>
             </div> -->
 
-            <button type="submit" class="btn-primary">
-              Save Changes
-            </button>
-          </form>
-        </div>
+          <button type="submit" class="btn-primary">
+            Save Changes
+          </button>
+        </form>
+      </div>
 
-        <!-- Orders -->
-        <div *ngIf="activeTab === 'orders'" class="p-6">
-          <div class="space-y-6">
-            <div *ngFor="let order of orders" 
-                 class="border rounded-lg p-4">
-              <div class="flex justify-between items-start mb-4">
-                <div>
-                  <h3 class="font-semibold">Order #{{order.orderId}}</h3>
-                  <!-- <p class="text-sm text-gray-600">
+      <!-- Orders -->
+      <div *ngIf="activeTab === 'orders'" class="p-6">
+        <div class="space-y-6">
+          <div *ngFor="let order of orders" class="border rounded-lg p-4">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-semibold">Order #{{order.orderId}}</h3>
+                <!-- <p class="text-sm text-gray-600">
                     Tracking Number: {{order.trackingNumber}}
                   </p> -->
-                </div>
-                <span class="px-3 py-1 rounded-full text-sm"
-                      [class.bg-yellow-100]="order.currentStatus === 'In Progress'"
-                      [class.text-yellow-800]="order.currentStatus === 'In Progress'"
-                      [class.bg-blue-100]="order.currentStatus === 'shipped'"
-                      [class.text-blue-800]="order.currentStatus === 'shipped'"
-                      [class.bg-green-100]="order.currentStatus === 'Delivered'"
-                      [class.text-green-800]="order.currentStatus === 'Delivered'">
-                  {{order.currentStatus | titlecase}}
-                </span>
               </div>
+              <span class="px-3 py-1 rounded-full text-sm" [class.bg-yellow-100]="order.currentStatus === 'In Progress'"
+                [class.text-yellow-800]="order.currentStatus === 'In Progress'"
+                [class.bg-blue-100]="order.currentStatus === 'shipped'"
+                [class.text-blue-800]="order.currentStatus === 'shipped'"
+                [class.bg-green-100]="order.currentStatus === 'Delivered'"
+                [class.text-green-800]="order.currentStatus === 'Delivered'">
+                {{order.currentStatus | titlecase}}
+              </span>
+            </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-1">
+                  Shipping Method
+                </h4>
+                <p>{{order.shippingAddress.method | uppercase}}</p>
+              </div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-700 mb-1">
+                  Shipping Address
+                </h4>
+                <p class="text-sm">
+                  {{order.shippingAddress.name}}<br>
+                  {{order.shippingAddress.address}}<br>
+                  {{order.shippingAddress.city}}, {{order.shippingAddress.state}} {{order.shippingAddress.zipCode}}
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div *ngFor="let item of order.items" class="flex items-center gap-4">
+                <img [src]="item.itemImage" [alt]="item.itemName" class="w-16 h-16 object-cover rounded" />
                 <div>
-                  <h4 class="text-sm font-medium text-gray-700 mb-1">
-                    Shipping Method
-                  </h4>
-                  <p>{{order.shippingAddress.method | uppercase}}</p>
+                  <h4 class="font-medium">{{item.itemName}} ({{item.variantSize}})</h4>
+                  <p class="text-sm text-gray-600">Qty: {{item.quantity}}</p>
                 </div>
-                <div>
-                  <h4 class="text-sm font-medium text-gray-700 mb-1">
-                    Shipping Address
-                  </h4>
-                  <p class="text-sm">
-                    {{order.shippingAddress.name}}<br>
-                    {{order.shippingAddress.address}}<br>
-                    {{order.shippingAddress.city}}, {{order.shippingAddress.state}} {{order.shippingAddress.zipCode}}
-                  </p>
+              </div>
+            </div>
+
+            <!-- Uploaded Images Display -->
+            <div class="mt-4 border-t pt-4" *ngIf="getDisplayImages(order).length > 0">
+              <h4 class="text-sm font-medium text-gray-700 mb-2">Uploaded Images</h4>
+              <div class="flex flex-wrap gap-4">
+                <div *ngFor="let img of getDisplayImages(order); let i = index"
+                  class="relative w-20 h-20 cursor-pointer hover:opacity-80 transition-opacity"
+                  (click)="openLightbox(getDisplayImages(order), i)">
+                  <img [src]="img" class="w-full h-full object-cover rounded border">
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Image Upload -->
+            <div class="mt-4 border-t pt-4"
+              *ngIf="(!order.additionalImages || order.additionalImages.length === 0) && order.allowUploads">
+              <h4 class="text-sm font-medium text-gray-700 mb-2">Add Additional Images (Max 2)</h4>
+
+              <div class="flex flex-wrap gap-4 mb-3">
+                <!-- Previews -->
+                <div *ngFor="let preview of filePreviews[order.orderId]; let i = index" class="relative w-20 h-20">
+                  <img [src]="preview" class="w-full h-full object-cover rounded border">
+                  <button (click)="removeFile(order.orderId, i)"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600">
+                    ×
+                  </button>
+                </div>
+
+                <!-- Upload Button / Input -->
+                <div *ngIf="!selectedFiles[order.orderId] || selectedFiles[order.orderId].length < 2"
+                  class="w-20 h-20 border-2 border-dashed border-gray-300 rounded flex items-center justify-center hover:border-primary cursor-pointer relative">
+                  <input type="file" (change)="onFileSelected($event, order.orderId)" accept="image/*"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" [multiple]="true">
+                  <span class="text-2xl text-gray-400">+</span>
                 </div>
               </div>
 
-              <div class="space-y-2">
-                <div *ngFor="let item of order.items" 
-                     class="flex items-center gap-4">
-                  <img [src]="item.itemImage" 
-                       [alt]="item.itemName"
-                       class="w-16 h-16 object-cover rounded"/>
-                  <div>
-                    <h4 class="font-medium">{{item.itemName}} ({{item.variantSize}})</h4> 
-                    <p class="text-sm text-gray-600">Qty: {{item.quantity}}</p>
-                  </div>
-                </div>
-              </div>
+              <button *ngIf="selectedFiles[order.orderId]?.length" (click)="uploadImages(order.orderId)"
+                class="btn-primary text-sm">
+                Upload Images
+              </button>
+            </div>
 
-              <div class="mt-4 flex justify-end">
-                <a [routerLink]="['/track-order']" 
-                   [queryParams]="{id: order.orderId}"
-                   class="text-primary hover:underline">
-                  Track Order
-                </a>
-              </div>
+            <div class="mt-4 flex justify-end">
+              <a [routerLink]="['/track-order']" [queryParams]="{id: order.orderId}"
+                class="text-primary hover:underline">
+                Track Order
+              </a>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Security -->
-        <div *ngIf="activeTab === 'security'" class="p-6">
-          <form (ngSubmit)="updatePassword()" class="max-w-lg">
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                Current Password
-              </label>
-              <input 
-                type="password"
-                [(ngModel)]="passwordForm.currentPassword"
-                name="currentPassword"
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
+      <!-- Security -->
+      <div *ngIf="activeTab === 'security'" class="p-6">
+        <form (ngSubmit)="updatePassword()" class="max-w-lg">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Current Password
+            </label>
+            <input type="password" [(ngModel)]="passwordForm.currentPassword" name="currentPassword"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
 
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                New Password
-              </label>
-              <input 
-                type="password"
-                [(ngModel)]="passwordForm.newPassword"
-                name="newPassword"
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              New Password
+            </label>
+            <input type="password" [(ngModel)]="passwordForm.newPassword" name="newPassword"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
 
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                Confirm New Password
-              </label>
-              <input 
-                type="password"
-                [(ngModel)]="passwordForm.confirmPassword"
-                name="confirmPassword"
-                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Confirm New Password
+            </label>
+            <input type="password" [(ngModel)]="passwordForm.confirmPassword" name="confirmPassword"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary" />
+          </div>
 
-            <button type="submit" class="btn-primary">
-              Update Password
-            </button>
-          </form>
-        </div>
+          <button type="submit" class="btn-primary">
+            Update Password
+          </button>
+        </form>
       </div>
     </div>
-  </main>
+  </div>
+
+
+  <!-- Lightbox Modal -->
+  <div *ngIf="isLightboxOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95 backdrop-blur-sm transition-opacity duration-300"
+    (click)="closeLightbox()">
+
+    <!-- Close Button -->
+    <button
+      class="absolute top-6 right-6 text-white text-5xl hover:text-gray-300 z-50 focus:outline-none transition-colors"
+      (click)="closeLightbox()">
+      &times;
+    </button>
+
+    <!-- Previous Button -->
+    <button *ngIf="lightboxImages.length > 1"
+      class="absolute left-4 md:left-8 text-white text-4xl md:text-6xl hover:text-gray-300 z-50 focus:outline-none p-4 transition-transform hover:scale-110"
+      (click)="$event.stopPropagation(); prevLightboxImage()">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- Image Container -->
+    <div class="relative max-w-7xl max-h-[90vh] flex flex-col items-center" (click)="$event.stopPropagation()">
+      <img [src]="lightboxImages[currentLightboxIndex]" alt="Order Image"
+        class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl" />
+
+      <!-- Image Counter -->
+      <div class="mt-4 text-white text-lg font-medium tracking-wide">
+        {{ currentLightboxIndex + 1 }} / {{ lightboxImages.length }}
+      </div>
+
+      <!-- Thumbnails Strip -->
+      <div class="flex gap-2 mt-4 overflow-x-auto max-w-full px-4 pb-2" *ngIf="lightboxImages.length > 1">
+        <button *ngFor="let img of lightboxImages; let i = index" (click)="currentLightboxIndex = i"
+          class="relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all"
+          [class.border-white]="i === currentLightboxIndex" [class.border-transparent]="i !== currentLightboxIndex"
+          [class.opacity-50]="i !== currentLightboxIndex" [class.opacity-100]="i === currentLightboxIndex">
+          <img [src]="img" class="w-full h-full object-cover">
+        </button>
+      </div>
+    </div>
+
+    <!-- Next Button -->
+    <button *ngIf="lightboxImages.length > 1"
+      class="absolute right-4 md:right-8 text-white text-4xl md:text-6xl hover:text-gray-300 z-50 focus:outline-none p-4 transition-transform hover:scale-110"
+      (click)="$event.stopPropagation(); nextLightboxImage()">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+
+  </div>
+</main>

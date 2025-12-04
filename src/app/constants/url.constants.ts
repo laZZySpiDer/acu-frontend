@@ -30,5 +30,6 @@ export class ApiUrlConstants {
 
     //PROFILE
     static readonly GET_ORDERS = `${ApiUrlConstants.baseUrl}/profile/recent-orders`
+    static readonly UPLOAD_ORDER_IMAGES = `${ApiUrlConstants.baseUrl}/orders/upload-images`;
 }
 
