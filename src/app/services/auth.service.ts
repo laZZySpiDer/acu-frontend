@@ -47,6 +47,18 @@ export class AuthService {
     );
   }
 
+  loginWithGoogle() {
+    return this.authApi.loginGoogle().pipe(
+      tap((response) => this.setCurrentUser(response))
+    );
+  }
+
+  handleOAuthCallback(token: string) {
+    return this.authApi.oauthCallback(token).pipe(
+      tap((response) => this.setCurrentUser(response))
+    );
+  }
+
   logout() {
     return this.authApi.logout().pipe(
       tap(() => this.currentUserSubject.next(null))

@@ -8,11 +8,11 @@ import { UserLoginResponse } from '../../interfaces/user.interface';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent { 
+export class LoginComponent {
   email: string = '';
   password: string = '';
   isLoading: boolean = false;
@@ -21,7 +21,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   onSubmit() {
     if (!this.email || !this.password) {
@@ -51,15 +51,18 @@ export class LoginComponent {
     this.isLoading = true;
     this.error = '';
 
-    // this.authService.loginWithGoogle().subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/']);
-    //   },
-    //   error: (err) => {
-    //     this.isLoading = false;
-    //     this.error = this.getErrorMessage(err.code);
-    //   }
-    // });
+    this.authService.loginWithGoogle().subscribe({
+      next: (user: any) => {
+        console.log('Google Login Success', user);
+        window.location.href = user.url;
+        // this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Google Login Error', err);
+        this.isLoading = false;
+        this.error = 'Failed to login with Google';
+      }
+    });
   }
 
   loginWithFacebook() {

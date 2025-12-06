@@ -10,13 +10,21 @@ import { ReCaptchaV3Service } from "ng-recaptcha";
   providedIn: "root",
 })
 export class AuthApiService {
-  constructor(private http: HttpClient,private recaptchaService: RecaptchaService,private recaptchaV3Service: ReCaptchaV3Service) {}
+  constructor(private http: HttpClient, private recaptchaService: RecaptchaService, private recaptchaV3Service: ReCaptchaV3Service) { }
 
   login(email: string, password: string) {
     return this.http.post<UserLoginResponse>(`${ApiUrlConstants.LOGIN}`, {
       email,
       password,
     });
+  }
+
+  loginGoogle() {
+    return this.http.post<any>(`${ApiUrlConstants.LOGIN_GOOGLE}`, {});
+  }
+
+  oauthCallback(access_token: string) {
+    return this.http.post<UserLoginResponse>(`${ApiUrlConstants.OAUTH_CALLBACK}`, { access_token });
   }
 
   logout() {

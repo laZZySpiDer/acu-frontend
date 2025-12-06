@@ -1,6 +1,7 @@
+import { environment } from '../../environments/environment';
 
 export class ApiUrlConstants {
-    static readonly baseUrl = 'http://localhost:3000';
+    static readonly baseUrl = environment.baseUrl;
 
     //PRODUCTS
     static readonly GET_PRODUCTS = `${ApiUrlConstants.baseUrl}/products`;
@@ -20,6 +21,8 @@ export class ApiUrlConstants {
     static readonly REGISTER = `${ApiUrlConstants.baseUrl}/auth/registerSupa`;
     static readonly LOGOUT = `${ApiUrlConstants.baseUrl}/auth/logout`;
     static readonly ME = `${ApiUrlConstants.baseUrl}/auth/me`;
+    static readonly LOGIN_GOOGLE = `${ApiUrlConstants.baseUrl}/auth/loginGoogle`;
+    static readonly OAUTH_CALLBACK = `${ApiUrlConstants.baseUrl}/auth/oauth-callback`;
 
     //PAYMENT
     static readonly INITIATE_PAYMENT = `${ApiUrlConstants.baseUrl}/payment/initiate`;

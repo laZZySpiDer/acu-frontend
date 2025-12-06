@@ -5,13 +5,18 @@ import { FooterComponent } from "./components/footer/footer.component";
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 
+import { ScrollToTopComponent } from "./components/scroll-to-top/scroll-to-top.component";
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, RecaptchaModule, RecaptchaFormsModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, RecaptchaModule, RecaptchaFormsModule, ScrollToTopComponent],
   template: `
     <app-header></app-header>
-    <router-outlet></router-outlet>
+    <main class="min-h-screen">
+      <router-outlet></router-outlet>
+    </main>
+    <app-scroll-to-top></app-scroll-to-top>
     <app-footer></app-footer>
   `
 })

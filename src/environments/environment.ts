@@ -1,3 +1,5 @@
 export const environment = {
-  recaptchaSiteKey: '6LdXr_QrAAAAAPVnHV-blIYKkZJlkcRBPoREIBHr'
+  production: false,
+  recaptchaSiteKey: '6LdXr_QrAAAAAPVnHV-blIYKkZJlkcRBPoREIBHr',
+  baseUrl: 'http://localhost:3000'
 };

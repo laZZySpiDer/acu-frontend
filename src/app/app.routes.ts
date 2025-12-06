@@ -111,4 +111,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/shipping-policy/shipping-policy.component').then(m => m.ShippingPolicyComponent)
   },
+  {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
+  }
 ];

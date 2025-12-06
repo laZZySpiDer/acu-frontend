@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
@@ -12,11 +12,11 @@ import { NavbarSearchComponent } from '../navbar-search.component/navbar-search.
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule,CartComponent,FormsModule, NavbarSearchComponent],
+  imports: [CommonModule, RouterModule, CartComponent, FormsModule, NavbarSearchComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent{
+export class HeaderComponent {
   menuList = [
     {
       name: 'Home',
@@ -38,9 +38,20 @@ export class HeaderComponent{
   showDropdown = false;
   searchQuery: string = '';
 
+  @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
 
+  constructor(private cartService: CartService, private wishlistService: WishlistService, private authService: AuthService, private router: Router, private productApiService: ProductsApiService) { }
 
-  constructor(private cartService: CartService,private wishlistService: WishlistService, private authService: AuthService, private router: Router,private productApiService: ProductsApiService) {}
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (this.showDropdown && this.dropdownContainer && !this.dropdownContainer.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+  }
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
 
   isMobileMenuOpen = false;
 
@@ -48,12 +59,12 @@ export class HeaderComponent{
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  logout(){
+  logout() {
     this.showDropdown = false;
     console.log('logout');
     this.authService.logout().subscribe({
-      next: (response:any) => {
-        console.log('Logout Response',response);
+      next: (response: any) => {
+        console.log('Logout Response', response);
         this.authService.setCurrentUser(null);
         this.router.navigate(['/']);
         this.cartService.clearCart();
@@ -63,17 +74,17 @@ export class HeaderComponent{
   }
 
 
-    onSearch() {
+  onSearch() {
     if (this.searchQuery.trim()) {
       // this.router.navigate(['/shop'], { queryParams: { search: this.searchQuery.trim() } });
       console.log('Search Query:', this.searchQuery.trim());
       this.productApiService.searchProducts(this.searchQuery.trim()).subscribe({
-        next: (results:any) => {
+        next: (results: any) => {
           console.log('Search Results:', results);
           // You can navigate to a search results page or display results as needed
           // this.router.navigate(['/shop'], { queryParams: { search: this.searchQuery.trim() } });
         },
-        error: (error:any) => {
+        error: (error: any) => {
           console.error('Search Error:', error);
         }
       });

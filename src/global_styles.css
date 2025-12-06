@@ -21,18 +21,47 @@ body {
   @apply mx-auto px-4 max-w-7xl;
 }
 
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg;
+}
+
+.btn-press {
+  @apply active:scale-95 transition-transform duration-100;
+}
+
 .btn-primary {
-  @apply bg-primary text-white px-6 py-2 rounded-md hover:bg-primary-dark transition-colors;
+  @apply bg-primary text-white px-6 py-2 rounded-md hover:bg-primary-dark transition-colors btn-press shadow-sm;
 }
 
 .btn-secondary {
-  @apply bg-secondary text-white px-6 py-2 rounded-md hover:bg-secondary-dark transition-colors;
+  @apply bg-secondary text-white px-6 py-2 rounded-md hover:bg-secondary-dark transition-colors btn-press shadow-sm;
 }
 
 .product-card {
-  @apply bg-white rounded-lg shadow-md p-4 transition-transform hover:scale-105;
+  @apply bg-white rounded-lg shadow-md p-4 hover-lift;
 }
 
 .section-title {
   @apply text-3xl font-bold text-center mb-8;
+}
+
+.grecaptcha-badge {
+  visibility: hidden !important;
 }
