@@ -48,8 +48,16 @@ export class AuthService {
   }
 
   loginWithGoogle() {
-    return this.authApi.loginGoogle().pipe(
+    return this.authApi.loginWithGoogle().pipe(
       tap((response) => this.setCurrentUser(response))
+    );
+  }
+
+  googleLoginWithToken(token: string) {
+    return this.authApi.googleLoginWithToken(token).pipe(
+      tap((response: UserLoginResponse) => {
+        this.setCurrentUser(response);
+      })
     );
   }
 

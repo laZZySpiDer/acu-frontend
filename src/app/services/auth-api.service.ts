@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { ApiUrlConstants } from "../constants/url.constants";
 import { UserLoginResponse } from "../interfaces/user.interface";
 import { RecaptchaService } from "./recaptcha.service";
-import { firstValueFrom, from, switchMap } from "rxjs";
+import { Observable, firstValueFrom, from, switchMap } from "rxjs";
 import { ReCaptchaV3Service } from "ng-recaptcha";
 
 @Injectable({
@@ -19,8 +19,12 @@ export class AuthApiService {
     });
   }
 
-  loginGoogle() {
-    return this.http.post<any>(`${ApiUrlConstants.LOGIN_GOOGLE}`, {});
+  loginWithGoogle(): Observable<any> {
+    return this.http.post(ApiUrlConstants.LOGIN_GOOGLE, {}, { withCredentials: true });
+  }
+
+  googleLoginWithToken(token: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.GOOGLE_LOGIN_WITH_TOKEN, { id_token: token }, { withCredentials: true });
   }
 
   oauthCallback(access_token: string) {

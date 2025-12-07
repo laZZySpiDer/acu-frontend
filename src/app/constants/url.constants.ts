@@ -22,6 +22,7 @@ export class ApiUrlConstants {
     static readonly LOGOUT = `${ApiUrlConstants.baseUrl}/auth/logout`;
     static readonly ME = `${ApiUrlConstants.baseUrl}/auth/me`;
     static readonly LOGIN_GOOGLE = `${ApiUrlConstants.baseUrl}/auth/loginGoogle`;
+    static readonly GOOGLE_LOGIN_WITH_TOKEN = `${ApiUrlConstants.baseUrl}/auth/google-token`;
     static readonly OAUTH_CALLBACK = `${ApiUrlConstants.baseUrl}/auth/oauth-callback`;
 
     //PAYMENT
