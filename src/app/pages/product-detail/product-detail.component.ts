@@ -46,7 +46,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     { value: 5, label: 'Family Set of 5' },
   ];
   constructor(
-    private router: Router,
+    public router: Router,
     private cartService: CartService,
     private wishlistService: WishlistService,
     private route: ActivatedRoute,
@@ -178,6 +178,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     if (this.requiresPhoto) {
+      if (!this.currentUser) {
+        alert('Please login to upload a photo for this product.');
+        this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+        return;
+      }
       if (!this.selectedCustomImage) {
         alert('Please upload a photo for this product before adding to cart.');
         return;
@@ -212,6 +217,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     if (this.requiresPhoto) {
+      if (!this.currentUser) {
+        alert('Please login to upload a photo for this product.');
+        this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+        return;
+      }
       if (!this.selectedCustomImage) {
         alert('Please upload a photo for this product before adding to cart.');
         return;
