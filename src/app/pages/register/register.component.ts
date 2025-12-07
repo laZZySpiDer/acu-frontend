@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthApiService } from '../../services/auth-api.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,7 @@ import { AuthApiService } from '../../services/auth-api.service';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent { 
+export class RegisterComponent {
   name: string = '';
   email: string = '';
   password: string = '';
@@ -23,8 +24,9 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private authApiService: AuthApiService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private notificationService: NotificationService
+  ) { }
 
   onSubmit() {
     if (!this.name || !this.email || !this.password || !this.confirmPassword) {
@@ -47,11 +49,13 @@ export class RegisterComponent {
 
     this.authApiService.register(this.name, this.email, this.password).subscribe({
       next: () => {
+        this.notificationService.success('Registration successful! PLease login');
         this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;
         this.error = this.getErrorMessage(err.code);
+        this.notificationService.error(this.error);
       }
     });
   }
@@ -60,20 +64,24 @@ export class RegisterComponent {
     this.isLoading = true;
     this.error = '';
 
-    // this.authService.loginWithGoogle().subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/']);
-    //   },
-    //   error: (err) => {
-    //     this.isLoading = false;
-    //     this.error = this.getErrorMessage(err.code);
-    //   }
-    // });
+    this.authService.loginWithGoogle().subscribe({
+      next: (user: any) => {
+        console.log('Google Login Success', user);
+        window.location.href = user.url;
+        // this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Google Login Error', err);
+        this.isLoading = false;
+        this.error = 'Failed to login with Google';
+        this.notificationService.error(this.error);
+      }
+    });
   }
 
   loginWithFacebook() {
-    this.isLoading = true;
-    this.error = '';
+    // this.isLoading = true;
+    // this.error = '';
 
     // this.authService.loginWithFacebook().subscribe({
     //   next: () => {

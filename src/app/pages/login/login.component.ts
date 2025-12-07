@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UserLoginResponse } from '../../interfaces/user.interface';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) { }
 
   onSubmit() {
@@ -37,11 +39,13 @@ export class LoginComponent {
         console.log(user.user);
         console.log(user.user.token);
         this.authService.setCurrentUser(user);
+        this.notificationService.success('Logged in successfully');
         this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;
         this.error = this.getErrorMessage(err.code);
+        this.notificationService.error(this.error);
       }
     });
 

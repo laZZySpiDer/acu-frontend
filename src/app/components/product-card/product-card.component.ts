@@ -4,20 +4,21 @@ import { Router, RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { WishlistService } from '../../services/wishlist.service';
 import { Product } from '../../interfaces/products/product.interface';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.css'  
+  styleUrl: './product-card.component.css'
 })
 export class ProductCardComponent implements OnChanges {
 
   @Input() product!: Product;
   constructor(private router: Router, private wishlistService: WishlistService,
-    private cartService: CartService) {}
- 
+    private cartService: CartService, private notificationService: NotificationService) { }
+
   ngOnChanges(changes: any) {
     // console.log('ProductCardComponent changes:', changes);
   }
@@ -29,6 +30,7 @@ export class ProductCardComponent implements OnChanges {
   toggleWishlist(product: any) {
     if (this.isInWishlist(product.id)) {
       this.wishlistService.removeFromWishlist(product.id);
+      this.notificationService.success("Removed from wishlist");
     } else {
       this.wishlistService.addToWishlist({
         id: product.id,
@@ -39,6 +41,7 @@ export class ProductCardComponent implements OnChanges {
         rating: product.rating,
         reviews: product.reviews
       });
+      this.notificationService.success("Added to wishlist");
     }
   }
 
@@ -52,4 +55,4 @@ export class ProductCardComponent implements OnChanges {
       size: product.sizes[0]
     });
   }
- }
+}
