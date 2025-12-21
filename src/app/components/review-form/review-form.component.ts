@@ -9,6 +9,7 @@ import {
 import { FormsModule } from "@angular/forms";
 import { ProductsApiService } from "../../services/products-api.service";
 import { Router } from "@angular/router";
+import { NotificationService } from "../../services/notification.service";
 
 @Component({
   selector: "app-review-form",
@@ -28,8 +29,9 @@ export class ReviewFormComponent {
 
   constructor(
     private _productsApiService: ProductsApiService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private notificationService: NotificationService
+  ) { }
 
   get isValid(): boolean {
     return this.rating > 0 && this.comment.trim().length > 0;
@@ -38,7 +40,7 @@ export class ReviewFormComponent {
   submitReview() {
     if (this.isValid && !this.isSubmitting) {
       this.isSubmitting = true;
- 
+
 
       console.log("Review submitted:", {
         rating: this.rating,
@@ -59,10 +61,12 @@ export class ReviewFormComponent {
             this.rating = 0;
             this.comment = "";
             this.isSubmitting = false;
-            
+            this.notificationService.success('Review submitted successfully');
+
           },
           error: (error) => {
             console.error("Error submitting review to server:", error);
+            this.notificationService.error('Failed to submit review');
           },
         });
       // Reset form

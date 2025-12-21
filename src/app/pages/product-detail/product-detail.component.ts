@@ -14,6 +14,7 @@ import { UserLoginResponse } from '../../interfaces/user.interface';
 import { ProductSize } from '../../interfaces/cart/cart.model';
 import { Product, Image } from '../../interfaces/products/product.interface';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification.service';
 
 
 
@@ -46,13 +47,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     { value: 5, label: 'Family Set of 5' },
   ];
   constructor(
-    private router: Router,
+    public router: Router,
     private cartService: CartService,
     private wishlistService: WishlistService,
     private route: ActivatedRoute,
     private authService: AuthService,
     private productApi: ProductsApiService,
-    private reviewsService: ReviewsService
+    private reviewsService: ReviewsService,
+    private notificationService: NotificationService
   ) { }
 
 
@@ -178,6 +180,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     if (this.requiresPhoto) {
+      if (!this.currentUser) {
+        alert('Please login to upload a photo for this product.');
+        this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+        return;
+      }
       if (!this.selectedCustomImage) {
         alert('Please upload a photo for this product before adding to cart.');
         return;
@@ -212,6 +219,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     if (this.requiresPhoto) {
+      if (!this.currentUser) {
+        alert('Please login to upload a photo for this product.');
+        this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+        return;
+      }
       if (!this.selectedCustomImage) {
         alert('Please upload a photo for this product before adding to cart.');
         return;
@@ -234,6 +246,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   toggleWishlist() {
     if (this.isInWishlist) {
       this.wishlistService.removeFromWishlist(this.product.id);
+      this.notificationService.success('Product removed from wishlist');
     } else {
       this.wishlistService.addToWishlist({
         id: this.product.id,
@@ -244,6 +257,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         rating: 69,
         reviews: 100
       });
+      this.notificationService.success('Product added to wishlist');
     }
     this.isInWishlist = !this.isInWishlist;
   }

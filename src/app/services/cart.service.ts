@@ -5,6 +5,7 @@ import { BehaviorSubject, map } from 'rxjs';
 import { CartItem } from '../interfaces/cart/cart.model';
 import { ProductsApiService } from './products-api.service';
 import { AuthService } from './auth.service';
+import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
@@ -23,7 +24,8 @@ export class CartService {
 
   constructor(
     private _productsApi: ProductsApiService,
-    private _authApi: AuthService
+    private _authApi: AuthService,
+    private notificationService: NotificationService
   ) {
     this.loadCartItems();
 
@@ -84,10 +86,12 @@ export class CartService {
       this._productsApi.addToCart(+item.productId, newQuantity, item.size.productVariantId, item.customImageName)
         .subscribe(response => {
           this.upsertItem(item, +response.item.quantity);
+          this.notificationService.success(`${item.productName} added to cart`);
         });
     } else {
       this.upsertItem(item, newQuantity);
       this.persistLocalCart();
+      this.notificationService.success(`${item.productName} added to cart`);
     }
   }
 
@@ -98,9 +102,12 @@ export class CartService {
     this.cartItems.next(updated);
 
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.removeFromCart(+item.productId, item.size.productVariantId).subscribe();
+      this._productsApi.removeFromCart(+item.productId, item.size.productVariantId).subscribe(() => {
+        this.notificationService.info(`${item.productName} removed from cart`);
+      });
     } else {
       this.persistLocalCart();
+      this.notificationService.info(`${item.productName} removed from cart`);
     }
   }
 

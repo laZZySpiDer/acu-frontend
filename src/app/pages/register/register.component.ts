@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthApiService } from '../../services/auth-api.service';
+import { NotificationService } from '../../services/notification.service';
+import { environment } from '../../../environments/environment';
+
+declare var google: any;
 
 @Component({
   selector: 'app-register',
@@ -12,7 +16,7 @@ import { AuthApiService } from '../../services/auth-api.service';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent { 
+export class RegisterComponent implements OnInit {
   name: string = '';
   email: string = '';
   password: string = '';
@@ -23,8 +27,55 @@ export class RegisterComponent {
   constructor(
     private authService: AuthService,
     private authApiService: AuthApiService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private notificationService: NotificationService
+  ) { }
+
+  ngOnInit() {
+    // Initialize Google Sign-In
+    const interval = setInterval(() => {
+      if (typeof google !== 'undefined') {
+        clearInterval(interval);
+        this.initializeGoogleSignIn();
+      }
+    }, 100);
+  }
+
+  initializeGoogleSignIn() {
+    google.accounts.id.initialize({
+      client_id: environment.googleClientId,
+      callback: (response: any) => this.handleGoogleCredential(response),
+      ux_mode: 'popup',
+      auto_select: false,
+      itp_support: true
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("google-register-button"),
+      { theme: "outline", size: "large", width: "100%" }
+    );
+  }
+
+  handleGoogleCredential(response: any) {
+    if (response.credential) {
+      console.log('Google Token:', response.credential);
+      this.isLoading = true;
+      this.authService.googleLoginWithToken(response.credential).subscribe({
+        next: (user: any) => {
+          console.log('Google Login/Register Success', user);
+          this.isLoading = false;
+          this.authService.setCurrentUser(user);
+          this.notificationService.success('Registered successfully with Google');
+          this.router.navigate(['/']);
+        },
+        error: (err: any) => {
+          console.error('Google Register Error', err);
+          this.isLoading = false;
+          this.notificationService.error('Failed to register with Google');
+        }
+      });
+    }
+  }
 
   onSubmit() {
     if (!this.name || !this.email || !this.password || !this.confirmPassword) {
@@ -47,11 +98,13 @@ export class RegisterComponent {
 
     this.authApiService.register(this.name, this.email, this.password).subscribe({
       next: () => {
+        this.notificationService.success('Registration successful! PLease login');
         this.router.navigate(['/']);
       },
       error: (err) => {
         this.isLoading = false;
         this.error = this.getErrorMessage(err.code);
+        this.notificationService.error(this.error);
       }
     });
   }
@@ -60,20 +113,24 @@ export class RegisterComponent {
     this.isLoading = true;
     this.error = '';
 
-    // this.authService.loginWithGoogle().subscribe({
-    //   next: () => {
-    //     this.router.navigate(['/']);
-    //   },
-    //   error: (err) => {
-    //     this.isLoading = false;
-    //     this.error = this.getErrorMessage(err.code);
-    //   }
-    // });
+    this.authService.loginWithGoogle().subscribe({
+      next: (user: any) => {
+        console.log('Google Login Success', user);
+        window.location.href = user.url;
+        // this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Google Login Error', err);
+        this.isLoading = false;
+        this.error = 'Failed to login with Google';
+        this.notificationService.error(this.error);
+      }
+    });
   }
 
   loginWithFacebook() {
-    this.isLoading = true;
-    this.error = '';
+    // this.isLoading = true;
+    // this.error = '';
 
     // this.authService.loginWithFacebook().subscribe({
     //   next: () => {

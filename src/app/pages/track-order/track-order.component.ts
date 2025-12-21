@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { OrderTrackingService } from '../../services/order-tracking.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TrackingDetails } from '../../interfaces/tracking.interface';
@@ -12,14 +12,26 @@ import { TrackingDetails } from '../../interfaces/tracking.interface';
   templateUrl: './track-order.component.html',
   styleUrl: './track-order.component.css'
 })
-export class TrackOrderComponent {
+export class TrackOrderComponent implements OnInit {
   orderId: string = '';
   email: string = '';
   isLoading: boolean = false;
   errorMessage: string = '';
   trackingDetails: TrackingDetails | null = null;
 
-  constructor(private orderTrackingService: OrderTrackingService) { }
+  constructor(
+    private orderTrackingService: OrderTrackingService,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['id']) {
+        this.orderId = params['id'];
+        this.trackOrder();
+      }
+    });
+  }
 
   trackOrder() {
     if (!this.orderId) {
@@ -30,23 +42,23 @@ export class TrackOrderComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    // this.orderTrackingService.trackOrder(this.orderId, this.email)
-    //   .subscribe({
-    //     next: (result:any) => {
-    //       this.isLoading = false;
-    //       if (result) {
-    //         this.trackingDetails = result;
-    //       } else {
-    //         this.errorMessage = 'Order not found. Please check your order ID and try again.';
-    //         this.trackingDetails = null;
-    //       }
-    //     },
-    //     error: (error:Error) => {
-    //       this.isLoading = false;
-    //       this.errorMessage = 'An error occurred while tracking your order. Please try again later.';
-    //       console.error('Error tracking order:', error);
-    //     }
-    //   });
+    this.orderTrackingService.trackOrder(this.orderId, this.email)
+      .subscribe({
+        next: (result: any) => {
+          this.isLoading = false;
+          if (result) {
+            this.trackingDetails = result;
+          } else {
+            this.errorMessage = 'Order not found. Please check your order ID and try again.';
+            this.trackingDetails = null;
+          }
+        },
+        error: (error: Error) => {
+          this.isLoading = false;
+          this.errorMessage = 'An error occurred while tracking your order. Please try again later.';
+          console.error('Error tracking order:', error);
+        }
+      });
   }
 
   formatDate(dateString: string): string {

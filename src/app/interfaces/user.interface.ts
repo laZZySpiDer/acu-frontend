@@ -5,4 +5,11 @@ export interface UserLoginResponse {
   avatar?: string;
   role: string;
   token?: string;
+  phone?: string;
+  address?: string;
+  pincode?: string;
+  landmark?: string;
+  city?: string;
+  state?: string;
+  profile_avatar?: string;
 }

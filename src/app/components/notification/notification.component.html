@@ -1,0 +1,52 @@
+<div class="fixed top-24 right-5 z-50 flex flex-col gap-3 pointer-events-none">
+    <div *ngFor="let note of notifications" [@toastAnimation]
+        class="pointer-events-auto min-w-[300px] max-w-sm w-full shadow-lg rounded-lg border overflow-hidden flex transform transition-all duration-300 hover:shadow-xl hover:scale-105"
+        [ngClass]="{
+         'bg-green-100 border-green-200': note.type === 'success',
+         'bg-red-100 border-red-200': note.type === 'error',
+         'bg-blue-100 border-blue-200': note.type === 'info',
+         'bg-yellow-100 border-yellow-200': note.type === 'warning'
+       }">
+
+        <!-- Icon Section -->
+        <div class="flex items-center justify-center w-12 bg-white bg-opacity-25">
+            <i class="fas text-xl" [ngClass]="{
+           'fa-check-circle text-green-600': note.type === 'success',
+           'fa-exclamation-circle text-red-600': note.type === 'error',
+           'fa-info-circle text-blue-600': note.type === 'info',
+           'fa-exclamation-triangle text-yellow-600': note.type === 'warning'
+         }"></i>
+        </div>
+
+        <!-- Content Section -->
+        <div class="flex-1 p-3">
+            <!-- Title (Capitalized Type) -->
+            <h4 class="font-bold text-sm uppercase tracking-wide mb-1" [ngClass]="{
+                'text-green-800': note.type === 'success',
+                'text-red-800': note.type === 'error',
+                'text-blue-800': note.type === 'info',
+                'text-yellow-800': note.type === 'warning'
+            }">
+                {{ note.type }}
+            </h4>
+            <p class="text-sm leading-snug font-medium" [ngClass]="{
+                'text-green-900': note.type === 'success',
+                'text-red-900': note.type === 'error',
+                'text-blue-900': note.type === 'info',
+                'text-yellow-900': note.type === 'warning'
+            }">{{ note.message }}</p>
+        </div>
+
+        <!-- Close Button -->
+        <button (click)="remove(note.id)"
+            class="px-3 flex items-center justify-center transition-colors bg-transparent hover:bg-black hover:bg-opacity-5"
+            [ngClass]="{
+                'text-green-800': note.type === 'success',
+                'text-red-800': note.type === 'error',
+                'text-blue-800': note.type === 'info',
+                'text-yellow-800': note.type === 'warning'
+            }">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>

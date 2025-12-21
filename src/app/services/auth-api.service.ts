@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { ApiUrlConstants } from "../constants/url.constants";
 import { UserLoginResponse } from "../interfaces/user.interface";
 import { RecaptchaService } from "./recaptcha.service";
-import { firstValueFrom, from, switchMap } from "rxjs";
+import { Observable, firstValueFrom, from, switchMap } from "rxjs";
 import { ReCaptchaV3Service } from "ng-recaptcha";
 
 @Injectable({
@@ -19,8 +19,12 @@ export class AuthApiService {
     });
   }
 
-  loginGoogle() {
-    return this.http.post<any>(`${ApiUrlConstants.LOGIN_GOOGLE}`, {});
+  loginWithGoogle(): Observable<any> {
+    return this.http.post(ApiUrlConstants.LOGIN_GOOGLE, {}, { withCredentials: true });
+  }
+
+  googleLoginWithToken(token: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.GOOGLE_LOGIN_WITH_TOKEN, { id_token: token }, { withCredentials: true });
   }
 
   oauthCallback(access_token: string) {
@@ -52,5 +56,13 @@ export class AuthApiService {
         );
       })
     );
+  }
+
+  updateProfile(name: string, phone: string, address: string, pincode: string, landmark: string, city: string, state: string, profile_avatar: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.UPDATE_PROFILE, { name, phone, address, pincode, landmark, city, state, profile_avatar }, { withCredentials: true });
+  }
+
+  updatePassword(password: string, newPassword: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.UPDATE_PASSWORD, { password, newPassword }, { withCredentials: true });
   }
 }
