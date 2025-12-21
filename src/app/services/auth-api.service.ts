@@ -57,4 +57,12 @@ export class AuthApiService {
       })
     );
   }
+
+  updateProfile(name: string, phone: string, address: string, pincode: string, landmark: string, city: string, state: string, profile_avatar: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.UPDATE_PROFILE, { name, phone, address, pincode, landmark, city, state, profile_avatar }, { withCredentials: true });
+  }
+
+  updatePassword(password: string, newPassword: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.UPDATE_PASSWORD, { password, newPassword }, { withCredentials: true });
+  }
 }

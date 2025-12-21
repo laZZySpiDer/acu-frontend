@@ -24,6 +24,8 @@ export class ApiUrlConstants {
     static readonly LOGIN_GOOGLE = `${ApiUrlConstants.baseUrl}/auth/loginGoogle`;
     static readonly GOOGLE_LOGIN_WITH_TOKEN = `${ApiUrlConstants.baseUrl}/auth/google-token`;
     static readonly OAUTH_CALLBACK = `${ApiUrlConstants.baseUrl}/auth/oauth-callback`;
+    static readonly UPDATE_PROFILE = `${ApiUrlConstants.baseUrl}/profile/update`;
+    static readonly UPDATE_PASSWORD = `${ApiUrlConstants.baseUrl}/auth/update-password`;
 
     //PAYMENT
     static readonly INITIATE_PAYMENT = `${ApiUrlConstants.baseUrl}/payment/initiate`;
@@ -35,5 +37,6 @@ export class ApiUrlConstants {
     //PROFILE
     static readonly GET_ORDERS = `${ApiUrlConstants.baseUrl}/profile/recent-orders`
     static readonly UPLOAD_ORDER_IMAGES = `${ApiUrlConstants.baseUrl}/orders/upload-images`;
+    static readonly TRACK_ORDER = `${ApiUrlConstants.baseUrl}/orders/track/:id`;
 }
 

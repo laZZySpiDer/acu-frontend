@@ -29,6 +29,10 @@ export class HeaderComponent {
     {
       name: 'Experience',
       link: '/experience'
+    },
+    {
+      name: 'About Us',
+      link: '/about-us'
     }
   ]
 

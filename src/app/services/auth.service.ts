@@ -1,9 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, of, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { ApiUrlConstants } from '../constants/url.constants';
 import { AuthApiService } from './auth-api.service';
 import { UserLoginResponse } from '../interfaces/user.interface';
+import { isPlatformBrowser } from '@angular/common';
+import { NotificationService } from './notification.service';
 
 
 
@@ -14,7 +16,12 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserLoginResponse | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private authApi: AuthApiService, private http: HttpClient) {
+  constructor(
+    private authApi: AuthApiService,
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private notificationService: NotificationService
+  ) {
     this.checkAuthStatus().subscribe();
   }
 
@@ -57,6 +64,23 @@ export class AuthService {
     return this.authApi.googleLoginWithToken(token).pipe(
       tap((response: UserLoginResponse) => {
         this.setCurrentUser(response);
+      })
+    );
+  }
+
+  updateProfile(name: string, phone: string, address: string, pincode: string, landmark: string, city: string, state: string, profile_avatar: string) {
+    return this.authApi.updateProfile(name, phone, address, pincode, landmark, city, state, profile_avatar).pipe(
+      tap((user: any) => {
+        this.setCurrentUser(user);
+        this.notificationService.success('Profile updated successfully');
+      })
+    );
+  }
+
+  updatePassword(password: string, newPassword: string) {
+    return this.authApi.updatePassword(password, newPassword).pipe(
+      tap(() => {
+        this.notificationService.success('Password updated successfully');
       })
     );
   }

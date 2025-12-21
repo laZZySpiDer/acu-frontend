@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ProductsApiService } from "../../services/products-api.service";
-import { Product } from "../../interfaces/product.interface";
+import { Product } from "../../interfaces/products/product.interface";
 import { Category } from "../../interfaces/category.interface";
 import { CartService } from "../../services/cart.service";
 import { WishlistService } from "../../services/wishlist.service";
@@ -11,13 +11,13 @@ import { FormsModule } from "@angular/forms";
 @Component({
   selector: "app-categories",
   standalone: true,
-  imports: [CommonModule,FormsModule,RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: "./categories.component.html",
   styleUrl: "./categories.component.css"
 })
 export class CategoriesComponent implements OnInit {
   public categorySlug: string | null = null;
-    products: Product[] = [
+  products: Product[] = [
     // Add more products as needed
   ];
   constructor(
@@ -35,21 +35,21 @@ export class CategoriesComponent implements OnInit {
       this._productsApiService
         .getProductByCategory(this.categorySlug)
         .subscribe((response: any) => {
-         
+
           this.products = response.products;
 
           this.products.forEach((product) => {
             if (product.sizes.length > 0) {
-              product.price = product.sizes[0].price;
-              product.stockQuantity = product.sizes[0].stockQuantity;
+              product.price = product.sizes[0].price.toString();
+              product.stockQuantity = product.sizes[0].stockQuantity.toString();
               product.dimensions = product.sizes[0].dimensions;
-              product.weight = product.sizes[0].weight;
+              product.weight = product.sizes[0].weight.toString();
               product.material = product.sizes[0].material;
               product.generalImages = product.sizes[0].images;
             }
           });
 
-         
+
         });
     }
   }
@@ -81,7 +81,7 @@ export class CategoriesComponent implements OnInit {
           return false;
 
         if (this.filters.inStock && !product.stockQuantity) return false;
-        if (this.filters.minRating && 4 < this.filters.minRating) return false;
+        if (this.filters.minRating && (product.averageRating ?? 0) < this.filters.minRating) return false;
         return true;
       })
       .sort((a, b) => {
@@ -91,7 +91,7 @@ export class CategoriesComponent implements OnInit {
           case "price-high":
             return +b.price - +a.price;
           case "rating":
-            return 4 - 5;
+            return (b.averageRating ?? 0) - (a.averageRating ?? 0);
           default: // newest
             return b.id - a.id;
         }
