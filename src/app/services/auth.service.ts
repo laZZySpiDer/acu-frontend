@@ -30,6 +30,14 @@ export class AuthService {
   }
 
   setCurrentUser(data: any) {
+    if (isPlatformBrowser(this.platformId)) {
+      if (!data) {
+        localStorage.removeItem('isLoggedIn');
+      } else {
+        localStorage.setItem('isLoggedIn', 'true');
+      }
+    }
+
     if (!data) {
       this.currentUserSubject.next(null);
       return;
@@ -93,18 +101,24 @@ export class AuthService {
 
   logout() {
     return this.authApi.logout().pipe(
-      tap(() => this.currentUserSubject.next(null))
+      tap(() => this.setCurrentUser(null))
     );
   }
 
   checkAuthStatus() {
+    if (isPlatformBrowser(this.platformId)) {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      if (!isLoggedIn) {
+        return of(null);
+      }
+    }
     return this.http.get<UserLoginResponse>(ApiUrlConstants.ME).pipe(
       tap(userResponse => {
         console.log("ME", userResponse);
         this.setCurrentUser(userResponse);
       }),
       catchError(error => {
-        this.currentUserSubject.next(null);
+        this.setCurrentUser(null);
         return of(null);
       })
     );
