@@ -8,6 +8,7 @@ export interface CartItem {
   mainImageLink: Image;
   size: ProductSize;
   price: number;
+  originalPrice?: number;
   customImageName?: string;
   category?: string;
   categoryId?: number;
@@ -16,6 +17,7 @@ export interface CartItem {
 export interface ProductSize {
   size: string;
   price: number;
+  salePrice?: number;
   images: Image[];
   weight: number;
   material: string;

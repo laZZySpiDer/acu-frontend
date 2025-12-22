@@ -46,13 +46,19 @@ export class ProductCardComponent implements OnChanges {
   }
 
   addToCart(product: any) {
+    const size = product.sizes && product.sizes.length > 0 ? product.sizes[0] : null;
+    const regularPrice = size ? size.price : product.price;
+    const salePrice = size ? size.salePrice : product.salePrice;
+    const finalPrice = salePrice ?? regularPrice;
+
     this.cartService.addToCart({
       productId: product.id,
       productName: product.name,
-      price: parseFloat(product.sizes[0].price),
-      mainImageLink: product.main_image_link?.image_link || '',
+      price: +finalPrice,
+      originalPrice: salePrice ? +regularPrice : undefined,
+      mainImageLink: product.mainImageLink?.imageLink || product.main_image_link?.image_link || '',
       quantity: 1,
-      size: product.sizes[0],
+      size: size,
       categoryId: product.category?.id
     });
   }
