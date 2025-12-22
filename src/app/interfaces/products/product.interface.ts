@@ -5,6 +5,7 @@ export interface Product {
   name: string;
   description: string;
   price: string;
+  salePrice?: number;
   stockQuantity: string;
   createdAt: string;
   updatedAt: string;
@@ -24,6 +25,7 @@ export interface Product {
 export interface ProductSize {
   size: string;
   price: number;
+  salePrice?: number;
   images: Image[];
   weight: number;
   material: string;

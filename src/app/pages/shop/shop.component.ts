@@ -63,6 +63,7 @@ export class ShopComponent implements OnInit {
       this.products.forEach(product => {
         if (product.sizes.length > 0) {
           product.price = product.sizes[0].price.toString();
+          product.salePrice = product.sizes[0].salePrice;
           product.stockQuantity = product.sizes[0].stockQuantity.toString();
           product.dimensions = product.sizes[0].dimensions;
           product.weight = product.sizes[0].weight.toString();
@@ -123,10 +124,12 @@ export class ShopComponent implements OnInit {
   }
 
   addToCart(product: Product) {
+    const finalPrice = product.salePrice ?? +product.price;
     this.cartService.addToCart({
       productId: product.id.toString(),
       productName: product.name,
-      price: +product.price,
+      price: finalPrice,
+      originalPrice: product.salePrice ? +product.price : undefined,
       mainImageLink: product.generalImages[0],
       quantity: 1,
       size: product.sizes[0]

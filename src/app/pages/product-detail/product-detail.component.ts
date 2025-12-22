@@ -100,6 +100,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.selectedImage = this.product.generalImages[index];
         this.selectedSize = this.product.sizes[index];
         this.product.price = this.product.sizes[index].price.toString();
+        this.product.salePrice = this.product.sizes[index].salePrice;
         this.product.stockQuantity = this.product.sizes[index].stockQuantity.toString();
         this.product.dimensions = this.product.sizes[index].dimensions;
         this.product.weight = this.product.sizes[index].weight.toString();
@@ -199,10 +200,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       }
     }
 
+    const finalPrice = this.product.salePrice ?? +this.product.price;
+
     this.cartService.addToCart({
       productId: `${this.product.id}`,
       productName: this.product.name,
-      price: +this.product.price,
+      price: finalPrice,
+      originalPrice: this.product.salePrice ? +this.product.price : undefined,
       mainImageLink: this.product.generalImages[0],
       quantity: +this.quantity,
       size: this.selectedSize,
@@ -266,6 +270,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   changeSizeOfProduct(size: ProductSize) {
     this.selectedSize = size
     this.product.price = size.price.toString();
+    this.product.salePrice = size.salePrice;
     this.product.stockQuantity = size.stockQuantity.toString();
     this.product.generalImages = size.images;
     this.selectedImage = this.product.generalImages[0];

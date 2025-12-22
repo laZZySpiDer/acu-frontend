@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
 
   handleGoogleCredential(response: any) {
     if (response.credential) {
-      console.log('Google Token:', response.credential);
+
       this.isLoading = true;
       this.authService.googleLoginWithToken(response.credential).subscribe({
         next: (user: any) => {

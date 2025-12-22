@@ -25,7 +25,22 @@
       <span class="text-sm text-gray-500 ml-2">({{product.ratingsCount}})</span>
     </div>
     <div class="flex justify-between items-center">
-      <p class="text-primary font-bold">₹{{!!(product.sizes[0].price) ? (product.sizes[0].price): product.price}}</p>
+      <div>
+        <ng-container *ngIf="product.sizes && product.sizes.length > 0; else noSizes">
+          <ng-container *ngIf="product.sizes[0].salePrice">
+            <span class="text-primary font-bold mr-2">₹{{product.sizes[0].salePrice}}</span>
+            <span class="text-gray-400 text-sm line-through">₹{{product.sizes[0].price}}</span>
+          </ng-container>
+          <span *ngIf="!product.sizes[0].salePrice" class="text-primary font-bold">₹{{product.sizes[0].price}}</span>
+        </ng-container>
+        <ng-template #noSizes>
+          <ng-container *ngIf="product.salePrice">
+            <span class="text-primary font-bold mr-2">₹{{product.salePrice}}</span>
+            <span class="text-gray-400 text-sm line-through">₹{{product.price}}</span>
+          </ng-container>
+          <span *ngIf="!product.salePrice" class="text-primary font-bold">₹{{product.price}}</span>
+        </ng-template>
+      </div>
       <button (click)="addToCart(product)" class="text-gray-700 hover:text-primary">
         <i class="fas fa-shopping-cart"></i>
       </button>
