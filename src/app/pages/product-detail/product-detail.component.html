@@ -60,8 +60,9 @@
 
       <!-- Size Selection -->
       <div *ngIf="product.sizes" class="mb-6">
-        <h3 class="font-semibold mb-2">Size</h3>
-        <div class="flex gap-2">
+        <!-- <h3 class="font-semibold mb-2">Size</h3> -->
+        <h3 class="font-semibold mb-2">{{ product.category.id === 7 ? 'Size' : 'Variants' }}</h3>
+        <div class="flex gap-2 flex-wrap">
           <button *ngFor="let size of product.sizes" (click)="changeSizeOfProduct(size)" [class.bg-primary]="
               selectedSize.productVariantId === size.productVariantId
             " [class.text-white]="
@@ -74,17 +75,20 @@
 
       <!-- Quantity -->
       <div class="mb-6">
-        <h3 class="font-semibold mb-2">Dolls in box</h3>
+        <h3 class="font-semibold mb-2">{{ product.category.id === 7 ? 'Dolls in box' : 'Quantity' }}</h3>
         <div class="flex items-center gap-2">
-          <!-- <button (click)="quantity = Math.max(1, quantity - 1)" class="px-3 py-1 border rounded-md">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <input type="number" [(ngModel)]="quantity" min="1"
-                        class="w-16 text-center border rounded-md px-2 py-1" />
-                    <button (click)="quantity = quantity + 1" class="px-3 py-1 border rounded-md">
-                        <i class="fas fa-plus"></i>
-                    </button> -->
-          <select (change)="quantityChange($event)" [(ngModel)]="quantity" class="border rounded-md px-2 py-1">
+          <ng-container *ngIf="product.category.id !== 7">
+            <button (click)="quantity = Math.max(1, quantity - 1)" class="px-3 py-1 border rounded-md">
+              <i class="fas fa-minus"></i>
+            </button>
+            <input type="number" [(ngModel)]="quantity" min="1" class="w-16 text-center border rounded-md px-2 py-1" />
+            <button (click)="quantity = quantity + 1" class="px-3 py-1 border rounded-md">
+              <i class="fas fa-plus"></i>
+            </button>
+          </ng-container>
+
+          <select *ngIf="product.category.id === 7" (change)="quantityChange($event)" [(ngModel)]="quantity"
+            class="border rounded-md px-2 py-1">
             <option *ngFor="let quantityType of quantityDropdownValuesForDolls"
               class="block px-4 py-2 text-sm text-gray-700" [value]="quantityType.value">
               {{ quantityType.label }}
