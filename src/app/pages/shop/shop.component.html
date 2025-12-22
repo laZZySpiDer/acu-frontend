@@ -113,10 +113,10 @@
           <!-- Product Info -->
           <div [class]="viewMode === 'grid' ? 'p-4' : 'flex-1 p-4'">
             <h3 class="text-lg font-semibold mb-2">{{product.name}}</h3>
-            <div class="flex items-center mb-2">
+            <div class="flex items-center mb-2"
+              *ngIf="product.averageRating && product.ratingsCount && product.averageRating > 0">
               <span class="text-sm text-gray-500 mr-2">{{product.averageRating}}</span>
-              <div class="flex text-yellow-400"
-                *ngIf="product.averageRating && product.ratingsCount && product.averageRating > 0">
+              <div class="flex text-yellow-400">
                 <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star text-sm"
                   [class.text-gray-300]="star > product.averageRating"></i>
               </div>

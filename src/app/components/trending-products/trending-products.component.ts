@@ -14,7 +14,7 @@ import { Product } from '../../interfaces/products/product.interface';
   imports: [CommonModule, ProductCardComponent],
   templateUrl: './trending-products.component.html',
   styleUrls: ['./trending-products.component.css'],
-  providers: [ProductsApiService,HttpClient]
+  providers: [ProductsApiService, HttpClient]
 })
 export class TrendingProductsComponent implements OnInit {
   products: Product[] = [];
@@ -24,11 +24,11 @@ export class TrendingProductsComponent implements OnInit {
     private wishlistService: WishlistService,
     private cartService: CartService,
     private productsApiService: ProductsApiService,
-  ) {}
+  ) { }
 
 
   ngOnInit() {
-    this.productsApiService.getProducts().subscribe((res: any) => {
+    this.productsApiService.getTrendingProducts().subscribe((res: any) => {
       this.products = res.products;
     });
   }

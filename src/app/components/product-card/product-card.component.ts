@@ -52,7 +52,8 @@ export class ProductCardComponent implements OnChanges {
       price: parseFloat(product.sizes[0].price),
       mainImageLink: product.main_image_link?.image_link || '',
       quantity: 1,
-      size: product.sizes[0]
+      size: product.sizes[0],
+      categoryId: product.category?.id
     });
   }
 }

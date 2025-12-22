@@ -10,6 +10,7 @@ export interface CartItem {
   price: number;
   customImageName?: string;
   category?: string;
+  categoryId?: number;
 }
 
 export interface ProductSize {

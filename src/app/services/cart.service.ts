@@ -59,7 +59,8 @@ export class CartService {
           productName: item.productName,
           mainImageLink: item.mainImageLink,
           size: item.size,
-          customImageName: item.customImageName || item.custom_image_name
+          customImageName: item.customImageName || item.custom_image_name,
+          categoryId: item.categoryId || item.category_id || (item.category ? item.category.id : undefined)
         }));
         this.cartItems.next(items);
         console.log('Cart items loaded:', this.cartItems.value);

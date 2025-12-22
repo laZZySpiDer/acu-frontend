@@ -19,6 +19,10 @@ export class ProductsApiService {
     return this.http.get<any[]>(ApiUrlConstants.GET_PRODUCTS);
   }
 
+  getTrendingProducts(): Observable<any[]> {
+    return this.http.get<any[]>(ApiUrlConstants.GET_TRENDING_PRODUCTS);
+  }
+
   // You can add more methods for specific product requests if needed, e.g.,
   getProductById(id: number): Observable<any> {
     return this.http.get<any>(`${ApiUrlConstants.GET_PRODUCTS}/${id}`);
