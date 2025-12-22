@@ -8,12 +8,14 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { ScrollToTopComponent } from "./components/scroll-to-top/scroll-to-top.component";
 
 import { NotificationComponent } from "./components/notification/notification.component";
+import { LoaderComponent } from "./components/loader/loader.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, RecaptchaModule, RecaptchaFormsModule, ScrollToTopComponent, NotificationComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, RecaptchaModule, RecaptchaFormsModule, ScrollToTopComponent, NotificationComponent, LoaderComponent],
   template: `
+    <app-loader></app-loader>
     <app-notification></app-notification>
     <app-header></app-header>
     <main class="min-h-screen">
