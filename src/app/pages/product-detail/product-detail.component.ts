@@ -207,6 +207,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       quantity: +this.quantity,
       size: this.selectedSize,
       category: this.product.category.name,
+      categoryId: this.product.category.id,
       // customImage: this.selectedCustomImage || undefined,
       customImageName: this.uploadedImageKey || undefined
     });

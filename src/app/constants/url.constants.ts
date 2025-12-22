@@ -5,6 +5,7 @@ export class ApiUrlConstants {
 
     //PRODUCTS
     static readonly GET_PRODUCTS = `${ApiUrlConstants.baseUrl}/products`;
+    static readonly GET_TRENDING_PRODUCTS = `${ApiUrlConstants.baseUrl}/products/trending-products`;
     static readonly GET_CATEGORIES = `${ApiUrlConstants.baseUrl}/categories`;
     static readonly GET_PRODUCT_BY_CATEGORY = `${ApiUrlConstants.baseUrl}/products/category/`;
     static readonly ADD_PRODUCT_REVIEW = `${ApiUrlConstants.baseUrl}/products/`;
