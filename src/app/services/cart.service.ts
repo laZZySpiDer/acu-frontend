@@ -52,16 +52,22 @@ export class CartService {
     if (this._authApi.isLoggedIn()) {
       this._productsApi.getCart().subscribe((res: any) => {
         console.log('Cart items loaded from API:', res);
-        const items: CartItem[] = res.items.map((item: any) => ({
-          productId: item.productId,
-          quantity: +item.quantity,
-          price: typeof item.size.price === 'string' ? parseFloat(item.size.price) : item.size.price,
-          productName: item.productName,
-          mainImageLink: item.mainImageLink,
-          size: item.size,
-          customImageName: item.customImageName || item.custom_image_name,
-          categoryId: item.categoryId || item.category_id || (item.category ? item.category.id : undefined)
-        }));
+        const items: CartItem[] = res.items.map((item: any) => {
+          const regularPrice = typeof item.size.price === 'string' ? parseFloat(item.size.price) : item.size.price;
+          const salePrice = item.size.salePrice ? (typeof item.size.salePrice === 'string' ? parseFloat(item.size.salePrice) : item.size.salePrice) : null;
+
+          return {
+            productId: item.productId,
+            quantity: +item.quantity,
+            price: salePrice && salePrice > 0 ? salePrice : regularPrice,
+            originalPrice: regularPrice,
+            productName: item.productName,
+            mainImageLink: item.mainImageLink,
+            size: item.size,
+            customImageName: item.customImageName || item.custom_image_name,
+            categoryId: item.categoryId || item.category_id || (item.category ? item.category.id : undefined)
+          };
+        });
         this.cartItems.next(items);
         console.log('Cart items loaded:', this.cartItems.value);
       });
