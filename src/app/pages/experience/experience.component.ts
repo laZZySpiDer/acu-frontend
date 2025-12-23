@@ -1,12 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import {Workshop, InviteType} from '../../interfaces/experience.interface';
+import { Workshop, InviteType } from '../../interfaces/experience.interface';
+import { AuthService } from '../../services/auth.service';
+import { ExperienceApiService } from '../../services/experience-api.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-experience',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './experience.component.html',
   styleUrl: './experience.component.css'
 })
@@ -15,33 +19,33 @@ export class ExperienceComponent {
     {
       id: 'doll-painting',
       title: 'Doll Painting Workshop',
-      description: 'Learn the art of doll painting and create your own unique masterpiece.',
-      image: 'https://images.unsplash.com/photo-1560421683-6856ea585c78?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      duration: '3 hours',
+      description: 'Paint and personalize your own wooden doll in this mindful, beginner-friendly art workshop by Ahiru’s Creative Universe.',
+      image: 'assets/images/workshops/doll-painting.webp',
+      duration: '2-3 hours',
       price: 2500
     },
     {
       id: 'clay-magnets',
       title: 'Clay Magnets Workshop',
-      description: 'Create adorable clay magnets with professional guidance.',
-      image: 'https://images.unsplash.com/photo-1516981442399-a91139e20ff8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      duration: '2 hours',
+      description: 'Create cute, functional clay magnets from scratch in a playful, hands-on workshop designed for creative joy.',
+      image: 'assets/images/workshops/clay-magnet.webp',
+      duration: '2-3 hours',
       price: 2000
     },
     {
       id: 'doodling',
       title: 'Doodling Workshop',
-      description: 'Express yourself through creative doodling techniques.',
-      image: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      duration: '2.5 hours',
+      description: 'Unwind and express yourself through guided doodling techniques focused on mindfulness and creative freedom.',
+      image: 'assets/images/workshops/doodling.webp',
+      duration: '2-3 hours',
       price: 1800
     },
     {
       id: 'canvas',
       title: 'Canvas Workshop',
-      description: 'Learn various canvas painting techniques and create your own artwork.',
-      image: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      duration: '4 hours',
+      description: 'Explore colors and brush techniques while creating your own canvas artwork in a relaxed, guided painting session.',
+      image: 'assets/images/workshops/canvas.webp',
+      duration: '2-3 hours',
       price: 1500
     }
   ];
@@ -50,22 +54,22 @@ export class ExperienceComponent {
     {
       id: 'wedding',
       title: 'Wedding Invitations',
-      description: 'Elegant digital invitations for your special day.',
-      image: 'https://images.unsplash.com/photo-1511184150666-9bb7d41a88f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      startingPrice: 4999
+      description: 'Elegant digital wedding invitations crafted with custom illustrations and thoughtful details - designed to tell your love story beautifully.',
+      image: 'assets/images/invites/1.webp',
+      startingPrice: 3999
     },
     {
       id: 'baby-shower',
       title: 'Baby Shower Invitations',
-      description: 'Cute and customizable digital invites for your baby shower.',
-      image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Playful, heart-warming digital invites for baby showers and birthdays- illustrated to celebrate little moments with big love.',
+      image: 'assets/images/invites/2.webp',
       startingPrice: 2999
     },
     {
       id: 'custom',
       title: 'Custom Invitations',
-      description: 'Personalized digital invitations for any occasion.',
-      image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Custom digital invitations for every celebration - thoughtfully illustrated to match your moment and mood.',
+      image: 'assets/images/invites/3.webp',
       startingPrice: 3999
     }
   ];
@@ -75,7 +79,9 @@ export class ExperienceComponent {
 
   workshopForm = {
     name: '',
-    email: ''
+    email: '',
+    phone: '',
+    details: ''
   };
 
   inviteForm = {
@@ -85,15 +91,49 @@ export class ExperienceComponent {
     details: ''
   };
 
+  showCorporate = false;
+  corporateForm = {
+    name: '',
+    email: '',
+    phone: '',
+    details: ''
+  };
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private experienceApiService: ExperienceApiService,
+    private notificationService: NotificationService
+  ) { }
+
   showWorkshopForm(workshop: Workshop) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Please log in to register for workshops.');
+      this.router.navigate(['/login']);
+      return;
+    }
     this.selectedWorkshop = workshop;
     this.workshopForm = {
       name: '',
-      email: ''
+      email: '',
+      phone: '',
+      details: ''
     };
   }
 
   showInviteForm(inviteType: InviteType) {
+    if (!this.authService.isLoggedIn()) {
+      alert('Please log in to request an invite quote.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.selectedInviteType = inviteType;
+    this.inviteForm = {
+      name: '',
+      email: '',
+      phone: '',
+      details: ''
+    };
     this.selectedInviteType = inviteType;
     this.inviteForm = {
       name: '',
@@ -103,23 +143,85 @@ export class ExperienceComponent {
     };
   }
 
+  showCorporateForm() {
+    if (!this.authService.isLoggedIn()) {
+      alert('Please log in to inquire about private events.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.showCorporate = true;
+    this.corporateForm = {
+      name: '',
+      email: '',
+      phone: '',
+      details: ''
+    };
+  }
+
   submitWorkshopInterest() {
-    console.log('Workshop Interest:', {
-      workshop: this.selectedWorkshop?.title,
-      ...this.workshopForm
+    if (!this.selectedWorkshop) return;
+
+    const payload = {
+      name: this.workshopForm.name,
+      phone: this.workshopForm.phone,
+      email: this.workshopForm.email,
+      eventType: this.selectedWorkshop.title,
+      message: this.workshopForm.details
+    };
+
+    this.experienceApiService.registerInterest(payload).subscribe({
+      next: () => {
+        this.notificationService.success('Thank you for your interest! We will contact you soon.');
+        this.selectedWorkshop = null;
+      },
+      error: (err) => {
+        console.error('Error submitting workshop interest', err);
+        this.notificationService.error('Something went wrong. Please try again.');
+      }
     });
-    
-    alert('Thank you for your interest! We will contact you soon.');
-    this.selectedWorkshop = null;
   }
 
   submitInviteRequest() {
-    console.log('Invite Request:', {
-      type: this.selectedInviteType?.title,
-      ...this.inviteForm
+    if (!this.selectedInviteType) return;
+
+    const payload = {
+      name: this.inviteForm.name,
+      phone: this.inviteForm.phone,
+      email: this.inviteForm.email,
+      eventType: this.selectedInviteType.title,
+      message: this.inviteForm.details
+    };
+
+    this.experienceApiService.registerInterest(payload).subscribe({
+      next: () => {
+        this.notificationService.success('Thank you for your request! We will get back to you with a quote soon.');
+        this.selectedInviteType = null;
+      },
+      error: (err) => {
+        console.error('Error submitting invite request', err);
+        this.notificationService.error('Something went wrong. Please try again.');
+      }
     });
-    
-    alert('Thank you for your request! We will get back to you with a quote soon.');
-    this.selectedInviteType = null;
   }
- }
+
+  submitCorporateRequest() {
+    const payload = {
+      name: this.corporateForm.name,
+      phone: this.corporateForm.phone,
+      email: this.corporateForm.email,
+      eventType: 'Private Events & Retreats',
+      message: this.corporateForm.details
+    };
+
+    this.experienceApiService.registerInterest(payload).subscribe({
+      next: () => {
+        this.notificationService.success('Thank you for your interest! We will get back to you soon.');
+        this.showCorporate = false;
+      },
+      error: (err) => {
+        console.error('Error submitting corporate request', err);
+        this.notificationService.error('Something went wrong. Please try again.');
+      }
+    });
+  }
+}
