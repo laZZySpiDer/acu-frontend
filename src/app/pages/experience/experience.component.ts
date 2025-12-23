@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Workshop, InviteType } from '../../interfaces/experience.interface';
@@ -88,6 +88,7 @@ export class ExperienceComponent {
     name: '',
     email: '',
     phone: '',
+    date: '',
     details: ''
   };
 
@@ -96,15 +97,39 @@ export class ExperienceComponent {
     name: '',
     email: '',
     phone: '',
+    date: '',
     details: ''
   };
+
+  minDate: string = '';
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private experienceApiService: ExperienceApiService,
-    private notificationService: NotificationService
-  ) { }
+    private notificationService: NotificationService,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer: Renderer2
+  ) {
+    const today = new Date();
+    today.setDate(today.getDate() + 14);
+    this.minDate = today.toISOString().split('T')[0];
+  }
+
+  private disableScroll() {
+    this.renderer.setStyle(this.document.body, 'overflow', 'hidden');
+  }
+
+  private enableScroll() {
+    this.renderer.removeStyle(this.document.body, 'overflow');
+  }
+
+  closeForms() {
+    this.selectedWorkshop = null;
+    this.selectedInviteType = null;
+    this.showCorporate = false;
+    this.enableScroll();
+  }
 
   showWorkshopForm(workshop: Workshop) {
     if (!this.authService.isLoggedIn()) {
@@ -119,6 +144,7 @@ export class ExperienceComponent {
       phone: '',
       details: ''
     };
+    this.disableScroll();
   }
 
   showInviteForm(inviteType: InviteType) {
@@ -132,15 +158,10 @@ export class ExperienceComponent {
       name: '',
       email: '',
       phone: '',
+      date: '',
       details: ''
     };
-    this.selectedInviteType = inviteType;
-    this.inviteForm = {
-      name: '',
-      email: '',
-      phone: '',
-      details: ''
-    };
+    this.disableScroll();
   }
 
   showCorporateForm() {
@@ -154,8 +175,10 @@ export class ExperienceComponent {
       name: '',
       email: '',
       phone: '',
+      date: '',
       details: ''
     };
+    this.disableScroll();
   }
 
   submitWorkshopInterest() {
@@ -172,7 +195,7 @@ export class ExperienceComponent {
     this.experienceApiService.registerInterest(payload).subscribe({
       next: () => {
         this.notificationService.success('Thank you for your interest! We will contact you soon.');
-        this.selectedWorkshop = null;
+        this.closeForms();
       },
       error: (err) => {
         console.error('Error submitting workshop interest', err);
@@ -189,13 +212,14 @@ export class ExperienceComponent {
       phone: this.inviteForm.phone,
       email: this.inviteForm.email,
       eventType: this.selectedInviteType.title,
+      estimatedEventDate: this.inviteForm.date,
       message: this.inviteForm.details
     };
 
     this.experienceApiService.registerInterest(payload).subscribe({
       next: () => {
         this.notificationService.success('Thank you for your request! We will get back to you with a quote soon.');
-        this.selectedInviteType = null;
+        this.closeForms();
       },
       error: (err) => {
         console.error('Error submitting invite request', err);
@@ -210,13 +234,14 @@ export class ExperienceComponent {
       phone: this.corporateForm.phone,
       email: this.corporateForm.email,
       eventType: 'Private Events & Retreats',
+      estimatedEventDate: this.corporateForm.date,
       message: this.corporateForm.details
     };
 
     this.experienceApiService.registerInterest(payload).subscribe({
       next: () => {
         this.notificationService.success('Thank you for your interest! We will get back to you soon.');
-        this.showCorporate = false;
+        this.closeForms();
       },
       error: (err) => {
         console.error('Error submitting corporate request', err);

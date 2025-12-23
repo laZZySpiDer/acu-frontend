@@ -9,6 +9,7 @@ export interface WorkshopInterestPayload {
     email: string;
     eventType: string;
     message: string;
+    estimatedEventDate?: string;
 }
 
 @Injectable({
