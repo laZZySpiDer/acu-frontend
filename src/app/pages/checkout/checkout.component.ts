@@ -11,6 +11,7 @@ import { OrderDetails } from '../../interfaces/order.interface';
 import { ProductsApiService } from '../../services/products-api.service';
 import { AuthApiService } from '../../services/auth-api.service';
 import { AuthService } from '../../services/auth.service';
+import { CouponService, CouponValidationResponse } from '../../services/coupon.service';
 
 interface ShippingMethod {
   id: string;
@@ -65,7 +66,14 @@ export class CheckoutComponent {
   };
 
   constructor(private cartService: CartService, private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
-    private _auth: AuthService) { }
+    private _auth: AuthService, private couponService: CouponService) { }
+
+  // Coupon properties
+  isCouponInputVisible = false;
+  couponCode = '';
+  discountAmount = 0;
+  isCouponApplied = false;
+  couponError = '';
 
   getSelectedShippingPrice(): number {
     const method = this.shippingMethods.find(m => m.id === this.selectedShippingMethod);
@@ -74,11 +82,73 @@ export class CheckoutComponent {
 
   calculateTax(): number {
     // Simplified tax calculation (8.5%)
-    return (this.cartService.getCartTotal() * 0.12);
+    // return (this.cartService.getCartTotal() * 0.12);
+    return Math.round(this.cartService.getCartTotal() * 0.12);
   }
 
   calculateTotal(): number {
-    return this.cartService.getCartTotal() + this.getSelectedShippingPrice() + this.calculateTax();
+    const total = this.cartService.getCartTotal() + this.getSelectedShippingPrice() + this.calculateTax() - this.discountAmount;
+    return total > 0 ? total : 0;
+  }
+
+  toggleCouponInput() {
+    this.isCouponInputVisible = !this.isCouponInputVisible;
+    if (!this.isCouponInputVisible) {
+      this.couponError = '';
+    }
+  }
+
+  applyCoupon() {
+    if (!this.couponCode.trim()) return;
+
+    console.log('Validating coupon:', this.couponCode, 'Cart Total:', this.cartService.getCartTotal());
+
+    this.couponService.validateCoupon(this.couponCode, this.cartService.getCartTotal())
+      .subscribe({
+        next: (response: any) => {
+          console.log('Coupon validation response:', response);
+
+          // Handle potentially nested response data
+          const data = response.data || response;
+
+          if (data.isValid || data.valid) {
+
+            if (data.coupon && data.coupon.discountPercentage) {
+              const cartTotal = this.cartService.getCartTotal();
+              this.discountAmount = (cartTotal * data.coupon.discountPercentage) / 100;
+            } else {
+              // Fallback for previous expected formats
+              let discount = data.discountAmount || data.discount || 0;
+              if (!discount && data.newTotal !== undefined) {
+                discount = this.cartService.getCartTotal() - data.newTotal;
+              }
+              this.discountAmount = Number(discount);
+            }
+
+            this.isCouponApplied = true;
+            this.couponError = '';
+            console.log('Coupon applied. Discount:', this.discountAmount);
+          } else {
+            this.couponError = data.message || 'Invalid coupon code';
+            this.isCouponApplied = false;
+            this.discountAmount = 0;
+          }
+        },
+        error: (err) => {
+          console.error('Coupon validation error:', err);
+          this.couponError = err.error?.message || 'Error validating coupon';
+          this.isCouponApplied = false;
+          this.discountAmount = 0;
+        }
+      });
+  }
+
+  removeCoupon() {
+    this.couponCode = '';
+    this.discountAmount = 0;
+    this.isCouponApplied = false;
+    this.couponError = '';
+    this.isCouponInputVisible = false;
   }
 
   placeOrder() {
@@ -112,7 +182,9 @@ export class CheckoutComponent {
       },
       estimatedDelivery: '',
       subtotal: 0,
-      userId: this._auth.getCurrentUser()?.id
+      userId: this._auth.getCurrentUser()?.id,
+      couponCode: this.isCouponApplied ? this.couponCode : undefined,
+      discountAmount: this.isCouponApplied ? this.discountAmount : 0
     }
     this.cartItems$.pipe(take(1)).subscribe(items => order.items = items)
     this.orderService.setOrderDetails(order);

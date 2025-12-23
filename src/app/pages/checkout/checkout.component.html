@@ -178,9 +178,15 @@
                 <span *ngIf="item.size">, Size: {{item.size.size}}</span>
               </p>
             </div>
-            <span class="font-semibold">
-              ₹{{(item.price * item.quantity).toFixed(2)}}
-            </span>
+            <div class="flex flex-col items-end">
+              <span *ngIf="item.originalPrice && item.originalPrice > item.price"
+                class="text-xs text-gray-500 line-through">
+                ₹{{(item.originalPrice * item.quantity).toFixed(2)}}
+              </span>
+              <span class="font-semibold" [class.text-red-600]="item.originalPrice && item.originalPrice > item.price">
+                ₹{{(item.price * item.quantity).toFixed(2)}}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -198,6 +204,10 @@
             <span>Tax</span>
             <span>₹{{calculateTax() | number:'1.2-2'}}</span>
           </div>
+          <div *ngIf="discountAmount > 0" class="flex justify-between text-green-600 font-medium">
+            <span>Discount</span>
+            <span>-₹{{discountAmount | number:'1.2-2'}}</span>
+          </div>
         </div>
 
         <!-- Total -->
@@ -207,7 +217,37 @@
         </div>
 
         <!-- Place Order Button -->
-        <button (click)="placeOrder()" class="w-full btn-primary mt-6">
+
+        <!-- Coupon Code -->
+        <div class="py-4">
+          <div *ngIf="!isCouponInputVisible && !isCouponApplied" (click)="toggleCouponInput()"
+            class="text-primary cursor-pointer hover:underline text-sm font-medium">
+            Have a coupon code?
+          </div>
+
+          <div *ngIf="isCouponInputVisible || isCouponApplied" class="space-y-2">
+            <div class="flex gap-2">
+              <input type="text" [(ngModel)]="couponCode" [disabled]="isCouponApplied" placeholder="Enter coupon code"
+                class="flex-1 px-3 py-2 border rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary uppercase">
+
+              <button *ngIf="!isCouponApplied" (click)="applyCoupon()" [disabled]="!couponCode"
+                class="px-4 py-2 bg-gray-900 text-white text-sm rounded hover:bg-gray-800 transition-colors disabled:bg-gray-400">
+                Apply
+              </button>
+
+              <button *ngIf="isCouponApplied" (click)="removeCoupon()"
+                class="px-4 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors">
+                Remove
+              </button>
+            </div>
+
+            <p *ngIf="couponError" class="text-red-500 text-xs">{{couponError}}</p>
+            <p *ngIf="isCouponApplied" class="text-green-600 text-xs">Coupon applied successfully! Saved
+              ₹{{discountAmount | number:'1.2-2'}}</p>
+          </div>
+        </div>
+
+        <button (click)="placeOrder()" class="w-full btn-primary mt-2">
           Place Order
         </button>
       </div>

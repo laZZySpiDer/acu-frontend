@@ -42,5 +42,8 @@ export class ApiUrlConstants {
 
     //EXPERIENCE
     static readonly WORKSHOP_INTEREST = `${ApiUrlConstants.baseUrl}/workshops/interest`;
+
+    // COUPONS
+    static readonly VALIDATE_COUPON = `${ApiUrlConstants.baseUrl}/coupons/validate`;
 }
 

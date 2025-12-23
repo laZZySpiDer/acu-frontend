@@ -29,4 +29,6 @@ export interface OrderDetails {
   tax: number;
   total: number;
   userId?: string;
+  couponCode?: string;
+  discountAmount?: number;
 }
