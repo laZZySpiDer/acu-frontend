@@ -93,6 +93,26 @@ export class AuthService {
     );
   }
 
+  resetPassword(token: string, email: string, newPassword: string) {
+    return this.authApi.resetPassword(token, email, newPassword).pipe(
+      tap(() => {
+        this.notificationService.success('Password updated successfully');
+      })
+    );
+  }
+
+  forgotPassword(email: string) {
+    return this.authApi.forgotPassword(email);
+  }
+
+  changePassword(newPassword: string) {
+    return this.authApi.changePassword(newPassword).pipe(
+      tap(() => {
+        this.notificationService.success('Password changed successfully');
+      })
+    );
+  }
+
   handleOAuthCallback(token: string) {
     return this.authApi.oauthCallback(token).pipe(
       tap((response) => this.setCurrentUser(response))

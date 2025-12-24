@@ -5,7 +5,7 @@ import { OrderTrackingService } from '../../services/order-tracking.service';
 import { UserLoginResponse } from '../../interfaces/user.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
@@ -66,7 +66,8 @@ export class ProfileComponent {
     private authService: AuthService,
     private orderTrackingService: OrderTrackingService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
@@ -117,21 +118,9 @@ export class ProfileComponent {
   updateProfile() {
     if (this.profileForm.invalid) {
       this.notificationService.error('Please fill all required fields correctly');
-
-      // touch all controls to show errors
       this.profileForm.markAllAsTouched();
       return;
     }
-
-    // Additional Custom Validations (if not covered by HTML attributes)
-    // Address length is covered by maxlength="1000" in HTML
-    // Pincode pattern is covered in HTML
-    // Phone pattern is covered in HTML
-
-    // We can keep these manual specific messages if we want more detail than "invalid", 
-    // but the user asked to "remove extra clutter". 
-    // HTML5 validation with specific 'title' attribute or angular error display is better.
-    // For now I will assume HTML attributes cover the constraints and form.invalid is enough.
 
     this.isProfileLoading = true;
     const { name, phone, address, pincode, landmark, city, state, profile_avatar } = this.profileForm.value;
@@ -159,15 +148,29 @@ export class ProfileComponent {
     });
   }
 
+  isEmailProvider(): boolean {
+    if (!this.user) return false;
+    // Check main provider or providers array
+    if (this.user.provider === 'email') return true;
+    if (this.user.providers && this.user.providers.includes('email')) return true;
+    // Fallback logic if needed, but per request: only show if provider is email
+    return false;
+  }
+
   updatePassword() {
     if (this.passwordForm.newPassword !== this.passwordForm.confirmPassword) {
       this.notificationService.error('Passwords do not match');
       return;
     }
 
+    if (!this.passwordForm.newPassword) {
+      this.notificationService.error('New password is required');
+      return;
+    }
+
     this.isPasswordLoading = true;
-    this.authService.updatePassword(
-      this.passwordForm.currentPassword,
+    // Calling the new changePassword API which only takes newPassword
+    this.authService.changePassword(
       this.passwordForm.newPassword
     ).subscribe({
       next: () => {
@@ -178,12 +181,14 @@ export class ProfileComponent {
           newPassword: '',
           confirmPassword: ''
         };
-        // Success notification is handled in AuthService
+        // Logout and redirect (Clear local state without calling backend logout API)
+        this.authService.setCurrentUser(null);
+        this.router.navigate(['/login']);
       },
       error: (err) => {
-        console.error('Failed to update password', err);
+        console.error('Failed to change password', err);
         this.isPasswordLoading = false;
-        this.notificationService.error('Failed to update password. Check your current password.');
+        this.notificationService.error(err.error?.message || 'Failed to change password. Please try again.');
       }
     });
   }
