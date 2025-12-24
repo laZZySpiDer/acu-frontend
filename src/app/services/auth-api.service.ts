@@ -65,4 +65,16 @@ export class AuthApiService {
   updatePassword(password: string, newPassword: string): Observable<any> {
     return this.http.post(ApiUrlConstants.UPDATE_PASSWORD, { password, newPassword }, { withCredentials: true });
   }
+
+  resetPassword(token: string, email: string, newPassword: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.RESET_PASSWORD, { token, email, newPassword });
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.FORGOT_PASSWORD, { email });
+  }
+
+  changePassword(newPassword: string): Observable<any> {
+    return this.http.post(ApiUrlConstants.CHANGE_PASSWORD, { newPassword }, { withCredentials: true });
+  }
 }

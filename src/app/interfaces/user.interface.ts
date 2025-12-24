@@ -12,4 +12,6 @@ export interface UserLoginResponse {
   city?: string;
   state?: string;
   profile_avatar?: string;
+  provider?: string;
+  providers?: string[];
 }

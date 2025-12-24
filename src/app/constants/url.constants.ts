@@ -27,6 +27,9 @@ export class ApiUrlConstants {
     static readonly OAUTH_CALLBACK = `${ApiUrlConstants.baseUrl}/auth/oauth-callback`;
     static readonly UPDATE_PROFILE = `${ApiUrlConstants.baseUrl}/profile/update`;
     static readonly UPDATE_PASSWORD = `${ApiUrlConstants.baseUrl}/auth/update-password`;
+    static readonly RESET_PASSWORD = `${ApiUrlConstants.baseUrl}/auth/reset-password`;
+    static readonly FORGOT_PASSWORD = `${ApiUrlConstants.baseUrl}/auth/forgot-password`;
+    static readonly CHANGE_PASSWORD = `${ApiUrlConstants.baseUrl}/auth/change-password`;
 
     //PAYMENT
     static readonly INITIATE_PAYMENT = `${ApiUrlConstants.baseUrl}/payment/initiate`;
