@@ -69,6 +69,7 @@ export class ShopComponent implements OnInit {
           product.weight = product.sizes[0].weight.toString();
           product.material = product.sizes[0].material;
           product.generalImages = product.sizes[0].images;
+          product.shortDescription = product.sizes[0].shortDescription;
         }
       })
     });
