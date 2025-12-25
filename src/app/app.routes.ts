@@ -127,6 +127,11 @@ export const routes: Routes = [
       import('./pages/about-us/about-us.component').then(m => m.AboutUsComponent)
   },
   {
+    path: 'contact',
+    loadComponent: () =>
+      import('./pages/contact-us/contact-us.component').then(m => m.ContactUsComponent)
+  },
+  {
     path: 'auth/callback',
     loadComponent: () =>
       import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
