@@ -57,7 +57,7 @@
         {{ selectedSize.shortDescription }}
       </p>
       <div class="mb-6">
-        <p class="text-gray-600" [class.line-clamp-3]="!isDescriptionExpanded">
+        <p class="text-gray-600 whitespace-pre-line" [class.line-clamp-3]="!isDescriptionExpanded">
           {{ product.description }}
         </p>
         <button *ngIf="product.description && product.description.length > 100" (click)="toggleDescription()"
