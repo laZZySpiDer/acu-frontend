@@ -20,6 +20,7 @@ export interface Product {
   comments?: Review[];
   averageRating?: number;
   ratingsCount?: number;
+  shortDescription?: string;
 }
 
 export interface ProductSize {
