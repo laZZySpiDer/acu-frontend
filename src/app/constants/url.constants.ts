@@ -53,5 +53,8 @@ export class ApiUrlConstants {
     static readonly WISHLIST_ADD = `${ApiUrlConstants.baseUrl}/wishlist/add`;
     static readonly WISHLIST_REMOVE = `${ApiUrlConstants.baseUrl}/wishlist/remove`;
     static readonly WISHLIST_GET = `${ApiUrlConstants.baseUrl}/wishlist`;
+
+    // CONTACT
+    static readonly CONTACT_US = `${ApiUrlConstants.baseUrl}/email/contact-us`;
 }
 

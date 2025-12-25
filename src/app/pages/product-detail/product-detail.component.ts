@@ -340,4 +340,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       this.prevLightboxImage();
     }
   }
+
+  isDescriptionExpanded: boolean = false;
+
+  toggleDescription() {
+    this.isDescriptionExpanded = !this.isDescriptionExpanded;
+  }
 }

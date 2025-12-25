@@ -32,6 +32,7 @@ export interface ProductSize {
   dimensions: string;
   stockQuantity: number;
   productVariantId: number;
+  shortDescription?: string;
 }
 
 export interface Image {

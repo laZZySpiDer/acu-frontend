@@ -53,7 +53,18 @@
       </div>
 
       <!-- Description -->
-      <p class="text-gray-600 mb-6">{{ product.description }}</p>
+      <p *ngIf="selectedSize?.shortDescription" class="font-bold text-gray-800 mb-2">
+        {{ selectedSize.shortDescription }}
+      </p>
+      <div class="mb-6">
+        <p class="text-gray-600 whitespace-pre-line" [class.line-clamp-3]="!isDescriptionExpanded">
+          {{ product.description }}
+        </p>
+        <button *ngIf="product.description && product.description.length > 100" (click)="toggleDescription()"
+          class="text-primary font-medium text-sm mt-1 hover:underline focus:outline-none">
+          {{ isDescriptionExpanded ? 'Read Less' : 'Read More' }}
+        </button>
+      </div>
 
       <!-- Color Selection -->
       <!-- <div *ngIf="product.colors" class="mb-6">
