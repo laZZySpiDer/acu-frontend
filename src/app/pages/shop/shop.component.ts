@@ -144,15 +144,7 @@ export class ShopComponent implements OnInit {
     if (this.isInWishlist(product.id)) {
       this.wishlistService.removeFromWishlist(product.id);
     } else {
-      this.wishlistService.addToWishlist({
-        id: product.id,
-        name: product.name,
-        price: +product.price,
-        image: product.generalImages[0].imageLink,
-        category: product.category.name,
-        rating: 5,
-        reviews: 5
-      });
+      this.wishlistService.addToWishlist(product.id);
     }
   }
 }
