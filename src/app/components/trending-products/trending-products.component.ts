@@ -37,21 +37,7 @@ export class TrendingProductsComponent implements OnInit {
     return this.wishlistService.isInWishlist(productId);
   }
 
-  toggleWishlist(product: any) {
-    if (this.isInWishlist(product.id)) {
-      this.wishlistService.removeFromWishlist(product.id);
-    } else {
-      this.wishlistService.addToWishlist({
-        id: product.id,
-        name: product.name,
-        price: parseFloat(product.price),
-        image: product.image,
-        category: product.category,
-        rating: product.rating,
-        reviews: product.reviews
-      });
-    }
-  }
+
 
   addToCart(product: any) {
     this.cartService.addToCart({

@@ -30,18 +30,8 @@ export class ProductCardComponent implements OnChanges {
   toggleWishlist(product: any) {
     if (this.isInWishlist(product.id)) {
       this.wishlistService.removeFromWishlist(product.id);
-      this.notificationService.success("Removed from wishlist");
     } else {
-      this.wishlistService.addToWishlist({
-        id: product.id,
-        name: product.name,
-        price: parseFloat(product.price),
-        image: product.main_image_link?.image_link || '',
-        category: product.category,
-        rating: product.rating,
-        reviews: product.reviews
-      });
-      this.notificationService.success("Added to wishlist");
+      this.wishlistService.addToWishlist(product.id);
     }
   }
 

@@ -5,31 +5,40 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div *ngFor="let item of wishlistItems$ | async" class="product-card group">
         <div class="relative overflow-hidden">
-          <img [src]="item.image" 
-               [alt]="item.name" 
-               class="w-full h-64 object-cover"/>
-          <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <img [src]="item.image" [alt]="item.name" class="w-full h-64 object-cover" />
+
+          <button (click)="removeFromWishlist(item.id)"
+            class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-md text-red-500 hover:bg-red-500 hover:text-white transition-all transform hover:scale-110 z-10"
+            title="Remove from wishlist">
+            <i class="fas fa-trash text-sm"></i>
+          </button>
+
+          <div
+            class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
             <button [routerLink]="['/product', item.id]" class="btn-primary mx-2">View Details</button>
-            <button (click)="removeFromWishlist(item.id)" class="text-white">
-              <i class="fas fa-trash text-2xl"></i>
-            </button>
           </div>
         </div>
         <div class="p-4">
           <h3 class="text-lg font-semibold mb-2">{{item.name}}</h3>
-          <div class="flex items-center mb-2">
+          <div class="flex items-center mb-2" *ngIf="item.rating > 0 || item.reviews > 0">
             <div class="flex text-yellow-400">
-              <i *ngFor="let star of [1,2,3,4,5]" 
-                 class="fas fa-star text-sm"
-                 [class.text-gray-300]="star > item.rating"></i>
+              <i *ngFor="let star of [1,2,3,4,5]" class="fas fa-star text-sm"
+                [class.text-gray-300]="star > item.rating"></i>
             </div>
             <span class="text-sm text-gray-500 ml-2">({{item.reviews}})</span>
           </div>
           <div class="flex justify-between items-center">
-            <p class="text-primary font-bold">${{item.price}}</p>
-            <button (click)="addToCart(item)" class="text-gray-700 hover:text-primary">
-              <i class="fas fa-shopping-cart"></i>
-            </button>
+            <div>
+              <ng-container *ngIf="item.originalPrice">
+                <span class="text-primary font-bold mr-2">₹{{item.price}}</span>
+                <span class="text-gray-400 text-sm line-through">₹{{item.originalPrice}}</span>
+              </ng-container>
+              <p *ngIf="!item.originalPrice" class="text-primary font-bold">₹{{item.price}}</p>
+            </div>
+            <a [routerLink]="['/product', item.id]"
+              class="text-sm font-semibold text-gray-500 hover:text-primary transition-colors">
+              View Details
+            </a>
           </div>
         </div>
       </div>

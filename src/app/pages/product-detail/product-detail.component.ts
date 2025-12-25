@@ -251,18 +251,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   toggleWishlist() {
     if (this.isInWishlist) {
       this.wishlistService.removeFromWishlist(this.product.id);
-      this.notificationService.success('Product removed from wishlist');
     } else {
-      this.wishlistService.addToWishlist({
-        id: this.product.id,
-        name: this.product.name,
-        price: +this.product.price,
-        image: this.product.generalImages[0].imageLink,
-        category: this.product.category.name,
-        rating: 69,
-        reviews: 100
-      });
-      this.notificationService.success('Product added to wishlist');
+      this.wishlistService.addToWishlist(this.product.id);
     }
     this.isInWishlist = !this.isInWishlist;
   }
