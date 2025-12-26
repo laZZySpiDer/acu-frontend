@@ -65,10 +65,10 @@ export class HeaderComponent {
 
   logout() {
     this.showDropdown = false;
-    console.log('logout');
+    // console.log('logout');
     this.authService.logout().subscribe({
       next: (response: any) => {
-        console.log('Logout Response', response);
+        // console.log('Logout Response', response);
         this.authService.setCurrentUser(null);
         this.router.navigate(['/']);
         this.cartService.clearCart();
@@ -81,10 +81,10 @@ export class HeaderComponent {
   onSearch() {
     if (this.searchQuery.trim()) {
       // this.router.navigate(['/shop'], { queryParams: { search: this.searchQuery.trim() } });
-      console.log('Search Query:', this.searchQuery.trim());
+      // console.log('Search Query:', this.searchQuery.trim());
       this.productApiService.searchProducts(this.searchQuery.trim()).subscribe({
         next: (results: any) => {
-          console.log('Search Results:', results);
+          // console.log('Search Results:', results);
           // You can navigate to a search results page or display results as needed
           // this.router.navigate(['/shop'], { queryParams: { search: this.searchQuery.trim() } });
         },

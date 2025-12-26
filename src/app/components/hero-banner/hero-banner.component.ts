@@ -19,7 +19,7 @@ export class HeroBannerComponent implements OnInit, AfterViewInit {
     if (this.heroVideo && this.heroVideo.nativeElement) {
       this.heroVideo.nativeElement.muted = true;
       this.heroVideo.nativeElement.play().catch(error => {
-        console.log('Video play failed:', error);
+        // console.log('Video play failed:', error);
       });
     }
   }

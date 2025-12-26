@@ -190,21 +190,50 @@
           </div>
         </div>
 
+        <!-- Gifting Option -->
+        <div class="py-4 border-t">
+          <div class="flex items-center justify-between cursor-pointer group"
+            (click)="isGiftPackagingSelected = !isGiftPackagingSelected">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <i class="fas fa-gift text-primary"></i>
+              </div>
+              <div>
+                <span class="text-sm font-semibold">Add Gift Packaging</span>
+                <p class="text-xs text-gray-500">Elegant wrapping for your order</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium">₹{{GIFT_PACKAGING_FEE}}</span>
+              <input type="checkbox" [(ngModel)]="isGiftPackagingSelected" (click)="$event.stopPropagation()"
+                class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
+            </div>
+          </div>
+        </div>
+
         <!-- Calculations -->
         <div class="space-y-2 py-4 border-t border-b">
-          <div class="flex justify-between">
-            <span>Subtotal</span>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Subtotal</span>
             <span>₹{{cartTotal$ | async | number:'1.2-2'}}</span>
           </div>
-          <div class="flex justify-between">
-            <span>Shipping</span>
-            <span>₹{{getSelectedShippingPrice() | number:'1.2-2'}}</span>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Shipping</span>
+            <span>+₹{{getSelectedShippingPrice() | number:'1.2-2'}}</span>
           </div>
-          <div class="flex justify-between">
-            <span>Tax</span>
-            <span>₹{{calculateTax() | number:'1.2-2'}}</span>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Estimated Tax (12%)</span>
+            <span>+₹{{calculateTax() | number:'1.2-2'}}</span>
           </div>
-          <div *ngIf="discountAmount > 0" class="flex justify-between text-green-600 font-medium">
+          <div *ngIf="isGiftPackagingSelected" class="flex justify-between text-sm text-primary font-medium">
+            <div class="flex items-center gap-1">
+              <i class="fas fa-gift text-xs"></i>
+              <span>Gift Packaging</span>
+            </div>
+            <span>+₹{{GIFT_PACKAGING_FEE | number:'1.2-2'}}</span>
+          </div>
+          <div *ngIf="discountAmount > 0" class="flex justify-between text-sm text-green-600 font-medium">
             <span>Discount</span>
             <span>-₹{{discountAmount | number:'1.2-2'}}</span>
           </div>
