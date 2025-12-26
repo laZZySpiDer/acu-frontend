@@ -31,4 +31,6 @@ export interface OrderDetails {
   userId?: string;
   couponCode?: string;
   discountAmount?: number;
+  giftPackaging?: boolean;
+  giftPackagingFee?: number;
 }

@@ -68,6 +68,10 @@ export class CheckoutComponent {
   constructor(private cartService: CartService, private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
     private _auth: AuthService, private couponService: CouponService) { }
 
+  // Gifting properties
+  isGiftPackagingSelected: boolean = false;
+  GIFT_PACKAGING_FEE: number = 30;
+
   // Coupon properties
   isCouponInputVisible = false;
   couponCode = '';
@@ -87,7 +91,10 @@ export class CheckoutComponent {
   }
 
   calculateTotal(): number {
-    const total = this.cartService.getCartTotal() + this.getSelectedShippingPrice() + this.calculateTax() - this.discountAmount;
+    let total = this.cartService.getCartTotal() + this.getSelectedShippingPrice() + this.calculateTax() - this.discountAmount;
+    if (this.isGiftPackagingSelected) {
+      total += this.GIFT_PACKAGING_FEE;
+    }
     return total > 0 ? total : 0;
   }
 
@@ -184,7 +191,9 @@ export class CheckoutComponent {
       subtotal: 0,
       userId: this._auth.getCurrentUser()?.id,
       couponCode: this.isCouponApplied ? this.couponCode : undefined,
-      discountAmount: this.isCouponApplied ? this.discountAmount : 0
+      discountAmount: this.isCouponApplied ? this.discountAmount : 0,
+      giftPackaging: this.isGiftPackagingSelected,
+      giftPackagingFee: this.isGiftPackagingSelected ? this.GIFT_PACKAGING_FEE : 0
     }
     this.cartItems$.pipe(take(1)).subscribe(items => order.items = items)
     this.orderService.setOrderDetails(order);
