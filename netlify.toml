@@ -7,14 +7,15 @@
     Referrer-Policy = "no-referrer-when-downgrade"
 
 [[headers]]
-  for = "/assets/*.webp"
+  for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
-  for = "/assets/*.mp4"
+  for = "/*.webp"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
 
 [[redirects]]
   from = "/*"
