@@ -1,5 +1,6 @@
 // cart.service.ts
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, map } from 'rxjs';
 // import { CartItem } from '../interfaces/cart.interface';
 import { CartItem } from '../interfaces/cart/cart.model';
@@ -25,7 +26,8 @@ export class CartService {
   constructor(
     private _productsApi: ProductsApiService,
     private _authApi: AuthService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loadCartItems();
 
@@ -45,7 +47,9 @@ export class CartService {
   }
 
   private persistLocalCart() {
-    localStorage.setItem('cart', JSON.stringify(this.cartItems.value));
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('cart', JSON.stringify(this.cartItems.value));
+    }
   }
 
   private loadCartItems() {
@@ -72,8 +76,12 @@ export class CartService {
         console.log('Cart items loaded:', this.cartItems.value);
       });
     } else {
-      const saved = localStorage.getItem('cart');
-      this.cartItems.next(saved ? JSON.parse(saved) : []);
+      if (isPlatformBrowser(this.platformId)) {
+        const saved = localStorage.getItem('cart');
+        this.cartItems.next(saved ? JSON.parse(saved) : []);
+      } else {
+        this.cartItems.next([]);
+      }
     }
 
 
@@ -150,7 +158,9 @@ export class CartService {
     if (this._authApi.isLoggedIn()) {
       this._productsApi.clearCart().subscribe();
     } else {
-      localStorage.removeItem('cart');
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.removeItem('cart');
+      }
     }
   }
 }
