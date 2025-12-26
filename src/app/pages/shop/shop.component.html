@@ -98,7 +98,7 @@
           <div [class]="viewMode === 'grid' ? 
                        'relative overflow-hidden' :
                        'relative overflow-hidden w-full sm:w-48'">
-            <img [src]="product.mainImageLink?.imageLink" [alt]="product.name"
+            <img [src]="product.mainImageLink.imageLink" [alt]="product.name"
               class="w-full h-48 sm:h-64 object-cover" />
             <button (click)="toggleWishlist(product)"
               class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-md transition-all transform hover:scale-110 z-10"

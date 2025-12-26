@@ -1,5 +1,5 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -11,16 +11,20 @@ import { RouterModule } from '@angular/router';
 export class HeroBannerComponent implements OnInit, AfterViewInit {
   @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+
   ngOnInit() {
     // Swiper initialization will go here
   }
 
   ngAfterViewInit() {
-    if (this.heroVideo && this.heroVideo.nativeElement) {
-      this.heroVideo.nativeElement.muted = true;
-      this.heroVideo.nativeElement.play().catch(error => {
-        // console.log('Video play failed:', error);
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.heroVideo && this.heroVideo.nativeElement) {
+        this.heroVideo.nativeElement.muted = true;
+        this.heroVideo.nativeElement.play().catch(error => {
+          // console.log('Video play failed:', error);
+        });
+      }
     }
   }
 }

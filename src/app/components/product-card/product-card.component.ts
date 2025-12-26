@@ -46,10 +46,10 @@ export class ProductCardComponent implements OnChanges {
       productName: product.name,
       price: +finalPrice,
       originalPrice: salePrice ? +regularPrice : undefined,
-      mainImageLink: product.mainImageLink?.imageLink || product.main_image_link?.image_link || '',
+      mainImageLink: product.mainImageLink.imageLink || '',
       quantity: 1,
       size: size,
-      categoryId: product.category?.id
+      categoryId: product.category.id
     });
   }
 }

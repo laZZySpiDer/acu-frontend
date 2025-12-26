@@ -1,7 +1,7 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration } from '@angular/platform-browser';
 import { authInterceptor } from './services/auth.interceptor';
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
                 scrollPositionRestoration: 'top',
             })
         ),
-        provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
+        provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor]), withFetch()),
         provideAnimations(),
         provideClientHydration()
     ]
