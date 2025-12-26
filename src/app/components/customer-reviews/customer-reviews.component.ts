@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div *ngFor="let review of reviews" class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex items-center mb-4">
-              <img [src]="review.avatar" [alt]="review.name" class="w-12 h-12 rounded-full object-cover"/>
+              <img [src]="review.avatar" [alt]="review.name" loading="lazy" class="w-12 h-12 rounded-full object-cover"/>
               <div class="ml-4">
                 <h4 class="font-semibold">{{review.name}}</h4>
                 <div class="flex text-yellow-400">

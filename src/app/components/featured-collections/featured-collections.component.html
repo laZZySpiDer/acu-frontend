@@ -4,7 +4,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div *ngFor="let collection of collections" class="relative overflow-hidden rounded-lg group cursor-pointer"
         (click)="navigateToCollection(collection)">
-        <img src="assets/images/category/{{collection.slug}}.webp" [alt]="collection.name"
+        <img src="assets/images/category/{{collection.slug}}.webp" [alt]="collection.name" loading="lazy"
           class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110" />
         <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
           <h3 class="text-white text-2xl font-bold">{{collection.name}}</h3>

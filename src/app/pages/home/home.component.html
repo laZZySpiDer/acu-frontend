@@ -1,7 +1,22 @@
-<main class="animate-fade-in">
+<main>
     <app-hero-banner></app-hero-banner>
+
+    @defer (on viewport) {
     <app-featured-collections></app-featured-collections>
+    } @placeholder {
+    <div class="h-96"></div>
+    }
+
+    @defer (on viewport) {
     <app-trending-products></app-trending-products>
+    } @placeholder {
+    <div class="h-96"></div>
+    }
+
+    @defer (on viewport) {
     <app-customer-reviews></app-customer-reviews>
+    } @placeholder {
+    <div class="h-96"></div>
+    }
     <!-- <app-newsletter></app-newsletter> -->
 </main>
