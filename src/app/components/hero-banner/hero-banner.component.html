@@ -1,6 +1,6 @@
 <section class="relative h-[600px] mt-20 overflow-hidden">
     <video #heroVideo autoplay loop muted playsinline [muted]="true" oncanplay="this.play()"
-        onloadedmetadata="this.muted = true"
+        onloadedmetadata="this.muted = true" fetchpriority="high"
         class="absolute inset-0 w-full h-full object-cover object-[30%] md:object-center">
         <source src="/assets/images/acu_hero_final_2.mp4" type="video/mp4">
     </video>
