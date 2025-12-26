@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -66,7 +67,7 @@ export class CheckoutComponent {
   };
 
   constructor(private cartService: CartService, private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
-    private _auth: AuthService, private couponService: CouponService) { }
+    private _auth: AuthService, private couponService: CouponService, @Inject(PLATFORM_ID) private platformId: Object) { }
 
   // Gifting properties
   isGiftPackagingSelected: boolean = false;
@@ -204,7 +205,9 @@ export class CheckoutComponent {
       console.log('Payment Response : ', response)
       this.cartService.clearCart();
       // window.location.href = response.payment_url;
-      window.location.href = response.data.instrumentResponse.redirectInfo.url;
+      if (isPlatformBrowser(this.platformId)) {
+        window.location.href = response.data.instrumentResponse.redirectInfo.url;
+      }
     });
 
     // this.router.navigate(['/order-confirmation']);
