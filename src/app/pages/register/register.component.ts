@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthApiService } from '../../services/auth-api.service';
 import { NotificationService } from '../../services/notification.service';
@@ -28,37 +28,32 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private authApiService: AuthApiService,
     private router: Router,
-    private notificationService: NotificationService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
     // Initialize Google Sign-In
-    if (isPlatformBrowser(this.platformId)) {
-      const interval = setInterval(() => {
-        if (typeof google !== 'undefined') {
-          clearInterval(interval);
-          this.initializeGoogleSignIn();
-        }
-      }, 100);
-    }
+    const interval = setInterval(() => {
+      if (typeof google !== 'undefined') {
+        clearInterval(interval);
+        this.initializeGoogleSignIn();
+      }
+    }, 100);
   }
 
   initializeGoogleSignIn() {
-    if (isPlatformBrowser(this.platformId)) {
-      google.accounts.id.initialize({
-        client_id: environment.googleClientId,
-        callback: (response: any) => this.handleGoogleCredential(response),
-        ux_mode: 'popup',
-        auto_select: false,
-        itp_support: true
-      });
+    google.accounts.id.initialize({
+      client_id: environment.googleClientId,
+      callback: (response: any) => this.handleGoogleCredential(response),
+      ux_mode: 'popup',
+      auto_select: false,
+      itp_support: true
+    });
 
-      google.accounts.id.renderButton(
-        document.getElementById("google-register-button"),
-        { theme: "outline", size: "large", width: "100%" }
-      );
-    }
+    google.accounts.id.renderButton(
+      document.getElementById("google-register-button"),
+      { theme: "outline", size: "large", width: "100%" }
+    );
   }
 
   handleGoogleCredential(response: any) {
@@ -121,9 +116,7 @@ export class RegisterComponent implements OnInit {
     this.authService.loginWithGoogle().subscribe({
       next: (user: any) => {
         console.log('Google Login Success', user);
-        if (isPlatformBrowser(this.platformId)) {
-          window.location.href = user.url;
-        }
+        window.location.href = user.url;
         // this.router.navigate(['/']);
       },
       error: (err) => {

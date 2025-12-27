@@ -5,6 +5,24 @@
     <!-- Left Column: Form -->
     <div class="lg:col-span-2">
       <form #checkoutForm="ngForm">
+        <!-- Profile Address Quick Fill -->
+        <div *ngIf="hasProfileAddress"
+          class="bg-primary/5 border border-primary/20 p-4 rounded-lg mb-6 flex items-center justify-between animate-fade-in">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+              <i class="fas fa-user-check text-primary"></i>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-800">Use Saved Address</p>
+              <p class="text-xs text-gray-500">Quickly fill your information from your profile</p>
+            </div>
+          </div>
+          <button type="button" (click)="useProfileAddress()"
+            class="px-4 py-2 bg-primary text-white text-xs font-bold rounded-md hover:bg-primary-dark transition-all transform hover:scale-105 active:scale-95 shadow-sm">
+            APPLY ADDRESS
+          </button>
+        </div>
+
         <!-- Contact Information -->
         <section class="bg-white p-6 rounded-lg shadow-md mb-6">
           <h2 class="text-xl font-semibold mb-4">Contact Information</h2>
@@ -276,9 +294,31 @@
           </div>
         </div>
 
-        <button (click)="placeOrder()" class="w-full btn-primary mt-2">
-          Place Order
-        </button>
+        <div class="mt-4">
+          <!-- Logged In: Place Order -->
+          <button *ngIf="isLoggedIn" (click)="placeOrder()" class="w-full btn-primary">
+            Place Order
+          </button>
+
+          <!-- Not Logged In: Continue to Login -->
+          <button *ngIf="!isLoggedIn" routerLink="/login"
+            class="w-full btn-primary flex items-center justify-center gap-2">
+            Continue to Login
+            <i class="fas fa-arrow-right text-xs"></i>
+          </button>
+          <div *ngIf="!isLoggedIn"
+            class="mt-3 p-3 border border-red-200/50 rounded-md flex items-start gap-3 animate-fade-in"
+            style="background-color: rgb(180 80 80 / 0.1);">
+            <i class="fa-solid fa-palette text-red-600/70 mt-0.5"></i>
+            <div>
+              <p class="text-xs text-red-900 font-medium">Secure Your Creation</p>
+              <p class="text-[10px] text-red-800/80 mt-0.5"><a routerLink="/login"
+                  class="underline font-bold hover:text-red-900 transition-colors">Login</a> or <a
+                  routerLink="/register" class="underline font-bold hover:text-red-900 transition-colors">Register</a>
+                to place your order and track it easily.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

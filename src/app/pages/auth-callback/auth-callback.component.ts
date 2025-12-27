@@ -1,5 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -23,37 +22,34 @@ export class AuthCallbackComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authService: AuthService,
-        @Inject(PLATFORM_ID) private platformId: Object
+        private authService: AuthService
     ) { }
 
     ngOnInit() {
-        if (isPlatformBrowser(this.platformId)) {
-            // Extract token from URL hash
-            const hash = window.location.hash;
-            console.log(hash);
-            if (hash) {
-                const params = new URLSearchParams(hash.substring(1)); // remove the '#'
-                const accessToken = params.get('access_token');
-                console.log(accessToken);
-                if (accessToken) {
-                    this.authService.handleOAuthCallback(accessToken).subscribe({
-                        next: () => {
-                            this.router.navigate(['/']);
-                        },
-                        error: (err) => {
-                            console.error('OAuth Callback Error:', err);
-                            this.router.navigate(['/login'], { queryParams: { error: 'oauth_failed' } });
-                        }
-                    });
-                } else {
-                    console.error('No access token found in hash');
-                    this.router.navigate(['/login'], { queryParams: { error: 'no_token' } });
-                }
+        // Extract token from URL hash
+        const hash = window.location.hash;
+        console.log(hash);
+        if (hash) {
+            const params = new URLSearchParams(hash.substring(1)); // remove the '#'
+            const accessToken = params.get('access_token');
+            console.log(accessToken);
+            if (accessToken) {
+                this.authService.handleOAuthCallback(accessToken).subscribe({
+                    next: () => {
+                        this.router.navigate(['/']);
+                    },
+                    error: (err) => {
+                        console.error('OAuth Callback Error:', err);
+                        this.router.navigate(['/login'], { queryParams: { error: 'oauth_failed' } });
+                    }
+                });
             } else {
-                console.error('No hash found in URL');
-                this.router.navigate(['/login'], { queryParams: { error: 'no_hash' } });
+                console.error('No access token found in hash');
+                this.router.navigate(['/login'], { queryParams: { error: 'no_token' } });
             }
+        } else {
+            console.error('No hash found in URL');
+            this.router.navigate(['/login'], { queryParams: { error: 'no_hash' } });
         }
     }
 }

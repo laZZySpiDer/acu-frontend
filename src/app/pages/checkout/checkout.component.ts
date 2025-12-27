@@ -1,5 +1,4 @@
-import { Component, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -28,7 +27,7 @@ interface ShippingMethod {
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.css']
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   @ViewChild('checkoutForm') checkoutForm!: NgForm;
   cartItems$ = this.cartService.cartItems$;
   cartTotal$ = this.cartService.cartTotal$;
@@ -66,8 +65,19 @@ export class CheckoutComponent {
     cvv: ''
   };
 
+  userProfile: any = null;
+
   constructor(private cartService: CartService, private orderService: OrderService, private router: Router, private _productsApi: ProductsApiService,
-    private _auth: AuthService, private couponService: CouponService, @Inject(PLATFORM_ID) private platformId: Object) { }
+    private _auth: AuthService, private couponService: CouponService) {
+    this._auth.currentUser$.subscribe(user => {
+      this.userProfile = user;
+    });
+  }
+
+  ngOnInit() {
+    // Refresh user profile data on landing
+    this._auth.checkAuthStatus().subscribe();
+  }
 
   // Gifting properties
   isGiftPackagingSelected: boolean = false;
@@ -159,6 +169,30 @@ export class CheckoutComponent {
     this.isCouponInputVisible = false;
   }
 
+  get isLoggedIn(): boolean {
+    return this._auth.isLoggedIn();
+  }
+
+  get hasProfileAddress(): boolean {
+    return !!(this.userProfile && this.userProfile.address);
+  }
+
+  useProfileAddress() {
+    if (this.userProfile) {
+      this.formData = {
+        ...this.formData,
+        email: this.userProfile.email || this.formData.email,
+        phone: this.userProfile.phone_number || this.formData.phone,
+        firstName: this.userProfile.name?.split(' ')[0] || this.formData.firstName,
+        lastName: this.userProfile.name?.split(' ').slice(1).join(' ') || this.formData.lastName,
+        address: this.userProfile.address || this.formData.address,
+        zipCode: this.userProfile.pincode || this.formData.zipCode,
+        city: this.userProfile.city || this.formData.city,
+        state: this.userProfile.state || this.formData.state,
+      };
+    }
+  }
+
   placeOrder() {
     if (this.checkoutForm.invalid) {
       this.checkoutForm.form.markAllAsTouched();
@@ -205,9 +239,7 @@ export class CheckoutComponent {
       console.log('Payment Response : ', response)
       this.cartService.clearCart();
       // window.location.href = response.payment_url;
-      if (isPlatformBrowser(this.platformId)) {
-        window.location.href = response.data.instrumentResponse.redirectInfo.url;
-      }
+      window.location.href = response.data.instrumentResponse.redirectInfo.url;
     });
 
     // this.router.navigate(['/order-confirmation']);
