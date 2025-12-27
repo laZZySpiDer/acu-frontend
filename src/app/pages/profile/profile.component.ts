@@ -59,6 +59,30 @@ export class ProfileComponent {
       name: 'Ahiru',
       role: 'The Creator',
       description: 'Finds stories in little moments'
+    },
+    {
+      id: 'billy',
+      name: 'Billy',
+      role: 'The Goofball',
+      description: 'Playful, curious, and always up to something fun.'
+    },
+    {
+      id: 'kiki',
+      name: 'Kiki',
+      role: 'The free spirit',
+      description: 'Curious, expressive, follows her heart with ease.'
+    },
+    {
+      id: 'ren',
+      name: 'Ren',
+      role: 'The chill one',
+      description: 'Moves at his own pace, calm, effortless & cool'
+    },
+    {
+      id: 'mirai',
+      name: 'Mirai',
+      role: 'The Dreamer',
+      description: 'Gentle and hopeful, believes in tomorrow.'
     }
   ];
 
