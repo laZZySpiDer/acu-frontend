@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { ProductsApiService } from "../../services/products-api.service";
 import { Product } from "../../interfaces/products/product.interface";
@@ -15,44 +15,54 @@ import { FormsModule } from "@angular/forms";
   templateUrl: "./categories.component.html",
   styleUrl: "./categories.component.css"
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnChanges {
+  @Input() category!: string;
   public categorySlug: string | null = null;
-  products: Product[] = [
-    // Add more products as needed
-  ];
+  products: Product[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private _productsApiService: ProductsApiService,
-    private cartService: CartService, private wishlistService: WishlistService
-  ) {
-    console.log(this.route.snapshot.paramMap.get("category"));
-    this.categorySlug = this.route.snapshot.paramMap.get("category");
-  }
+    private cartService: CartService,
+    private wishlistService: WishlistService
+  ) { }
 
   ngOnInit(): void {
-    // Use this._categorySlug to fetch and display category-specific data
-    if (this.categorySlug) {
-      this._productsApiService
-        .getProductByCategory(this.categorySlug)
-        .subscribe((response: any) => {
-
-          this.products = response.products;
-
-          this.products.forEach((product) => {
-            if (product.sizes.length > 0) {
-              product.price = product.sizes[0].price.toString();
-              product.stockQuantity = product.sizes[0].stockQuantity.toString();
-              product.dimensions = product.sizes[0].dimensions;
-              product.weight = product.sizes[0].weight.toString();
-              product.material = product.sizes[0].material;
-              product.generalImages = product.sizes[0].images;
-            }
-          });
-
-
-        });
+    // Initial load if category is already available
+    if (this.category) {
+      this.categorySlug = this.category;
+      this.loadProducts();
     }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['category'] && !changes['category'].firstChange) {
+      this.categorySlug = changes['category'].currentValue;
+      this.loadProducts();
+    }
+  }
+
+  private loadProducts(): void {
+    if (!this.categorySlug) return;
+
+    this._productsApiService
+      .getProductByCategory(this.categorySlug)
+      .subscribe((response: any) => {
+        this.products = response.products;
+        this.products.forEach((product) => {
+          if (product.sizes.length > 0) {
+            product.price = product.sizes[0].price.toString();
+            product.stockQuantity = product.sizes[0].stockQuantity.toString();
+            product.dimensions = product.sizes[0].dimensions;
+            product.weight = product.sizes[0].weight.toString();
+            product.material = product.sizes[0].material;
+            product.generalImages = product.sizes[0].images;
+          }
+        });
+      });
+  }
+
+
 
   viewMode: "grid" | "list" = "grid";
   sortBy: string = "newest";

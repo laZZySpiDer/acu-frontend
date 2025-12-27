@@ -1,11 +1,11 @@
-import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Component, HostListener, Inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 
 @Component({
-    selector: 'app-scroll-to-top',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-scroll-to-top',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <button
       *ngIf="showButton"
       (click)="scrollToTop()"
@@ -15,31 +15,27 @@ import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
       <i class="fas fa-arrow-up"></i>
     </button>
   `,
-    styles: [`
+  styles: [`
     :host {
       display: block;
     }
   `]
 })
 export class ScrollToTopComponent {
-    showButton = false;
+  showButton = false;
 
-    constructor(@Inject(DOCUMENT) private document: Document, @Inject(PLATFORM_ID) private platformId: Object) { }
+  constructor(@Inject(DOCUMENT) private document: Document) { }
 
-    @HostListener('window:scroll', [])
-    onWindowScroll() {
-        if (isPlatformBrowser(this.platformId)) {
-            if (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop > 300) {
-                this.showButton = true;
-            } else if (this.showButton && (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop < 300)) {
-                this.showButton = false;
-            }
-        }
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop > 300) {
+      this.showButton = true;
+    } else if (this.showButton && (window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop < 300)) {
+      this.showButton = false;
     }
+  }
 
-    scrollToTop() {
-        if (isPlatformBrowser(this.platformId)) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }

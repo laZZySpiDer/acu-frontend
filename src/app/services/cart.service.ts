@@ -1,7 +1,6 @@
 // cart.service.ts
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, map } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, forkJoin, map } from 'rxjs';
 // import { CartItem } from '../interfaces/cart.interface';
 import { CartItem } from '../interfaces/cart/cart.model';
 import { ProductsApiService } from './products-api.service';
@@ -26,8 +25,7 @@ export class CartService {
   constructor(
     private _productsApi: ProductsApiService,
     private _authApi: AuthService,
-    private notificationService: NotificationService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    private notificationService: NotificationService
   ) {
     this.loadCartItems();
 
@@ -47,14 +45,43 @@ export class CartService {
   }
 
   private persistLocalCart() {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('cart', JSON.stringify(this.cartItems.value));
-    }
+    localStorage.setItem('cart', JSON.stringify(this.cartItems.value));
   }
 
   private loadCartItems() {
     if (this._authApi.isLoggedIn()) {
-      this._productsApi.getCart().subscribe((res: any) => {
+      const saved = localStorage.getItem('cart');
+      if (saved) {
+        const localItems: CartItem[] = JSON.parse(saved);
+        if (localItems.length > 0) {
+          // Merge local items to server
+          const mergeRequests = localItems.map(item =>
+            this._productsApi.addToCart(+item.productId, item.quantity, item.size.productVariantId, item.customImageName)
+          );
+
+          forkJoin(mergeRequests).subscribe({
+            next: () => {
+              localStorage.removeItem('cart'); // Clear local after successful merge
+              this.fetchServerCart();
+            },
+            error: (err) => {
+              console.error('Failed to merge cart items:', err);
+              this.fetchServerCart(); // Proceed to load server cart anyway
+            }
+          });
+          return;
+        }
+      }
+      this.fetchServerCart();
+    } else {
+      const saved = localStorage.getItem('cart');
+      this.cartItems.next(saved ? JSON.parse(saved) : []);
+    }
+  }
+
+  private fetchServerCart() {
+    this._productsApi.getCart().subscribe({
+      next: (res: any) => {
         console.log('Cart items loaded from API:', res);
         const items: CartItem[] = res.items.map((item: any) => {
           const regularPrice = typeof item.size.price === 'string' ? parseFloat(item.size.price) : item.size.price;
@@ -74,17 +101,11 @@ export class CartService {
         });
         this.cartItems.next(items);
         console.log('Cart items loaded:', this.cartItems.value);
-      });
-    } else {
-      if (isPlatformBrowser(this.platformId)) {
-        const saved = localStorage.getItem('cart');
-        this.cartItems.next(saved ? JSON.parse(saved) : []);
-      } else {
-        this.cartItems.next([]);
+      },
+      error: (err) => {
+        console.error('Failed to load server cart:', err);
       }
-    }
-
-
+    });
   }
 
   addToCart(item: CartItem) {
@@ -158,9 +179,7 @@ export class CartService {
     if (this._authApi.isLoggedIn()) {
       this._productsApi.clearCart().subscribe();
     } else {
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.removeItem('cart');
-      }
+      localStorage.removeItem('cart');
     }
   }
 }

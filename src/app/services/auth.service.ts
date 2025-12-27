@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { ApiUrlConstants } from '../constants/url.constants';
 import { AuthApiService } from './auth-api.service';
 import { UserLoginResponse } from '../interfaces/user.interface';
-import { isPlatformBrowser } from '@angular/common';
+
 import { NotificationService } from './notification.service';
 
 
@@ -19,7 +19,6 @@ export class AuthService {
   constructor(
     private authApi: AuthApiService,
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object,
     private notificationService: NotificationService
   ) {
     this.checkAuthStatus().subscribe();
@@ -30,12 +29,10 @@ export class AuthService {
   }
 
   setCurrentUser(data: any) {
-    if (isPlatformBrowser(this.platformId)) {
-      if (!data) {
-        localStorage.removeItem('isLoggedIn');
-      } else {
-        localStorage.setItem('isLoggedIn', 'true');
-      }
+    if (!data) {
+      localStorage.removeItem('isLoggedIn');
+    } else {
+      localStorage.setItem('isLoggedIn', 'true');
     }
 
     if (!data) {
@@ -126,11 +123,9 @@ export class AuthService {
   }
 
   checkAuthStatus() {
-    if (isPlatformBrowser(this.platformId)) {
-      const isLoggedIn = localStorage.getItem('isLoggedIn');
-      if (!isLoggedIn) {
-        return of(null);
-      }
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (!isLoggedIn) {
+      return of(null);
     }
     return this.http.get<UserLoginResponse>(ApiUrlConstants.ME).pipe(
       tap(userResponse => {
